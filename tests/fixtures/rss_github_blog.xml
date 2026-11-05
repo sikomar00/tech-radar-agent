@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>The GitHub Blog</title>
+	<atom:link href="https://github.blog/feed/" rel="self" type="application/rss+xml" />
+	<link>https://github.blog/</link>
+	<description>Updates, ideas, and inspiration from GitHub to help developers build and design software.</description>
+	<lastBuildDate>Tue, 03 Nov 2026 01:10:31 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=7.1.4</generator>
+
+<image>
+	<url>https://github.blog/wp-content/uploads/2019/01/cropped-github-favicon-512.png?fit=32%2C32</url>
+	<title>The GitHub Blog</title>
+	<link>https://github.blog/</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+<site xmlns="com-wordpress:feed-additions:1">153214340</site>	<item>
+		<title>Arnis turns any place on Earth into a Minecraft world</title>
+		<link>https://github.blog/open-source/maintainers/arnis-turns-any-place-on-earth-into-a-minecraft-world/</link>
+		
+		<dc:creator><![CDATA[Alex Perrault]]></dc:creator>
+		<pubDate>Tue, 03 Nov 2026 16:00:00 +0000</pubDate>
+				<category><![CDATA[Maintainers]]></category>
+		<category><![CDATA[Open Source]]></category>
+		<category><![CDATA[GitHub Copilot]]></category>
+		<category><![CDATA[GitHub Copilot app]]></category>
+		<category><![CDATA[open source]]></category>
+		<category><![CDATA[open source community]]></category>
+		<guid isPermaLink="false">https://github.blog/?p=99955</guid>
+
+					<description><![CDATA[<p>Louis Erbkamm built the first prototype in his free time. Now GitHub Copilot helps him maintain it alone.</p>
+<p>The post <a href="https://github.blog/open-source/maintainers/arnis-turns-any-place-on-earth-into-a-minecraft-world/">Arnis turns any place on Earth into a Minecraft world</a> appeared first on <a href="https://github.blog">The GitHub Blog</a>.</p>
+]]></description>
+										
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">99955</post-id>	</item>
+		<item>
+		<title>Game Off 2026: The theme is SHIFT</title>
+		<link>https://github.blog/open-source/gaming/game-off-2026-the-theme-is-shift/</link>
+		
+		<dc:creator><![CDATA[Lee Reilly]]></dc:creator>
+		<pubDate>Sun, 01 Nov 2026 21:36:00 +0000</pubDate>
+				<category><![CDATA[Gaming]]></category>
+		<category><![CDATA[Open Source]]></category>
+		<category><![CDATA[GitHub Game Off]]></category>
+		<guid isPermaLink="false">https://github.blog/?p=99918</guid>
+
+					<description><![CDATA[<p>GitHub’s annual month-long game jam is back for its 14th year! This November, make a game inspired by the theme SHIFT. Change gears, swap perspectives, bend reality, or just press a certain key.</p>
+<p>The post <a href="https://github.blog/open-source/gaming/game-off-2026-the-theme-is-shift/">Game Off 2026: The theme is SHIFT</a> appeared first on <a href="https://github.blog">The GitHub Blog</a>.</p>
+]]></description>
+										
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">99918</post-id>	</item></channel></rss>

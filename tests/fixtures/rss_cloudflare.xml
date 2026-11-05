@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cloudflare Blog</title>
+    <description>Technical deep dives, product updates, and insights from the teams that are helping to build a better Internet.</description>
+    <link>https://blog.cloudflare.com/</link>
+    <language>en-us</language>
+    <atom:link href="https://blog.cloudflare.com/rss/" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>https://blog.cloudflare.com/favicon.ico</url>
+      <title>Cloudflare Blog</title>
+      <link>https://blog.cloudflare.com</link>
+    </image>
+    <lastBuildDate>Thu, 05 Nov 2026 08:17:34 GMT</lastBuildDate>
+    <item>
+      <title>See the agents, set the terms: new visibility and control for personal agents</title>
+      <link>https://blog.cloudflare.com/personal-agents-visibility-control/</link>
+      <pubDate>Wed, 04 Nov 2026 14:00:00 GMT</pubDate>
+      <description>Personal AI agents have changed how users interact with the web, blurring the lines between automated and human traffic. Learn how Cloudflare gives site owners visibility and control to manage personal agent access.</description>
+      <dc:creator>Marina Elmore</dc:creator>
+      <dc:creator>Nicole Justus</dc:creator>
+      <category>AI</category>
+      <category>Analytics</category>
+      <category>Bot Management</category>
+      <category>Product News</category>
+      <category>Security</category>
+      
+      <enclosure url="https://blog.cloudflare.com/_emdash/api/media/file/01M6HZ1ZE3ZTGF9NEGGPF8SZNS.png" type="image/png" length="0"/>
+      <guid isPermaLink="false">01M6HZ245M2MBZAF7ZQXKC85X6</guid>
+    </item>
+    <item>
+      <title>Introducing Zero Wire, a hub for investigating critical Internet vulnerabilities </title>
+      <link>https://blog.cloudflare.com/zero-wire/</link>
+      <pubDate>Tue, 03 Nov 2026 14:00:00 GMT</pubDate>
+      <description>Zero Wire on Cloudflare Radar pairs plain-language briefings with global attack telemetry and remediation steps. Triage critical CVEs faster and decide how to protect your infrastructure.</description>
+      <dc:creator>Daniele Molteni</dc:creator>
+      <dc:creator>Celso Martinho</dc:creator>
+      <category>CVE</category>
+      <category>Product News</category>
+      <category>Radar</category>
+      <category>Security</category>
+      <category>Threat Intelligence</category>
+      <category>Vulnerabilities</category>
+      <category>WAF</category>
+      
+      <enclosure url="https://blog.cloudflare.com/_emdash/api/media/file/01M6GJ6AY4JP65PWEN7N433797.01M6GJ6BBQ9P5FYVNPWDVKT2EY.png" type="image/png" length="0"/>
+      <guid isPermaLink="false">01M6GJ3RNQ17SDPWXJVW49JAFW</guid>
+    </item></channel></rss>
