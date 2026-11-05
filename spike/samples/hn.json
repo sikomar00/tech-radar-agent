@@ -1,0 +1,272 @@
+[
+ {
+  "kind": "topstories",
+  "external_id": "50371246",
+  "title": "Residential proxies detected on White House network",
+  "url": "https://layer3intel.com/blog/residential-proxies-white-house-network",
+  "points": 950,
+  "num_comments": 284,
+  "created_at": 1793825118
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50375354",
+  "title": "Lemmings CSS Animation",
+  "url": "https://markblah.github.io/lemmings/",
+  "points": 93,
+  "num_comments": 15,
+  "created_at": 1793854450
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50372945",
+  "title": "Images 2.6",
+  "url": "https://openai.com/index/introducing-images-2-6/",
+  "points": 245,
+  "num_comments": 159,
+  "created_at": 1793835344
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50372929",
+  "title": "A thousand fewer paths to root",
+  "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/",
+  "points": 286,
+  "num_comments": 182,
+  "created_at": 1793835194
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50375653",
+  "title": "Altera Announces Agilex 2X, a Complete FPGA and SoC Portfolio",
+  "url": "https://www.altera.com/newsroom/agilex-2x",
+  "points": 17,
+  "num_comments": 4,
+  "created_at": 1793857634
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50366999",
+  "title": "Kimi K3.1 Pro model weights are out",
+  "url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
+  "points": 494,
+  "num_comments": 141,
+  "created_at": 1793806230
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50369925",
+  "title": "Ripple-65B Preview: U.S. Open-Weight SOTA on Agentic Coding",
+  "url": "https://www.ricursive.com/ripple",
+  "points": 279,
+  "num_comments": 99,
+  "created_at": 1793818409
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50341576",
+  "title": "Spreading Liquid with Three.js",
+  "url": "https://mofu-dev.com/en/blog/fluid-foundation/",
+  "points": 57,
+  "num_comments": 10,
+  "created_at": 1793645154
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50370610",
+  "title": "Insects don't swarm at LED lights",
+  "url": "https://www.birdsoutsidemywindow.org/2026/11/03/insects-dont-swarm-at-led-lights/",
+  "points": 230,
+  "num_comments": 124,
+  "created_at": 1793821823
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50349165",
+  "title": "Future Maintenance of Mbed TLS",
+  "url": "https://lists.trustedfirmware.org/archives/list/mbed-tls@lists.trustedfirmware.org/thread/YPIGCB7WN6GCHOGEGKOJXUYAP7OK527W/",
+  "points": 18,
+  "num_comments": 1,
+  "created_at": 1793691545
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50369106",
+  "title": "A new Go API for JSON",
+  "url": "https://go.dev/blog/jsonv2",
+  "points": 292,
+  "num_comments": 132,
+  "created_at": 1793814731
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50340195",
+  "title": "Partial Operator Precedence",
+  "url": "https://ziglang.org/devlog/2026/#2026-10-24",
+  "points": 8,
+  "num_comments": 0,
+  "created_at": 1793640140
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50364860",
+  "title": "So my ISP was hijacking my DNS",
+  "url": "https://www.karthihegde.dev/posts/dns_tampering",
+  "points": 45,
+  "num_comments": 21,
+  "created_at": 1793796711
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50373308",
+  "title": "Starfall – Affordable, routine access to microgravity",
+  "url": "https://www.spacex.com/starfall",
+  "points": 201,
+  "num_comments": 133,
+  "created_at": 1793837898
+ },
+ {
+  "kind": "topstories",
+  "external_id": "50372164",
+  "title": "Hacking the Xbox 360 Hypervisor Part 3: Bad Update Improvements",
+  "url": "https://icode4.coffee/?p=1746",
+  "points": 103,
+  "num_comments": 6,
+  "created_at": 1793829709
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50369895",
+  "title": "Show HN: After a decade of reversing, I got co-op working in DOS Wing Commander",
+  "url": "https://fireflyk64.github.io/wcmulti/",
+  "points": 161,
+  "num_comments": 21,
+  "created_at": 1793818287
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50339183",
+  "title": "Show HN: The DNA of DOOM – How code structure survives across 44 ports",
+  "url": "https://squid-protocol.github.io/gitgalaxy/museum-of-code/doom-dna/",
+  "points": 43,
+  "num_comments": 22,
+  "created_at": 1793636617
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50366929",
+  "title": "Show HN: I built a tool that prices a pre-built PC part by part",
+  "url": "https://pcdealcheck.com/",
+  "points": 103,
+  "num_comments": 72,
+  "created_at": 1793805933
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50371090",
+  "title": "Show HN: Gauge – Open-Source CLI to recursively improve your docs",
+  "url": "https://github.com/gauge-sh/gauge-cli",
+  "points": 29,
+  "num_comments": 4,
+  "created_at": 1793824290
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50358352",
+  "title": "Show HN: Uncracked City, detective game where you question LLM suspects that lie",
+  "url": "https://uncracked.city",
+  "points": 124,
+  "num_comments": 67,
+  "created_at": 1793740803
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50374993",
+  "title": "Show HN: Ryzova UCE – A local-first, rule-based software compatibility analyzer",
+  "url": "https://uce.ryzova.com/analyze",
+  "points": 2,
+  "num_comments": 0,
+  "created_at": 1793851135
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50346755",
+  "title": "Show HN: HackerTV – HN's most-recommended Youtube videos as 24/7 TV channels",
+  "url": "https://hackertv.org",
+  "points": 466,
+  "num_comments": 80,
+  "created_at": 1793668689
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50373795",
+  "title": "Show HN: I turned 18 Agatha Christie novels into SQL murder cases",
+  "url": "https://querythemurder.com/",
+  "points": 4,
+  "num_comments": 1,
+  "created_at": 1793841496
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50358314",
+  "title": "Show HN: Kairos – Open-source risk and fraud decisioning platform",
+  "url": "https://github.com/finic-ai/kairos",
+  "points": 104,
+  "num_comments": 34,
+  "created_at": 1793740608
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50326821",
+  "title": "Show HN: HackerBooks – HackerTube, but for books mentioned on HN",
+  "url": "https://hackerbooks.org",
+  "points": 1853,
+  "num_comments": 306,
+  "created_at": 1793548708
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50340088",
+  "title": "Show HN: Subvocal – Talk to your computer without making noise",
+  "url": null,
+  "points": 830,
+  "num_comments": 390,
+  "created_at": 1793639777
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50369277",
+  "title": "Show HN: Unclickbait – Replace clickbait YouTube thumbnails",
+  "url": "https://unclickbait.app/",
+  "points": 10,
+  "num_comments": 8,
+  "created_at": 1793815542
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50366811",
+  "title": "Show HN: Codemap – one-page interactive map of any Go repository",
+  "url": "https://github.com/peterretief/codemap",
+  "points": 42,
+  "num_comments": 18,
+  "created_at": 1793805504
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50372526",
+  "title": "Show HN: Using GPUs for other bs than AI – important prime record for the geeks",
+  "url": "https://github.com/djuk8/beacon/",
+  "points": 2,
+  "num_comments": 1,
+  "created_at": 1793832234
+ },
+ {
+  "kind": "showstories",
+  "external_id": "50346981",
+  "title": "Show HN: Hacker Times, a New York Times-inspired version of Hacker News",
+  "url": "https://hackertimes.ca/",
+  "points": 471,
+  "num_comments": 148,
+  "created_at": 1793670814
+ }
+]

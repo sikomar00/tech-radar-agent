@@ -1,0 +1,1442 @@
+[
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99955",
+  "title": "Arnis turns any place on Earth into a Minecraft world",
+  "url": "https://github.blog/open-source/maintainers/arnis-turns-any-place-on-earth-into-a-minecraft-world/",
+  "published_at": "Tue, 03 Nov 2026 16:00:00 +0000",
+  "excerpt": "Louis Erbkamm built the first prototype in his free time. Now GitHub Copilot helps him maintain it alone. The post Arnis turns any place on Earth into a Minecraft world appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99918",
+  "title": "Game Off 2026: The theme is SHIFT",
+  "url": "https://github.blog/open-source/gaming/game-off-2026-the-theme-is-shift/",
+  "published_at": "Sun, 01 Nov 2026 21:36:00 +0000",
+  "excerpt": "GitHub’s annual month-long game jam is back for its 14th year! This November, make a game inspired by the theme SHIFT. Change gears, swap perspectives, bend reality, or just press a certain key. The post Game Off 2026: The theme is SHIFT appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99788",
+  "title": "GitHub Universe 2026: Evolving every layer of the stack",
+  "url": "https://github.blog/news-insights/company-news/github-universe-2026-evolving-every-layer-of-the-stack/",
+  "published_at": "Wed, 28 Oct 2026 16:09:28 +0000",
+  "excerpt": "Today, we laid out our vision for GitHub as the most comprehensive, end-to-end software delivery system in the world. The post GitHub Universe 2026: Evolving every layer of the stack appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99742",
+  "title": "Octoverse: Commits, pushes, reach new highs in 2026 as developers build with agents",
+  "url": "https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/",
+  "published_at": "Wed, 28 Oct 2026 16:07:40 +0000",
+  "excerpt": "See how a record year of growth reached every industry, every field, and every kind of builder in the 2026 Octoverse report. The post Octoverse: Commits, pushes, reach new highs in 2026 as developers build with agents appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99645",
+  "title": "How bug bounty sharpens one researcher’s security skills",
+  "url": "https://github.blog/security/how-bug-bounty-sharpens-one-researchers-security-skills/",
+  "published_at": "Thu, 22 Oct 2026 17:21:30 +0000",
+  "excerpt": "As Cybersecurity Awareness Month continues, the GitHub Bug Bounty team spotlights @r31n, diving into their research approach, favorite bug classes, and advice for aspiring hackers. The post How bug bounty sharpens one researcher’s security skills appeared first on The GitHub Blog"
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99628",
+  "title": "The bridge to agent-scale Git infrastructure",
+  "url": "https://github.blog/engineering/architecture-optimization/the-bridge-to-agent-scale-git-infrastructure/",
+  "published_at": "Wed, 21 Oct 2026 16:00:00 +0000",
+  "excerpt": "We moved a copy of 99.99999% of GitHub's repositories to Azure. Here's how per-reference quorums will bring over the rest, and how object storage lets reads scale independently. The post The bridge to agent-scale Git infrastructure appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99538",
+  "title": "How 3 Java Champions are using GitHub Copilot for increased productivity",
+  "url": "https://github.blog/ai-and-ml/github-copilot/how-3-java-champions-are-using-github-copilot-for-increased-productivity/",
+  "published_at": "Tue, 20 Oct 2026 16:05:03 +0000",
+  "excerpt": "Three Java Champions share how they use GitHub Copilot to solve problems, accelerate development, and keep humans responsible for the results. The post How 3 Java Champions are using GitHub Copilot for increased productivity appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99556",
+  "title": "How to continue a GitHub Copilot app session in VS Code",
+  "url": "https://github.blog/ai-and-ml/github-copilot/how-to-continue-a-github-copilot-app-session-in-vs-code/",
+  "published_at": "Mon, 19 Oct 2026 18:47:22 +0000",
+  "excerpt": "Learn how to move an agent session from the GitHub Copilot app into VS Code without losing the conversation, code changes, or working context. The post How to continue a GitHub Copilot app session in VS Code appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99541",
+  "title": "The next developer interface is ambient intelligence",
+  "url": "https://github.blog/news-insights/company-news/the-next-developer-interface-is-ambient-intelligence/",
+  "published_at": "Thu, 15 Oct 2026 19:39:27 +0000",
+  "excerpt": "AI, agents, voice, and physical controls are shifting software development from operating tools to expressing intent—and helping developers stay focused on building. The post The next developer interface is ambient intelligence appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "github-blog",
+  "external_id": "https://github.blog/?p=99529",
+  "title": "Staying Evergreen: How we automated secure access and repo hygiene in a shared org",
+  "url": "https://github.blog/engineering/platform-security/staying-evergreen-how-we-automated-secure-access-and-repo-hygiene-in-a-shared-org/",
+  "published_at": "Thu, 15 Oct 2026 18:00:00 +0000",
+  "excerpt": "Put native GitHub features to work to review outside collaborator access and archive stale repositories. The post Staying Evergreen: How we automated secure access and repo hygiene in a shared org appeared first on The GitHub Blog ."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M6HZ245M2MBZAF7ZQXKC85X6",
+  "title": "See the agents, set the terms: new visibility and control for personal agents",
+  "url": "https://blog.cloudflare.com/personal-agents-visibility-control/",
+  "published_at": "Wed, 04 Nov 2026 14:00:00 GMT",
+  "excerpt": "Personal AI agents have changed how users interact with the web, blurring the lines between automated and human traffic. Learn how Cloudflare gives site owners visibility and control to manage personal agent access."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M6GJ3RNQ17SDPWXJVW49JAFW",
+  "title": "Introducing Zero Wire, a hub for investigating critical Internet vulnerabilities",
+  "url": "https://blog.cloudflare.com/zero-wire/",
+  "published_at": "Tue, 03 Nov 2026 14:00:00 GMT",
+  "excerpt": "Zero Wire on Cloudflare Radar pairs plain-language briefings with global attack telemetry and remediation steps. Triage critical CVEs faster and decide how to protect your infrastructure."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5J4YTFMTRT7PG1Y8HAPNPYG",
+  "title": "How we halved DNS build delay and cut memory use by 85%",
+  "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+  "published_at": "Mon, 02 Nov 2026 14:00:00 GMT",
+  "excerpt": "Zone setting changes used to rebuild entire DNS zones, even ones with tens of millions of records. Here is how we built a planner that picks the smallest safe build, cutting full builds by 40%, peak memory by 85%, and halving build delay."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M66XYRNK559YY01V2P37EBD7",
+  "title": "4 real? Tracking exploitation and patching of eMudhra’s weak keys",
+  "url": "https://blog.cloudflare.com/emudhra-patching/",
+  "published_at": "Fri, 30 Oct 2026 17:38:50 GMT",
+  "excerpt": "Four, just four: that’s the key to break into any unpatched connection on the Internet that is using eMudhra certificates. Here’s how we quickly patched Cloudflare, what evidence we can see of attempted exploitation, and how much of the rest of the Internet remains exposed."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M64V2TDYZYSS8RE60T3MWKSM",
+  "title": "Cloudflare services for private origins is now generally available",
+  "url": "https://blog.cloudflare.com/private-origins-public-to-private/",
+  "published_at": "Fri, 30 Oct 2026 14:23:43 GMT",
+  "excerpt": "Public traffic to private origins, with WAF, bot management, caching, and Workers, is now available to every customer with Cloudflare One connectivity."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M6254V6WN4EZTWVH0BF1748Y",
+  "title": "Cloudflare DDoS Threat Report 2026 Q3: More swarms, fewer giants",
+  "url": "https://blog.cloudflare.com/ddos-threat-report-2026-q3/",
+  "published_at": "Thu, 29 Oct 2026 12:55:00 GMT",
+  "excerpt": "Cloudflare mitigated over 8,200 DDoS attacks per hour in Q3 2026 as attackers shifted to shorter, high-frequency strikes. Explore the latest threat data, including the collapse of CLDAP vectors and the impact of recent botnet takedowns."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5YGNW60G1XYREPZQ9W8PSTD",
+  "title": "Introducing the Cloudflare PHP Capture the Flag challenge",
+  "url": "https://blog.cloudflare.com/php-ctf/",
+  "published_at": "Tue, 27 Oct 2026 13:00:00 GMT",
+  "excerpt": "We are launching a PHP Capture the Flag challenge integrated with our Bug Bounty program to test our WAF protections. Security researchers are invited to bypass our defenses and capture the flag to help make the Internet safer."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5G72REK3978980FNZCPDBRR",
+  "title": "What took the Internet offline in Q3 2026",
+  "url": "https://blog.cloudflare.com/q3-2026-internet-disruption-summary/",
+  "published_at": "Tue, 27 Oct 2026 13:00:00 GMT",
+  "excerpt": "An examination of global Internet disruptions observed by Cloudflare Radar during the third quarter of 2026. This review analyzes how power failures, natural disasters, and government shutdowns impacted network connectivity and traffic."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5X2P6CQYMNAESRJ922DG5J3",
+  "title": "Cross-request KV cache exposure in the GLM-5.3 Workers AI model, and our remediation with SGLang",
+  "url": "https://blog.cloudflare.com/kv-cache-exposure-remediation/",
+  "published_at": "Mon, 26 Oct 2026 22:01:23 GMT",
+  "excerpt": "A configuration mismatch in GLM 5.3 on Workers AI triggered an SGLang bug that exposed KV cache pages across requests. Here is how we addressed the issue."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5MZPETYH27RS72QV5V85YZ8",
+  "title": "Origin Range Requests: Serving large files without range-request tuning",
+  "url": "https://blog.cloudflare.com/origin-range-requests/",
+  "published_at": "Fri, 23 Oct 2026 18:22:59 GMT",
+  "excerpt": "Naive byte-range caching can waste gigabytes of origin bandwidth on small requests. We rebuilt our cache architecture in Pingora to coordinate partial fetches automatically, cutting R2 p99 latency in half."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5MYFG0SHDEYME96N0A4Z6PH",
+  "title": "Bringing post-quantum cryptography to geographically fenced key management",
+  "url": "https://blog.cloudflare.com/post-quantum-geo-key-manager/",
+  "published_at": "Fri, 23 Oct 2026 18:06:56 GMT",
+  "excerpt": "Cloudflare's new post-quantum GeoKey Manager protects geographically fenced decryption keys from harvest now, decrypt later attacks. Learn how we redesigned our cryptography stack to support strict data sovereignty in a post-quantum world."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5FTVN0D8MSEXMF36ZM9WWD4",
+  "title": "Localizing compliance at scale: achieving South Korea’s ISMS certification",
+  "url": "https://blog.cloudflare.com/k-isms/",
+  "published_at": "Thu, 22 Oct 2026 13:00:00 GMT",
+  "excerpt": "Cloudflare has achieved South Korea's ISMS certification following an audit across 80 controls. Learn how we localized user consent flows, adapted social sign-up paths at the edge, and validated our global security program."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5E1HXVZGTKAKEYZ0KMZQ65Q",
+  "title": "Introducing full transaction detection for Cloudflare WAF",
+  "url": "https://blog.cloudflare.com/full-transaction-waf/",
+  "published_at": "Wed, 21 Oct 2026 14:10:42 GMT",
+  "excerpt": "Cloudflare's web application firewall can now correlate an HTTP request with its response. Full transaction detection helps every customer find successful exploits, data exposure, and risky misconfigurations that request-only inspection can miss."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5FBPW0VHJGHYHGS7CWWKGSP",
+  "title": "Cloudflare deploys protections against php2shell vulnerability",
+  "url": "https://blog.cloudflare.com/php-vulnerabilities-waf-protection/",
+  "published_at": "Wed, 21 Oct 2026 13:56:45 GMT",
+  "excerpt": "Cloudflare has deployed default web application firewall (WAF) protections for newly disclosed PHP vulnerabilities before public disclosure. The rules use request and response signals to stop exploit attempts and prevent exposed data from reaching attackers."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5AYSGXBWG00KS9KC299XDR8",
+  "title": "How Commerce.com and Cloudflare are getting storefronts ready for AI agents",
+  "url": "https://blog.cloudflare.com/webmcp-commerce/",
+  "published_at": "Wed, 21 Oct 2026 13:00:00 GMT",
+  "excerpt": "Almost 100,000 Commerce.com domains now give AI agents real shopping tools through WebMCP on Cloudflare. Here's how we turned it on across every store at once, while keeping each merchant in control."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5DK5J81T0VC8YTBR2FKD8A3",
+  "title": "8 eMudhra certificates are compromised. Here's what you need to know",
+  "url": "https://blog.cloudflare.com/emudhra-certificate-compromise/",
+  "published_at": "Tue, 20 Oct 2026 22:20:16 GMT",
+  "excerpt": "Following the discovery that eight eMudhra intermediate certificates use weak keys, Cloudflare is deploying mitigations and releasing client updates. We explain the impact, our response, and what customers and developers should do next."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5C833HV3W30PBZZYVMCVRR6",
+  "title": "Introducing tsrs: A port of TypeScript to Rust",
+  "url": "https://blog.cloudflare.com/typescript-rust-port/",
+  "published_at": "Tue, 20 Oct 2026 13:00:00 GMT",
+  "excerpt": "Cloudflare is collaborating on tsrs, a Rust port of TypeScript that is up to 8x faster and uses 70% less memory."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M58NMKW6A1DQJNZXH37VZ9JH",
+  "title": "Cutting our inference bill by 68% by being obsessive about optimization",
+  "url": "https://blog.cloudflare.com/obsessive-inference-optimization/",
+  "published_at": "Mon, 19 Oct 2026 19:12:53 GMT",
+  "excerpt": "When our AI code reviewer's cost per run doubled, we dug into the token usage to find out why. Learn how we used prompt caching and intelligent model routing to slash our inference bill by 68% while speeding up reviews."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M5AKCKW0449M3Q6FW10XB4K3",
+  "title": "Introducing Clairic, a new System One class of extraction models",
+  "url": "https://blog.cloudflare.com/clairic-extraction-model/",
+  "published_at": "Mon, 19 Oct 2026 17:48:26 GMT",
+  "excerpt": "Clairic is a new model from Cloudflare that is a System One extraction modeI, capable of extracting, computing, estimating, and forecasting data from unstructured inputs."
+ },
+ {
+  "kind": "rss",
+  "feed": "cloudflare",
+  "external_id": "01M537RHECVHNJPV12N2E54ZR7",
+  "title": "Beyond the patch: Protecting your NetScaler gateway against future vulnerabilities",
+  "url": "https://blog.cloudflare.com/protect-your-netscaler-gateway/",
+  "published_at": "Mon, 19 Oct 2026 13:00:00 GMT",
+  "excerpt": "CVE-2026-88771 lets attackers run commands on NetScaler Gateway before anyone signs in. Patching takes time most teams don't have, so the sign-in decision has to move in front of the vulnerable code."
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/Dharma-AI/dharma-field-extractor",
+  "title": "Dharma Field Extractor: Any Document In, Structured Fields in JSON Out",
+  "url": "https://huggingface.co/blog/Dharma-AI/dharma-field-extractor",
+  "published_at": "Wed, 04 Nov 2026 17:50:10 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/allenai/statebench",
+  "title": "StateBench: Testing how language models track state changes over long documents",
+  "url": "https://huggingface.co/blog/allenai/statebench",
+  "published_at": "Tue, 03 Nov 2026 17:15:21 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/ibm-research/palette-deck-building",
+  "title": "Palette: teaching a small model to build decks in your design language",
+  "url": "https://huggingface.co/blog/ibm-research/palette-deck-building",
+  "published_at": "Tue, 03 Nov 2026 16:35:36 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/cwe-bench",
+  "title": "CWE-bench v2: More coverage, quality, and transparency",
+  "url": "https://huggingface.co/blog/cwe-bench",
+  "published_at": "Tue, 03 Nov 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/transformers-mic",
+  "title": "Transformers Model Integration Contracts",
+  "url": "https://huggingface.co/blog/transformers-mic",
+  "published_at": "Tue, 03 Nov 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/nvidia/nemotron-halloween",
+  "title": "nemotron-halloween",
+  "url": "https://huggingface.co/blog/nvidia/nemotron-halloween",
+  "published_at": "Fri, 30 Oct 2026 17:57:24 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/ibm-granite/granite-switch-4-1-1",
+  "title": "Granite Switch 4.1.1 — Update models like you update software",
+  "url": "https://huggingface.co/blog/ibm-granite/granite-switch-4-1-1",
+  "published_at": "Thu, 29 Oct 2026 13:37:07 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/announcing-project-protostar",
+  "title": "Announcing Project ProtoStar: Making Publicly Funded Science AI-Ready",
+  "url": "https://huggingface.co/blog/announcing-project-protostar",
+  "published_at": "Thu, 29 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/mistral-large4",
+  "title": "Welcome Le Chonk: Mistral Large 4 on Hugging Face",
+  "url": "https://huggingface.co/blog/mistral-large4",
+  "published_at": "Thu, 29 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/anydecisionmodel",
+  "title": "Introducing AnySpeechRecognizer and AnyDecisionModel: Open Models for Speech and Decisions on Apple Platforms",
+  "url": "https://huggingface.co/blog/anydecisionmodel",
+  "published_at": "Thu, 29 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/LiquidAI/lfm3",
+  "title": "Build specialized multimodal models with LFM3",
+  "url": "https://huggingface.co/blog/LiquidAI/lfm3",
+  "published_at": "Tue, 27 Oct 2026 17:16:52 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/torch-neuronx-model-support",
+  "title": "Does Your Model Run on AWS Trainium? Look It Up",
+  "url": "https://huggingface.co/blog/torch-neuronx-model-support",
+  "published_at": "Fri, 23 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/microsoft/thinkingbox-training",
+  "title": "Turning Database Grading into RL Rewards: Post-Training Agents with ThinkingBox",
+  "url": "https://huggingface.co/blog/microsoft/thinkingbox-training",
+  "published_at": "Thu, 22 Oct 2026 22:24:34 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/Dharma-AI/vocabx-vocabulary-specialization",
+  "title": "How Specializing the Vocabulary of SLMs Can Cut Inference Cost by 77% in Real Applications",
+  "url": "https://huggingface.co/blog/Dharma-AI/vocabx-vocabulary-specialization",
+  "published_at": "Wed, 21 Oct 2026 17:35:36 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/amazon/profiling-torchneuron-part-1",
+  "title": "Profiling TorchNeuron (Part 1): System-level profiling on AWS Trainium.",
+  "url": "https://huggingface.co/blog/amazon/profiling-torchneuron-part-1",
+  "published_at": "Wed, 21 Oct 2026 16:04:43 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/hf-torchtpu",
+  "title": "Hugging Face ❤️ TorchTPU: TPUs, Natively",
+  "url": "https://huggingface.co/blog/hf-torchtpu",
+  "published_at": "Tue, 20 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/anylanguagemodel-1-0",
+  "title": "AnyLanguageModel 1.0: One Year of Local Models on Apple Platforms",
+  "url": "https://huggingface.co/blog/anylanguagemodel-1-0",
+  "published_at": "Tue, 20 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/mps-pytorch-2-15",
+  "title": "MPS in PyTorch 2.15",
+  "url": "https://huggingface.co/blog/mps-pytorch-2-15",
+  "published_at": "Tue, 20 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/hf-torchneuron",
+  "title": "TorchNeuron: running HF models on AWS Trainium is easier than ever",
+  "url": "https://huggingface.co/blog/hf-torchneuron",
+  "published_at": "Mon, 19 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/reflection-beam",
+  "title": "Welcome Beam: a 501B open model you can own, customize, and scale",
+  "url": "https://huggingface.co/blog/reflection-beam",
+  "published_at": "Fri, 16 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes",
+  "title": "Apertus 1.5 Release Notes",
+  "url": "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes",
+  "published_at": "Thu, 15 Oct 2026 09:08:45 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/meta-muse-spark-open",
+  "title": "Welcome Muse Spark Open: open-weight frontier multimodal mixture-of-experts model from Meta",
+  "url": "https://huggingface.co/blog/meta-muse-spark-open",
+  "published_at": "Thu, 15 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/flux-3",
+  "title": "Welcome FLUX.3 Image Klein in Diffusers",
+  "url": "https://huggingface.co/blog/flux-3",
+  "published_at": "Thu, 15 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b",
+  "title": "Run fast, private agents on-device with LFM2.5-24B-A2B",
+  "url": "https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b",
+  "published_at": "Tue, 13 Oct 2026 17:05:48 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/building-with-ml-intern",
+  "title": "The model that didn't exist, so you made it yourself",
+  "url": "https://huggingface.co/blog/building-with-ml-intern",
+  "published_at": "Thu, 08 Oct 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/tiiuae/falcon-asr",
+  "title": "Introducing Falcon ASR",
+  "url": "https://huggingface.co/blog/tiiuae/falcon-asr",
+  "published_at": "Wed, 07 Oct 2026 13:21:03 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/microsoft/thinkingbox",
+  "title": "The Agent Said It Was Done. The Database Disagreed.",
+  "url": "https://huggingface.co/blog/microsoft/thinkingbox",
+  "published_at": "Sat, 03 Oct 2026 22:56:48 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/ServiceNow-AI/autosynthdata",
+  "title": "AutoSynthData: Generating Training Data for Enterprise Agents",
+  "url": "https://huggingface.co/blog/ServiceNow-AI/autosynthdata",
+  "published_at": "Fri, 02 Oct 2026 04:01:31 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/open-tts-leaderboard",
+  "title": "Open TTS Leaderboard: Scalable Evaluation for Multilingual Text-to-Speech and Voice Cloning",
+  "url": "https://huggingface.co/blog/open-tts-leaderboard",
+  "published_at": "Wed, 30 Sep 2026 00:00:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "huggingface",
+  "external_id": "https://huggingface.co/blog/MultiverseComputingCAI/getting-the-source-right-not-just-the-fact-source",
+  "title": "Getting the Source Right, Not Just the Fact: Source-Aware Verification for MCP Agents",
+  "url": "https://huggingface.co/blog/MultiverseComputingCAI/getting-the-source-right-not-just-the-fact-source",
+  "published_at": "Tue, 29 Sep 2026 13:07:00 GMT",
+  "excerpt": ""
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/4/datasette-llm/",
+  "title": "datasette-llm 0.1a10",
+  "url": "https://simonwillison.net/2026/Nov/4/datasette-llm/",
+  "published_at": "2026-11-04T15:26:02+00:00",
+  "excerpt": "Release: datasette-llm 0.1a10 Fixes a bug that affected my agent.datasette.io demo site, where the set of available LLM models was not correctly restricted to just those in the configuration. Tags: datasette , llm"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/4/datasette-apps/",
+  "title": "datasette-apps 0.3a0",
+  "url": "https://simonwillison.net/2026/Nov/4/datasette-apps/",
+  "published_at": "2026-11-04T00:29:36+00:00",
+  "excerpt": "Release: datasette-apps 0.3a0 Datasette Apps adds support for hosting and editing custom HTML applications inside of Datasette. These can be created by hand, but it's easier to create them using LLMs via Datasette Agent . This release improves that integration: Apps can now be ta"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/3/datasette-agent/",
+  "title": "datasette-agent 0.5a0",
+  "url": "https://simonwillison.net/2026/Nov/3/datasette-agent/",
+  "published_at": "2026-11-03T23:13:45+00:00",
+  "excerpt": "Release: datasette-agent 0.5a0 This is a significant release of Datasette Agent . The most notable new feature is called the panel - it lets the agent chat open and then sit next to pages from Datasette, for example a table or query page. When combined with datasette-apps this me"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/3/llm/",
+  "title": "llm 0.37.1",
+  "url": "https://simonwillison.net/2026/Nov/3/llm/",
+  "published_at": "2026-11-03T21:41:42+00:00",
+  "excerpt": "Release: llm 0.37.1 A bugfix release for LLM , with contributions from Steven Huang , Tao An , Arjan Mossel , and XQ . Tags: llm"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/",
+  "title": "Qwen 3.8 27B on my laptop can interpret model weights, too",
+  "url": "https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/",
+  "published_at": "2026-11-03T16:29:48+00:00",
+  "excerpt": "Yesterday's hot paper was Sparks of Weight-Space Programming: LLMs can natively read &amp; write neural network weights by Rikiya Takehi, Jayden Teoh, Alex Zhang, and Omar Khattab. The paper (OK, the authors classify is as a \"blog post\", but it's paper-shaped) found that frontier"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/3/a-sound-that-leaks-your-exact-location/",
+  "title": "I discovered a sound that leaks your exact location (and it's everywhere) - YouTube",
+  "url": "https://simonwillison.net/2026/Nov/3/a-sound-that-leaks-your-exact-location/",
+  "published_at": "2026-11-03T05:32:25+00:00",
+  "excerpt": "I discovered a sound that leaks your exact location (and it&#x27;s everywhere) - YouTube Genius piece of OSINT by Colsto, who demonstrates how you can take almost imperceptible background noise of planes from a video soundtrack, figure out their Doppler curves, then cross referen"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/3/october-newsletter/",
+  "title": "October sponsors-only newsletter",
+  "url": "https://simonwillison.net/2026/Nov/3/october-newsletter/",
+  "published_at": "2026-11-03T05:28:59+00:00",
+  "excerpt": "I sent out the October edition of my sponsors-only monthly newsletter . If you are a sponsor (or start a sponsorship now) you can access it here . This month: The October inflection point for vibe game development The vulnerability apocalypse gets hot LLM releases API credits for"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/2/llm/",
+  "title": "llm 0.37",
+  "url": "https://simonwillison.net/2026/Nov/2/llm/",
+  "published_at": "2026-11-02T23:49:30+00:00",
+  "excerpt": "Release: llm 0.37 There's a lot of stuff in this new release of my LLM CLI tool and Python library, representing around two months of accumulated features and fixes. I added gpt-6.1-sol and gpt-6.1-terra , plus a new llm openai endpoint add command to make it easier to configure "
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/2/census-bureau-super-intelligence/",
+  "title": "The U.S. Census Bureau and “Super Intelligence”",
+  "url": "https://simonwillison.net/2026/Nov/2/census-bureau-super-intelligence/",
+  "published_at": "2026-11-02T13:31:26+00:00",
+  "excerpt": "I was reminded today of AI Adoption Rate Trending Down for Large Companies , a chart produced by Apollo Global Management in September 2025, which appeared to show a slowdown in U.S. corporate AI adoption based on numbers collected by the U.S. Census Bureau. At the time I used th"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/1/delete-uv-lock-first/",
+  "title": "If in doubt, delete the uv.lock file",
+  "url": "https://simonwillison.net/2026/Nov/1/delete-uv-lock-first/",
+  "published_at": "2026-11-01T23:24:22+00:00",
+  "excerpt": "I've been getting the occasional confusing Python dependency error since switching over to Python 3.15 and the rule I'm having to remember is: If in doubt, delete the uv.lock file Most of my projects are libraries which don't include a uv.lock file, since it's rude for a library "
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Nov/1/kyle-kingsbury/",
+  "title": "Quoting Kyle Kingsbury",
+  "url": "https://simonwillison.net/2026/Nov/1/kyle-kingsbury/",
+  "published_at": "2026-11-01T16:49:04+00:00",
+  "excerpt": "More broadly, the use of LLMs erodes trust in documentation, in software, and in the organizations which produce them. Perhaps engineers will begin to treat any new software project with suspicion—the signals we used to rely on as markers of a mature system are now easier to coun"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/31/how-we-took-over-chatgpt-accounts/",
+  "title": "How We Took Over ChatGPT Accounts",
+  "url": "https://simonwillison.net/2026/Oct/31/how-we-took-over-chatgpt-accounts/",
+  "published_at": "2026-10-31T23:15:22+00:00",
+  "excerpt": "How We Took Over ChatGPT Accounts Parameter Labs describe an exploit they found against ChatGPT's implementation of the artifacts pattern (OpenAI used to call this \"Canvas\" but it looks like the latest revision is called HTML previews ), where interactive custom HTML apps are dis"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/31/datasette-llm/",
+  "title": "datasette-llm 0.1a9",
+  "url": "https://simonwillison.net/2026/Oct/31/datasette-llm/",
+  "published_at": "2026-10-31T22:10:01+00:00",
+  "excerpt": "Release: datasette-llm 0.1a9 I have some big upgrades to Datasette Agent in the pipeline, but in the meantime here's a tiny user experience improvement to the underlying datasette-llm plugin. It now picks up the default model used by LLM , which means you can start using Datasett"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/30/nesformer/",
+  "title": "dbreunig/nesformer",
+  "url": "https://simonwillison.net/2026/Oct/30/nesformer/",
+  "published_at": "2026-10-30T21:59:22+00:00",
+  "excerpt": "dbreunig/nesformer Inspired by qwenputer by Divyansh Agrawal, Drew Breunig baked a working emulator for a Nintendo Entertainment System 6502 CPU into the weights of Qwen3.5-4B. You can now play NES ROMs such as Super Mario Bros (very slowly) running inside Qwen! In a comment on H"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/29/api-credits/",
+  "title": "API credits benefit for eligible ChatGPT subscriptions",
+  "url": "https://simonwillison.net/2026/Oct/29/api-credits/",
+  "published_at": "2026-10-29T22:48:29+00:00",
+  "excerpt": "API credits benefit for eligible ChatGPT subscriptions Earlier this month Anthropic announced a generous new benefit for their Max and Team subscriptions: $100, $200, and $500 per month subscribers would get the equivalent quantity of (expiring) credits to use with the Anthropic "
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/29/how-i-built-the-most-ai-pilled-company-in-the-world/",
+  "title": "Building a multiplayer game world with autonomous Fable-class models",
+  "url": "https://simonwillison.net/2026/Oct/29/how-i-built-the-most-ai-pilled-company-in-the-world/",
+  "published_at": "2026-10-29T17:00:26+00:00",
+  "excerpt": "How I Built the Most AI-Pilled Company in the World Don't be put off by the clickbait headline, this piece by Jacob Sansbury describing how they are building Spawn is a fascinating exploration of the bleeding edge of what's possible with agentic engineering against frontier model"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/29/ben-hylak/",
+  "title": "Quoting Ben Hylak",
+  "url": "https://simonwillison.net/2026/Oct/29/ben-hylak/",
+  "published_at": "2026-10-29T14:06:27+00:00",
+  "excerpt": "every product i use should just be a headless mcp, that feeds into an agent, where i never have to think about anything underneath. except for our product, of course. in our product, customers love the ui and love us very much. we're special that way. &mdash; Ben Hylak Tags: mode"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/28/ted-sanders/",
+  "title": "Quoting Ted Sanders",
+  "url": "https://simonwillison.net/2026/Oct/28/ted-sanders/",
+  "published_at": "2026-10-28T23:23:21+00:00",
+  "excerpt": "In general, LLM performance is incredibly multidimensional. There's no guarantee of a fixed ordering where the model that is best at math is also the model that's best at jokes. Despite that complexity, much of the variation in performance is explained by just a single variable: "
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/28/github-octoverse-2026/",
+  "title": "GitHub Octoverse 2026",
+  "url": "https://simonwillison.net/2026/Oct/28/github-octoverse-2026/",
+  "published_at": "2026-10-28T16:45:23+00:00",
+  "excerpt": "GitHub Octoverse 2026 I'm at GitHub Universe today (GitHub gave me a free ticket through their \"GitHub Stars\" program). EVP Jay Parikh just announced this year's Octoverse report, and highlighted these numbers in particular: This is a pretty stark representation of the impact of "
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/28/vibe-game-development/",
+  "title": "The October inflection point for vibe game development",
+  "url": "https://simonwillison.net/2026/Oct/28/vibe-game-development/",
+  "published_at": "2026-10-28T13:55:15+00:00",
+  "excerpt": "I've written before about how November 2025 was an inflection point for coding agents - the point where Opus 4.5 and GPT-5.1 crossed a tipping point that meant their respective coding agents became reliable daily drivers for software engineers. I think we've reached a new inflect"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/28/terk-terkowitz/",
+  "title": "Quoting Terk Terkowitz",
+  "url": "https://simonwillison.net/2026/Oct/28/terk-terkowitz/",
+  "published_at": "2026-10-28T10:09:07+00:00",
+  "excerpt": "If your work does not benefit from current AI tooling, that is a finding, not a failing. Document why, share it with your community of peers, bring it to your manager, and work to find solutions. An engineer who can explain where AI does not yet help their work is demonstrating t"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/27/game-boy-color-on-my-conference-badge/",
+  "title": "Game Boy Color on My Conference Badge",
+  "url": "https://simonwillison.net/2026/Oct/27/game-boy-color-on-my-conference-badge/",
+  "published_at": "2026-10-27T19:34:18+00:00",
+  "excerpt": "Game Boy Color on My Conference Badge I'm at GitHub Universe this week and, similar to last year , the conference badge is a full-blown color screen computer. I've been hacking around with it again, and then I ran into with Steve Francia... who worked with Gemini to get a full NE"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/26/gpt-61-terra/",
+  "title": "GPT-6.1 Terra",
+  "url": "https://simonwillison.net/2026/Oct/26/gpt-61-terra/",
+  "published_at": "2026-10-26T23:53:07+00:00",
+  "excerpt": "GPT-6.1 Terra It's always interesting to note which aspects of a new model are emphasized in the release announcement. In the case of GPT-6.1 Terra, OpenAI went with visual reasoning and computer use: We’re introducing GPT-6.1 Terra , a fast, efficient model that combines detaile"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/26/jason-koebler/",
+  "title": "Quoting Jason Koebler",
+  "url": "https://simonwillison.net/2026/Oct/26/jason-koebler/",
+  "published_at": "2026-10-26T19:00:25+00:00",
+  "excerpt": "Because big tech platforms essentially do not have customer support and make it impossible for their users to contact a human, many people experiencing run-of-the-mill tech problems have turned to ChatGPT. And, increasingly, ChatGPT is telling people that have normal tech support"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/26/webframe-evaluation/",
+  "title": "webframe: evaluated as a scraper and a sandbox",
+  "url": "https://simonwillison.net/2026/Oct/26/webframe-evaluation/",
+  "published_at": "2026-10-26T16:15:00+00:00",
+  "excerpt": "Research: webframe: evaluated as a scraper and a sandbox webframe is a neat little project from Jeff Lindsay which lets you \"run a web page like a program\" - you point it at a URL or file and it executes it in a hidden headless web view and outputs console.log() to standard outpu"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/25/seam-cutter/",
+  "title": "Seam Cutter",
+  "url": "https://simonwillison.net/2026/Oct/25/seam-cutter/",
+  "published_at": "2026-10-25T15:10:19+00:00",
+  "excerpt": "Tool: Seam Cutter I built this weird and very specific cropping tool - it lets you create a horizontal or vertical cut across an image, then slide the two sides relative to each other. Effectively it lets you crop out a section in the middle of an image. I wanted this because I o"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/24/battledrones/",
+  "title": "battledrones v14: Compass Rose, a four player map",
+  "url": "https://simonwillison.net/2026/Oct/24/battledrones/",
+  "published_at": "2026-10-24T03:59:57+00:00",
+  "excerpt": "Release: battledrones v14: Compass Rose, a four player map I added four player online mode to Battledrones - previous maps were limited to two. Here's the initial prompt I used: Add a new map for a four player battle - four way rotational symmetry, up to four AI players, works wi"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/23/quick-study-painter/",
+  "title": "Quick Study",
+  "url": "https://simonwillison.net/2026/Oct/23/quick-study-painter/",
+  "published_at": "2026-10-23T21:35:13+00:00",
+  "excerpt": "Tool: Quick Study Prompt to Claude Opus 5.5 High : Build an artifact where you open a photo and it rapidly (in a few seconds) paints a version of that photo using a canvas element and simulated paintbrush See also my previous experiment getting Claude Fable to simulate a watercol"
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/23/kimi-k31-pro/",
+  "title": "Introducing Kimi K3.1 Pro",
+  "url": "https://simonwillison.net/2026/Oct/23/kimi-k31-pro/",
+  "published_at": "2026-10-23T19:40:54+00:00",
+  "excerpt": "Introducing Kimi K3.1 Pro Kimi K3.1 Pro landed on the Kimi API today - it's not yet open weights, but Moonshot promise \"Full model weights will be released by Nov 4, 2026\". They're also offering a \"Highspeed\" version that's 2-3x faster, at twice the price (except for input token "
+ },
+ {
+  "kind": "rss",
+  "feed": "simon-willison",
+  "external_id": "https://simonwillison.net/2026/Oct/22/de-staat-freedom/",
+  "title": "DE STAAT - FREEDOM (Official Music Video)",
+  "url": "https://simonwillison.net/2026/Oct/22/de-staat-freedom/",
+  "published_at": "2026-10-22T19:42:26+00:00",
+  "excerpt": "DE STAAT - FREEDOM (Official Music Video) OK well this is a first for me... at 00:44 in this new music video by Dutch alternative rock band De Staat : The visual effects are credited to Matties Grooten of Fake it or Leave it . Via flir on Hacker News Tags: music , ai , generative"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50372929",
+  "title": "A thousand fewer paths to root",
+  "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/",
+  "published_at": "Wed, 04 Nov 2026 23:33:14 +0000",
+  "excerpt": "Article URL: https://openai.com/index/a-thousand-fewer-paths-to-root/ Comments URL: https://news.ycombinator.com/item?id=50372929 Points: 277 # Comments: 176"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50371246",
+  "title": "Residential proxies detected on White House network",
+  "url": "https://layer3intel.com/blog/residential-proxies-white-house-network",
+  "published_at": "Wed, 04 Nov 2026 20:45:18 +0000",
+  "excerpt": "Article URL: https://layer3intel.com/blog/residential-proxies-white-house-network Comments URL: https://news.ycombinator.com/item?id=50371246 Points: 931 # Comments: 281"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50369925",
+  "title": "Ripple-65B Preview: U.S. Open-Weight SOTA on Agentic Coding",
+  "url": "https://www.ricursive.com/ripple",
+  "published_at": "Wed, 04 Nov 2026 18:53:29 +0000",
+  "excerpt": "Article URL: https://www.ricursive.com/ripple Comments URL: https://news.ycombinator.com/item?id=50369925 Points: 276 # Comments: 99"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50369106",
+  "title": "A new Go API for JSON",
+  "url": "https://go.dev/blog/jsonv2",
+  "published_at": "Wed, 04 Nov 2026 17:52:11 +0000",
+  "excerpt": "Article URL: https://go.dev/blog/jsonv2 Comments URL: https://news.ycombinator.com/item?id=50369106 Points: 288 # Comments: 131"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50367125",
+  "title": "AMD expects to outsell Intel in Q4 for the first time in history",
+  "url": "https://www.tomshardware.com/pc-components/cpus/amd-expects-to-outsell-intel-in-q4-for-the-first-time-in-history-usd17b-guidance-would-exceed-intels-projections",
+  "published_at": "Wed, 04 Nov 2026 15:38:34 +0000",
+  "excerpt": "Article URL: https://www.tomshardware.com/pc-components/cpus/amd-expects-to-outsell-intel-in-q4-for-the-first-time-in-history-usd17b-guidance-would-exceed-intels-projections Comments URL: https://news.ycombinator.com/item?id=50367125 Points: 527 # Comments: 193"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50366999",
+  "title": "Kimi K3.1 Pro model weights are out",
+  "url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
+  "published_at": "Wed, 04 Nov 2026 15:30:30 +0000",
+  "excerpt": "Article URL: https://huggingface.co/moonshotai/Kimi-K3.1-Pro Comments URL: https://news.ycombinator.com/item?id=50366999 Points: 486 # Comments: 139"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50366522",
+  "title": "Guerrilla bike lanes: San Francisco makes illicit infrastructure permanent (2016)",
+  "url": "https://99percentinvisible.org/article/guerrilla-bike-lanes-san-francisco-makes-illicit-infrastructure-permanent/",
+  "published_at": "Wed, 04 Nov 2026 15:01:44 +0000",
+  "excerpt": "Article URL: https://99percentinvisible.org/article/guerrilla-bike-lanes-san-francisco-makes-illicit-infrastructure-permanent/ Comments URL: https://news.ycombinator.com/item?id=50366522 Points: 286 # Comments: 212"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50365982",
+  "title": "US voters roundly reject data centers in ballot measures",
+  "url": "https://www.semafor.com/article/11/04/2026/us-voters-roundly-reject-data-centers-in-ballot-measures",
+  "published_at": "Wed, 04 Nov 2026 14:27:02 +0000",
+  "excerpt": "Article URL: https://www.semafor.com/article/11/04/2026/us-voters-roundly-reject-data-centers-in-ballot-measures Comments URL: https://news.ycombinator.com/item?id=50365982 Points: 326 # Comments: 661"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50365755",
+  "title": "North Korean fake job interview led to $6.3B Binance heist",
+  "url": "https://www.theregister.com/security/2026/11/03/north-korean-fake-job-interview-led-to-63b-binance-heist/5307398",
+  "published_at": "Wed, 04 Nov 2026 14:09:55 +0000",
+  "excerpt": "Article URL: https://www.theregister.com/security/2026/11/03/north-korean-fake-job-interview-led-to-63b-binance-heist/5307398 Comments URL: https://news.ycombinator.com/item?id=50365755 Points: 599 # Comments: 368"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50364336",
+  "title": "AI is forcing us to pay off 40 years of technical debt",
+  "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability",
+  "published_at": "Wed, 04 Nov 2026 11:52:17 +0000",
+  "excerpt": "Article URL: https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability Comments URL: https://news.ycombinator.com/item?id=50364336 Points: 1157 # Comments: 668"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50363554",
+  "title": "Geoffrey Hinton: it might turn out we were better off without AI",
+  "url": "https://www.theguardian.com/uk-news/2026/nov/03/ai-godfather-geoffrey-hinton-better-off-without-ai",
+  "published_at": "Wed, 04 Nov 2026 10:23:34 +0000",
+  "excerpt": "Article URL: https://www.theguardian.com/uk-news/2026/nov/03/ai-godfather-geoffrey-hinton-better-off-without-ai Comments URL: https://news.ycombinator.com/item?id=50363554 Points: 304 # Comments: 301"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50363461",
+  "title": "Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)",
+  "url": "https://news.ycombinator.com/item?id=50363461",
+  "published_at": "Wed, 04 Nov 2026 10:10:27 +0000",
+  "excerpt": "If you have a personal Google AI subscription, all your saved chat history in Gemini can be used for training and there is no way to opt out unless you turn off chat history or use temporary chat sessions. These chat transcripts may even be read by human reviewers. Although Googl"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50362980",
+  "title": "Kitty 0.50",
+  "url": "https://sw.kovidgoyal.net/kitty/changelog/#",
+  "published_at": "Wed, 04 Nov 2026 08:57:10 +0000",
+  "excerpt": "Article URL: https://sw.kovidgoyal.net/kitty/changelog/# Comments URL: https://news.ycombinator.com/item?id=50362980 Points: 371 # Comments: 229"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50362905",
+  "title": "Nvidia RTX Spark encrypted firmware slows inference speed to 35% on Linux",
+  "url": "https://www.mindstudio.ai/blog/linux-nvidia-rtx-spark-laptop",
+  "published_at": "Wed, 04 Nov 2026 08:46:29 +0000",
+  "excerpt": "Article URL: https://www.mindstudio.ai/blog/linux-nvidia-rtx-spark-laptop Comments URL: https://news.ycombinator.com/item?id=50362905 Points: 598 # Comments: 277"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50361268",
+  "title": "Jelly Sheet",
+  "url": "https://mrdoob.github.io/codevember-2026/01/",
+  "published_at": "Wed, 04 Nov 2026 03:40:50 +0000",
+  "excerpt": "Article URL: https://mrdoob.github.io/codevember-2026/01/ Comments URL: https://news.ycombinator.com/item?id=50361268 Points: 454 # Comments: 116"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50360164",
+  "title": "C++26 Disapproved",
+  "url": "https://andreasfertig.com/blog/2026/11/cpp26-dis-failed-how-does-cpp-survive/",
+  "published_at": "Wed, 04 Nov 2026 00:33:22 +0000",
+  "excerpt": "Article URL: https://andreasfertig.com/blog/2026/11/cpp26-dis-failed-how-does-cpp-survive/ Comments URL: https://news.ycombinator.com/item?id=50360164 Points: 407 # Comments: 350"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50358702",
+  "title": "The Internals of PostgreSQL",
+  "url": "https://www.interdb.jp/pg/index.html",
+  "published_at": "Tue, 03 Nov 2026 21:51:06 +0000",
+  "excerpt": "Article URL: https://www.interdb.jp/pg/index.html Comments URL: https://news.ycombinator.com/item?id=50358702 Points: 369 # Comments: 32"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50358582",
+  "title": "The Little Book of Generative AI Foundations: An Intuitive Mathematical Primer",
+  "url": "https://arxiv.org/abs/2605.29713",
+  "published_at": "Tue, 03 Nov 2026 21:40:53 +0000",
+  "excerpt": "Article URL: https://arxiv.org/abs/2605.29713 Comments URL: https://news.ycombinator.com/item?id=50358582 Points: 384 # Comments: 60"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50358562",
+  "title": "Safari introduces Adaptive Dark Mode in 27.3",
+  "url": "https://webkit.org/blog/18541/introducing-adaptive-dark-mode/",
+  "published_at": "Tue, 03 Nov 2026 21:39:05 +0000",
+  "excerpt": "Article URL: https://webkit.org/blog/18541/introducing-adaptive-dark-mode/ Comments URL: https://news.ycombinator.com/item?id=50358562 Points: 504 # Comments: 259"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50358422",
+  "title": "US tech giants' hidden AI debt swells 90% to $3.2T in 6 months",
+  "url": "https://asia.nikkei.com/business/technology/artificial-intelligence/us-tech-giants-hidden-ai-debt-swells-90-to-3.2tn-in-6-months",
+  "published_at": "Tue, 03 Nov 2026 21:26:44 +0000",
+  "excerpt": "Article URL: https://asia.nikkei.com/business/technology/artificial-intelligence/us-tech-giants-hidden-ai-debt-swells-90-to-3.2tn-in-6-months Comments URL: https://news.ycombinator.com/item?id=50358422 Points: 412 # Comments: 167"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50355251",
+  "title": "Qwen 3.8 27B on my laptop can interpret model weights, too",
+  "url": "https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/",
+  "published_at": "Tue, 03 Nov 2026 17:40:00 +0000",
+  "excerpt": "Article URL: https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/ Comments URL: https://news.ycombinator.com/item?id=50355251 Points: 725 # Comments: 212"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50354960",
+  "title": "Postman silently auto-installs AI plugins and attempts to share all API data",
+  "url": "https://github.com/postmanlabs/postman-app-support/issues/14370",
+  "published_at": "Tue, 03 Nov 2026 17:22:37 +0000",
+  "excerpt": "Article URL: https://github.com/postmanlabs/postman-app-support/issues/14370 Comments URL: https://news.ycombinator.com/item?id=50354960 Points: 1495 # Comments: 485"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50354358",
+  "title": "Stringman, an $800 open-source room scale gripper robot",
+  "url": "https://neufangled.com/",
+  "published_at": "Tue, 03 Nov 2026 16:47:29 +0000",
+  "excerpt": "Article URL: https://neufangled.com/ Comments URL: https://news.ycombinator.com/item?id=50354358 Points: 820 # Comments: 243"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50353229",
+  "title": "Kalshi and its co-founders face felony charges for violating Utah gambling laws",
+  "url": "https://arstechnica.com/tech-policy/2026/10/trump-admin-sues-utah-to-save-kalshi-from-the-states-total-ban-on-gambling/",
+  "published_at": "Tue, 03 Nov 2026 15:29:15 +0000",
+  "excerpt": "Article URL: https://arstechnica.com/tech-policy/2026/10/trump-admin-sues-utah-to-save-kalshi-from-the-states-total-ban-on-gambling/ Comments URL: https://news.ycombinator.com/item?id=50353229 Points: 498 # Comments: 490"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50353192",
+  "title": "Google will turn off search for schools that reject AI",
+  "url": "https://www.nytimes.com/2026/11/03/us/google-search-schools-restrict-ai.html",
+  "published_at": "Tue, 03 Nov 2026 15:25:47 +0000",
+  "excerpt": "https://archive.ph/RuwsB https://blog.google/products-and-platforms/products/educatio... Comments URL: https://news.ycombinator.com/item?id=50353192 Points: 666 # Comments: 460"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50352758",
+  "title": "Mac at any scale",
+  "url": "https://namespace.so/blog/mac-at-any-scale",
+  "published_at": "Tue, 03 Nov 2026 14:53:42 +0000",
+  "excerpt": "Article URL: https://namespace.so/blog/mac-at-any-scale Comments URL: https://news.ycombinator.com/item?id=50352758 Points: 413 # Comments: 224"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50352757",
+  "title": "OpenAI seems to be silently re-enabling model training on Codex chats",
+  "url": "https://news.ycombinator.com/item?id=50352757",
+  "published_at": "Tue, 03 Nov 2026 14:53:41 +0000",
+  "excerpt": "My company is pretty paranoid about leaking IP to the frontier labs through prompts, so we've all been diligent about disabling data sharing in Codex/Claude Code/etc. But yesterday my coworkers and I noticed that the setting had been silently reenabled in Codex. None of us knowin"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50351111",
+  "title": "The 'Astra can read and write weights to improve Qwen' post is misleading",
+  "url": "https://honnibal.dev/blog/astra-read-write-misleading",
+  "published_at": "Tue, 03 Nov 2026 12:21:17 +0000",
+  "excerpt": "Article URL: https://honnibal.dev/blog/astra-read-write-misleading Comments URL: https://news.ycombinator.com/item?id=50351111 Points: 1030 # Comments: 207"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50349276",
+  "title": "Could a modern chess engine on a Pentium have defeated Kasparov in 1996?",
+  "url": "https://nicholas.carlini.com/writing/2026/algorithmic-improvements-chess.html",
+  "published_at": "Tue, 03 Nov 2026 07:56:21 +0000",
+  "excerpt": "Article URL: https://nicholas.carlini.com/writing/2026/algorithmic-improvements-chess.html Comments URL: https://news.ycombinator.com/item?id=50349276 Points: 489 # Comments: 237"
+ },
+ {
+  "kind": "rss",
+  "feed": "hacker-news-best",
+  "external_id": "https://news.ycombinator.com/item?id=50348962",
+  "title": "Nvidia – open-source auto-ontology",
+  "url": "https://github.com/NVIDIA/auto-ontology",
+  "published_at": "Tue, 03 Nov 2026 07:04:50 +0000",
+  "excerpt": "Article URL: https://github.com/NVIDIA/auto-ontology Comments URL: https://news.ycombinator.com/item?id=50348962 Points: 288 # Comments: 138"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ieee-industry-experts-webinar",
+  "title": "IEEE Computer Society Chapter Offers Webinars With Industry Experts",
+  "url": "https://spectrum.ieee.org/ieee-industry-experts-webinar",
+  "published_at": "Tue, 03 Nov 2026 19:00:02 +0000",
+  "excerpt": "To help engineers keep up with emerging technologies such as AI, cloud computing, and sustainable infrastructure, and learn how they can be applied in practice, the IEEE Computer Society ’s Central Indiana Chapter recently launched its Tech Talk Series. The live webinar series co"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ai-slop-trust-science",
+  "title": "Guarding the Gates of Knowledge",
+  "url": "https://spectrum.ieee.org/ai-slop-trust-science",
+  "published_at": "Sun, 01 Nov 2026 14:00:01 +0000",
+  "excerpt": "A recent scroll through social media got me thinking about trust. About half my feed was filled with AI slop that astute users would call out as being machine-generated, often to the embarrassment of the rube who unknowingly spread it and sometimes to the delight of the poster wh"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/early-electric-vehicles",
+  "title": "When Electric Cars Were for Women",
+  "url": "https://spectrum.ieee.org/early-electric-vehicles",
+  "published_at": "Sat, 31 Oct 2026 13:00:02 +0000",
+  "excerpt": "At the turn of the last century, the automobile industry was still new and evolving rapidly. In 1898, there were about 50 carmakers in the United States. A decade later, that number had increased fivefold. In 1901, the companies produced 7,000 vehicles. By 1910, production had re"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ai-personal-assistant-intelligent-wearables",
+  "title": "Consumer Appetite for Personal AI Goes Mainstream",
+  "url": "https://spectrum.ieee.org/ai-personal-assistant-intelligent-wearables",
+  "published_at": "Thu, 29 Oct 2026 19:18:20 +0000",
+  "excerpt": "This article is brought to you by Qualcomm Technologies . For many consumers, much of the promise and appeal of AI is personal. Consumers are looking past generic tools and want to know how these technologies will help them in their daily lives. These trends coincide with the adv"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/systems-thinking-vital-in-ai",
+  "title": "Systems Thinking Is Vital in the Age of AI",
+  "url": "https://spectrum.ieee.org/systems-thinking-vital-in-ai",
+  "published_at": "Wed, 28 Oct 2026 18:00:02 +0000",
+  "excerpt": "Modern engineering projects increasingly combine human judgment with machine capability. An engineer can define a problem, then ask an artificial intelligence tool to search relevant research and technical standards, generate design options, test them in simulation, and compare t"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/beta-technologies-electric-aircraft",
+  "title": "How Beta Technologies Is Clearing the Runway for Electric Flight",
+  "url": "https://spectrum.ieee.org/beta-technologies-electric-aircraft",
+  "published_at": "Wed, 28 Oct 2026 13:00:03 +0000",
+  "excerpt": "In the cockpit of Beta Technologies’ Alia CX300, pilot Chris Caputo steers onto Runway 33 at Patrick Leahy Burlington International Airport in Vermont. Cleared for takeoff, he releases the brakes and nudges the throttle forward. At the back of the aircraft, the five-blade pusher "
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ai-robot-safety-cybersecurity-vicone",
+  "title": "Your Robot’s Safety Functions Already Work. What If the Input Lies?",
+  "url": "https://spectrum.ieee.org/ai-robot-safety-cybersecurity-vicone",
+  "published_at": "Tue, 27 Oct 2026 16:14:39 +0000",
+  "excerpt": "This article is brought to you by VicOne . A mobile robot slows for someone in a hallway. A collaborative arm eases its movement as a worker approaches. A humanoid pauses to let a person pass. Each response depends on information about the robot or its surroundings: a distance re"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ai-generated-scientific-papers",
+  "title": "I Used AI to Fake a Scientific Paper. Here’s What Happened",
+  "url": "https://spectrum.ieee.org/ai-generated-scientific-papers",
+  "published_at": "Tue, 27 Oct 2026 13:00:03 +0000",
+  "excerpt": "Science has a spam problem. And the spam filter is getting clogged up. According to all reports, academic publishing is drowning in what has come to be called AI slop: low-quality, mass-produced content generated with AI. By 2025, an estimated 57 percent of all published academic"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ieee-xplore-digital-library-ai",
+  "title": "IEEE Xplore Digital Library Adds AI Assistant",
+  "url": "https://spectrum.ieee.org/ieee-xplore-digital-library-ai",
+  "published_at": "Mon, 26 Oct 2026 18:00:03 +0000",
+  "excerpt": "IEEE recently released the IEEE Xplore AI Research Suite , built on the full text of millions of peer-reviewed publications in the IEEE Xplore Digital Library . The library offers full-text access to IEEE standards , journals, magazines, conference proceedings, and more. Research"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/magnetic",
+  "title": "Build a Hidden Lock With a Magnetic Imager",
+  "url": "https://spectrum.ieee.org/magnetic",
+  "published_at": "Mon, 26 Oct 2026 13:00:02 +0000",
+  "excerpt": "Like many a nerd, I have a certain fascination with locks. This originates in reading the memoir Surely You’re Joking, Mr. Feynman as a teenager, in which Richard Feynman recounts picking locks and cracking combinations while at his day job working on the Manhattan Project at Los"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/poetry-for-engineers-of-code-and-shortleaf-pine",
+  "title": "Poetry for Engineers: Of Code and Shortleaf Pine",
+  "url": "https://spectrum.ieee.org/poetry-for-engineers-of-code-and-shortleaf-pine",
+  "published_at": "Sun, 25 Oct 2026 12:00:02 +0000",
+  "excerpt": "I step into the warm moist air among the columns of the pines, their net of twigs and roots complex as any lines of code. The trees purify and anchor. Their branches balance my restlessness. Their calling is to be present, mine to develop apps. Our tasks verge toward a common log"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/preethi-ashwath-chip-designer",
+  "title": "From Chip Lab to Center Stage",
+  "url": "https://spectrum.ieee.org/preethi-ashwath-chip-designer",
+  "published_at": "Fri, 23 Oct 2026 18:00:03 +0000",
+  "excerpt": "Many engineers are more comfortable working behind the scenes developing technology than speaking to consumers about products. But Preethi Ashwath has learned to take center stage, talking about the “hearable” and wearable devices she has had a hand in developing as an analog int"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/engineering-jobs-that-ai-cant-replace",
+  "title": "Why AI Can’t Replace Engineering Teams",
+  "url": "https://spectrum.ieee.org/engineering-jobs-that-ai-cant-replace",
+  "published_at": "Thu, 22 Oct 2026 18:02:20 +0000",
+  "excerpt": "This article is crossposted from IEEE Spectrum ’s careers newsletter. Sign up now to get insider tips, expert advice, and practical strategies, written i n partnership with tech career development company Parsity and delivered to your inbox for free! If you’re an engineer, you ma"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/engineers-lobbying-congress",
+  "title": "Why Engineers Should Brave Capitol Hill",
+  "url": "https://spectrum.ieee.org/engineers-lobbying-congress",
+  "published_at": "Thu, 22 Oct 2026 13:00:02 +0000",
+  "excerpt": "When San Antonio–based software engineer Nikhil Jathar first went to Washington, D.C., to advocate for federal support for technology education and research funding, he was in awe of the opportunity. It was spring of 2025, not long after Jathar settled in the United States from I"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/schindler-2027-ieee-president-elect",
+  "title": "Manfred “Fred” J. Schindler Is 2027 IEEE President-Elect",
+  "url": "https://spectrum.ieee.org/schindler-2027-ieee-president-elect",
+  "published_at": "Wed, 21 Oct 2026 18:00:03 +0000",
+  "excerpt": "IEEE Life Fellow Manfred “Fred” J. Schindler has been elected as the 2027 IEEE president-elect . He will begin serving as president on 1 January 2028. Schindler, who was nominated by the IEEE Board of Directors , received 16,421 votes in the election. Senior Member David Alan Koe"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/wikipedia-wikiproject-ai-writing-cleanup",
+  "title": "How Wikipedia’s Editors Keep the Online Encyclopedia Human-Written",
+  "url": "https://spectrum.ieee.org/wikipedia-wikiproject-ai-writing-cleanup",
+  "published_at": "Wed, 21 Oct 2026 13:00:02 +0000",
+  "excerpt": "Ellia Lebleu is a founding member of the WikiProject AI Cleanup , a volunteer effort launched in 2023 to find and remove AI-generated material from Wikipedia that breaks the website’s guidelines. When the cleanup began, AI writing was often betrayed by conspicuous clichés. Today,"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ieee-report-engineering-public-good",
+  "title": "IEEE Report Highlights How Members Are Engineering for Public Good",
+  "url": "https://spectrum.ieee.org/ieee-report-engineering-public-good",
+  "published_at": "Mon, 19 Oct 2026 18:00:03 +0000",
+  "excerpt": "Advancing technology for the benefit of humanity isn’t just the tagline for IEEE’s mission as a public charity. It’s something that the organization’s more than 500,000 members strive to do all the time. IEEE’s recently released 2025 Social Impact Report showcases a variety of pr"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/agility-robotics-digit-5-redesign",
+  "title": "The Robot I Didn’t Expect to Build",
+  "url": "https://spectrum.ieee.org/agility-robotics-digit-5-redesign",
+  "published_at": "Mon, 19 Oct 2026 13:00:03 +0000",
+  "excerpt": "Agility Robotics , the company I cofounded out of my robotics lab at Oregon State University in 2015, has just launched Digit 5 . It’s designed to be the first humanoid robot that can safely and economically do useful work at scale, allowing us to bring tens of thousands of human"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://content.knowledgehub.wiley.com/edge-ai-for-smart-cities-from-real-time-insights-to-cognitive-urban-systems/?utm_source=IEEE",
+  "title": "Edge AI for Smart Cities: From Insight to Cognitive Action",
+  "url": "https://content.knowledgehub.wiley.com/edge-ai-for-smart-cities-from-real-time-insights-to-cognitive-urban-systems/?utm_source=IEEE",
+  "published_at": "Mon, 19 Oct 2026 10:00:04 +0000",
+  "excerpt": "This white paper explains how edge AI and physical AI help cities move beyond passive monitoring. It shows how urban infrastructure can sense, reason, and act on real-time conditions across public safety, mobility, and infrastructure management. What you will learn about: How the"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/variable-frequency-drives",
+  "title": "This Hidden Device Could Free Up Gigawatts of Grid Power",
+  "url": "https://spectrum.ieee.org/variable-frequency-drives",
+  "published_at": "Sat, 17 Oct 2026 13:00:02 +0000",
+  "excerpt": "This article was originally published by Canary Media . America’s energy supply crunch is driving a surge of federal and private investment in new electricity generation —from polluting gas turbines to cleaner developments like solar farms and geothermal plants . But gigawatts of"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ieee-smart-cities-new-services",
+  "title": "IEEE Offers More Services to Cities That Want to Be Smarter",
+  "url": "https://spectrum.ieee.org/ieee-smart-cities-new-services",
+  "published_at": "Fri, 16 Oct 2026 18:00:03 +0000",
+  "excerpt": "More and more city governments are using advanced technologies to improve livability for their residents. Municipalities use data from smartphones and sensors for traffic enforcement, traffic control, and waste management. They also have implemented artificial intelligence and de"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/electric-truck-battery-design-simulation",
+  "title": "Simulation App Speeds Up Electric Truck Battery Design",
+  "url": "https://spectrum.ieee.org/electric-truck-battery-design-simulation",
+  "published_at": "Fri, 16 Oct 2026 16:49:18 +0000",
+  "excerpt": "This article is brought to you by COMSOL . These days, no one blinks an eye at two-day, one-day, and even same-day package deliveries. Despite the plethora of localized fulfillment and distributi on centers that have cropped up to meet the demand, delivery trucks still need to ma"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/china-rare-earth-minerals",
+  "title": "Chasing China’s Monazite Monopoly",
+  "url": "https://spectrum.ieee.org/china-rare-earth-minerals",
+  "published_at": "Thu, 15 Oct 2026 14:54:03 +0000",
+  "excerpt": "One of the singular features of Baotou, an industrial city of 2 million people in Inner Mongolia, is a 10-square-kilometer (4-square-mile) lake that is among the most polluted in the world. The artificial lake, referred to by the name of the dam associated with it, Weikuang Dam ("
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/monazite-rare-earth",
+  "title": "Can a Radioactive Ore Break China’s Grip on Rare Earths?",
+  "url": "https://spectrum.ieee.org/monazite-rare-earth",
+  "published_at": "Thu, 15 Oct 2026 14:53:02 +0000",
+  "excerpt": "The global campaigns to break China’s dominance of vital rare-earth markets are shaping up into one of the signature geostrategic struggles of the early 21st century. Hundreds of mining companies, government agencies, and industrial facilities scattered across North America, Aust"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://content.knowledgehub.wiley.com/fast-rf-device-testing-with-analog-sources-a-practical-guide-to-amplifier-and-receiver-characterization/",
+  "title": "Compact Analog Signal Generators for Fast RF Testing",
+  "url": "https://content.knowledgehub.wiley.com/fast-rf-device-testing-with-analog-sources-a-practical-guide-to-amplifier-and-receiver-characterization/",
+  "published_at": "Thu, 15 Oct 2026 10:00:04 +0000",
+  "excerpt": "This White Paper shows RF and microwave engineers and technicians how compact analog signal generators support core amplifier and receiver test tasks, from gain and distortion measurements to blocker rejection, power calibration, and local oscillator substitution. What you will l"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/realignment-ieee-regions",
+  "title": "IEEE Continues Preparations for the Realignment of Its Regions",
+  "url": "https://spectrum.ieee.org/realignment-ieee-regions",
+  "published_at": "Wed, 14 Oct 2026 18:00:03 +0000",
+  "excerpt": "Progress continues in restructuring IEEE’s geographic regions, as outlined in The Institute’s February 2023 article “ IEEE Is Realigning Its Geographic Regions .” The “Region 1” designation will no longer be used. The new Region 2 will merge what is currently Region 1 (Northeaste"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/anthropic-engineer-ai-agent",
+  "title": "Meet the Anthropic Engineer Keeping Its AI Agent Trustworthy",
+  "url": "https://spectrum.ieee.org/anthropic-engineer-ai-agent",
+  "published_at": "Mon, 12 Oct 2026 18:00:02 +0000",
+  "excerpt": "If you’ve ever wondered how Claude and similar AI agents can answer complex questions in seconds and where they get the information, you’re not alone. Gurmeet Saran works to find that answer every day as an engineer at Anthropic in San Francisco, the AI research company behind Cl"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/andrew-ng-data-centric-ai",
+  "title": "Andrew Ng: Unbiggen AI",
+  "url": "https://spectrum.ieee.org/andrew-ng-data-centric-ai",
+  "published_at": "Wed, 09 Feb 2022 15:31:12 +0000",
+  "excerpt": "Andrew Ng has serious street cred in artificial intelligence. He pioneered the use of graphics processing units (GPUs) to train deep learning models in the late 2000s with his students at Stanford University , cofounded Google Brain in 2011, and then served for three years as chi"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/ai-chip-design-matlab",
+  "title": "How AI Will Change Chip Design",
+  "url": "https://spectrum.ieee.org/ai-chip-design-matlab",
+  "published_at": "Tue, 08 Feb 2022 14:00:01 +0000",
+  "excerpt": "The end of Moore’s Law is looming. Engineers and designers can do only so much to miniaturize transistors and pack as many of them as possible into chips . So they’re turning to other approaches to chip design, incorporating technologies like AI into the process. Samsung, for ins"
+ },
+ {
+  "kind": "rss",
+  "feed": "ieee-spectrum",
+  "external_id": "https://spectrum.ieee.org/2d-hbn-qubit",
+  "title": "Atomically Thin Materials Significantly Shrink Qubits",
+  "url": "https://spectrum.ieee.org/2d-hbn-qubit",
+  "published_at": "Mon, 07 Feb 2022 16:12:05 +0000",
+  "excerpt": "Quantum computing is a devilishly complex technology, with many technical hurdles impacting its development. Of these challenges two critical issues stand out: miniaturization and qubit quality. IBM has adopted the superconducting qubit road map of reaching a 1,121-qubit processo"
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://science.nasa.gov/image-article/apod-2026-november-5-enceladus-in-silhouette/",
+  "title": "APOD: 2026 November 5 – Enceladus in Silhouette",
+  "url": "https://science.nasa.gov/image-article/apod-2026-november-5-enceladus-in-silhouette/",
+  "published_at": "Thu, 05 Nov 2026 05:05:00 +0000",
+  "excerpt": "APOD Science APOD APOD: 2026 November 5 –… Today’s APOD Archive Submissions Index Search Calendar RSS Education About Discuss APOD Astronomy Picture of the Day Discover the cosmos! Each day a different image or photograph of our fascinating universe is featured, along with a brie"
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://science.nasa.gov/earth/earth-observatory/cyprus-island-of-snakes-cats-and-ophiolites/",
+  "title": "Cyprus: Island of Snakes, Cats, and Ophiolites",
+  "url": "https://science.nasa.gov/earth/earth-observatory/cyprus-island-of-snakes-cats-and-ophiolites/",
+  "published_at": "Thu, 05 Nov 2026 05:01:00 +0000",
+  "excerpt": "The third-largest island in the Mediterranean Sea exposes an ancient piece of the ocean floor and hosts a clowder of cats."
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://www.nasa.gov/?post_type=press-release&p=1062503",
+  "title": "NASA Announces X-70 Experimental Aircraft to Advance Flight Research",
+  "url": "https://www.nasa.gov/news-release/nasa-announces-x-70-experimental-aircraft-to-advance-flight-research/",
+  "published_at": "Thu, 05 Nov 2026 01:43:21 +0000",
+  "excerpt": "On Wednesday, NASA unveiled its newest experimental aircraft, the X-70 Fractal, during the UP.Summit at the agency’s Kennedy Space Center in Florida. This high-performance, highly adaptable research platform is designed to accelerate the development and testing of advanced aviati"
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://www.nasa.gov/?p=1062413",
+  "title": "NASA Shares Plans to Accelerate Artemis, Return to Moon",
+  "url": "https://www.nasa.gov/missions/artemis/nasa-shares-plans-to-accelerate-artemis-return-to-moon/",
+  "published_at": "Wed, 04 Nov 2026 21:04:10 +0000",
+  "excerpt": "In an update on Oct. 23, NASA Administrator Jared Isaacman and other agency leaders shared the agency’s path to returning Americans to the lunar surface in 2028. Agency leadership provided updates on the previously announced acceleration plans for the Artemis program, advancing t"
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://www.nasa.gov/?post_type=press-release&p=1062160",
+  "title": "NASA Announces Ka-Band Satellite Relay Awards for Space Communications",
+  "url": "https://www.nasa.gov/news-release/nasa-announces-ka-band-satellite-relay-awards-for-space-communications/",
+  "published_at": "Wed, 04 Nov 2026 18:00:02 +0000",
+  "excerpt": "NASA selected three companies on Wednesday to perform work to develop Ka-band space relay capability concepts that are compatible with current missions in space, ensuring service continuity for existing spacecraft without requiring modifications to their onboard systems. Through "
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://www.nasa.gov/?p=1061412",
+  "title": "NASA Navigation Experiment Shows Promise for Planetary Landings",
+  "url": "https://www.nasa.gov/centers-and-facilities/armstrong/nasa-navigation-experiment-shows-promise-for-planetary-landings/",
+  "published_at": "Wed, 04 Nov 2026 16:52:43 +0000",
+  "excerpt": "NASA successfully demonstrated technology designed to help spacecraft autonomously navigate to safe landing sites on the Moon and on other planets. An Alta-X drone equipped with the agency’s Safe and Precise Landing – Integrated Capabilities Evolution (SPLICE) guidance, navigatio"
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://www.nasa.gov/?p=1061949",
+  "title": "NASA Space Grant Students Fuel Agency’s Inspiration Tour",
+  "url": "https://www.nasa.gov/learning-resources/nasa-space-grant-students-fuel-agencys-inspiration-tour/",
+  "published_at": "Wed, 04 Nov 2026 16:16:41 +0000",
+  "excerpt": "NASA’s Inspiration Tour spread the excitement of space exploration and aeronautical innovation by connecting the public, industry, and academia with the people, technologies, and organizations that drive American leadership in space. At nearly every stop across the country, NASA "
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://www.nasa.gov/?post_type=image-article&p=1061808",
+  "title": "Hubble Reveals Cosmic Mystery",
+  "url": "https://www.nasa.gov/image-article/hubble-reveals-cosmic-mystery/",
+  "published_at": "Wed, 04 Nov 2026 15:59:36 +0000",
+  "excerpt": "This photo released on Nov. 2, 2026, showcases NGC &#160;4449, a dwarf irregular. Researchers using NASA&#8217;s Hubble Space Telescope studied 37 nearby dwarf galaxies — small galaxies containing a few thousand to hundreds of millions of stars — including NGC 4449 and found that"
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://science.nasa.gov/image-article/apod-2026-november-4-the-not-so-hidden-galaxy-ic-342/",
+  "title": "APOD: 2026 November 4 – The Not-So-Hidden Galaxy, IC 342",
+  "url": "https://science.nasa.gov/image-article/apod-2026-november-4-the-not-so-hidden-galaxy-ic-342/",
+  "published_at": "Wed, 04 Nov 2026 05:05:00 +0000",
+  "excerpt": "APOD Science APOD APOD: 2026 November 4 – The… Today’s APOD Archive Submissions Index Search Calendar RSS Education About Discuss APOD Astronomy Picture of the Day Discover the cosmos! Each day a different image or photograph of our fascinating universe is featured, along with a "
+ },
+ {
+  "kind": "rss",
+  "feed": "nasa",
+  "external_id": "https://science.nasa.gov/earth/earth-observatory/before-the-dawn-in-americas-heartland/",
+  "title": "Before the Dawn in America’s Heartland",
+  "url": "https://science.nasa.gov/earth/earth-observatory/before-the-dawn-in-americas-heartland/",
+  "published_at": "Wed, 04 Nov 2026 05:01:00 +0000",
+  "excerpt": "With hardly a cloud in sight, astronauts had a sweeping view of nighttime lights in the U.S. Midwest."
+ }
+]
