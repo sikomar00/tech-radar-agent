@@ -6,8 +6,11 @@ from typing import Sequence
 import psycopg
 
 from radar.adapters.http import UrllibClient
-from radar.config import database_url, load_env
+from radar import holds
+from radar.config import database_url, gemini_api_key, load_env
 from radar.gate import gate_report
+from radar.llm import LlmClient
+from radar.llm.gemini import GeminiClient
 from radar.seed import seed_sources
 from radar.store import runs
 from radar.store.db import apply_migrations, connect
@@ -27,7 +30,11 @@ def _parser() -> argparse.ArgumentParser:
     runs_cmd.add_argument("--limit", type=int, default=20)
     jobs_cmd = sub.add_parser("jobs", help="잡 관리")
     jobs_cmd.add_argument("action", choices=["retry"])
-    jobs_cmd.add_argument("job_id", type=int)
+    jobs_cmd.add_argument("job_id", type=int, nargs="?", help="다시 실행할 failed 잡 하나")
+    jobs_cmd.add_argument("--kind", help="이 종류의 failed 잡을 모두 다시 실행한다(예: analyze_item)")
+    holds_cmd = sub.add_parser("holds", help="분류 보류 큐")
+    holds_cmd.add_argument("action", choices=["list", "set", "link", "new"])
+    holds_cmd.add_argument("ids", nargs="*", help="set: 기술 id와 유형(PRODUCT|FRAMEWORK_LIBRARY), link: 항목 id와 기술 id, new: 항목 id")
     sub.add_parser("gate-check", help="1단계 게이트를 숫자로 점검한다")
     return parser
 
@@ -38,10 +45,49 @@ def main(argv: Sequence[str] | None = None) -> int:
     load_env()
     url = database_url()
     if args.command == "worker" and not args.once:
-        run_forever(lambda: connect(url), UrllibClient())
+        run_forever(lambda: connect(url), UrllibClient(), _llm())
         return 0
     with connect(url) as conn:
         return _run(args, conn)
+
+
+def _llm() -> LlmClient | None:
+    """GEMINI_API_KEY가 있으면 분석도 한다. 없으면 수집만 한다."""
+    key = gemini_api_key()
+    logging.getLogger(__name__).info("분석 %s", "켜짐(Gemini)" if key else "꺼짐(GEMINI_API_KEY 없음)")
+    return GeminiClient(key) if key else None
+
+
+def _holds(args: argparse.Namespace, conn: psycopg.Connection) -> int:
+    ids = args.ids
+    if args.action == "list":
+        print("\n".join(holds.list_holds(conn)))
+        return 0
+    wanted = {"set": 2, "link": 2, "new": 1}[args.action]
+    if len(ids) != wanted or not ids[0].isdigit() or (args.action == "link" and not ids[1].isdigit()):
+        print(f"holds {args.action}에는 인자가 {wanted}개 필요합니다. 도움말: python -m radar holds -h")
+        return 2
+    if args.action == "set":
+        ok, message = holds.set_type(conn, int(ids[0]), ids[1])
+    elif args.action == "link":
+        ok, message = holds.link_item(conn, utc_now, int(ids[0]), int(ids[1]))
+    else:
+        ok, message = holds.new_from_item(conn, utc_now, int(ids[0]))
+    print(message)
+    return 0 if ok else 1
+
+
+def _retry(args: argparse.Namespace, queue: JobQueue) -> int:
+    if (args.job_id is None) == (args.kind is None):
+        print("잡 id 하나나 --kind 중 하나만 정해 주세요")
+        return 2
+    if args.kind:
+        count = queue.retry_failed_kind(args.kind)
+        print(f"{args.kind} 잡 {count}개를 다시 대기열에 넣었습니다")
+        return 0
+    ok = queue.retry_failed(args.job_id)
+    print("다시 대기열에 넣었습니다" if ok else "failed 상태의 잡이 아니어서 아무것도 하지 않았습니다")
+    return 0 if ok else 1
 
 
 def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
@@ -50,8 +96,8 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
     elif args.command == "seed":
         print(f"새 소스 {seed_sources(conn)}개를 넣었습니다")
     elif args.command == "worker":
-        http = UrllibClient()
-        while run_once(conn, http):
+        http, llm = UrllibClient(), _llm()
+        while run_once(conn, http, llm=llm):
             pass
     elif args.command == "runs":
         for r in runs.list_runs(conn, args.limit):
@@ -59,9 +105,9 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
             print(f"#{r['id']} {r['source']} {r['status']} {r['started_at']:%Y-%m-%d %H:%M} "
                   f"요청 {r['requests_total']}건 중 실패 {r['requests_failed']}건 {first_cause}")
     elif args.command == "jobs":
-        ok = JobQueue(conn, utc_now).retry_failed(args.job_id)
-        print("다시 대기열에 넣었습니다" if ok else "failed 상태의 잡이 아니어서 아무것도 하지 않았습니다")
-        return 0 if ok else 1
+        return _retry(args, JobQueue(conn, utc_now))
+    elif args.command == "holds":
+        return _holds(args, conn)
     elif args.command == "gate-check":
         lines, passed = gate_report(conn)
         print("\n".join(lines))

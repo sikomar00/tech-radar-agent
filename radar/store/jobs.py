@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
-from typing import Any, Callable
+from typing import Any, Callable, Sequence
 
 import psycopg
 from psycopg.types.json import Jsonb
 
 COLLECT = "collect_source"
+ANALYZE = "analyze_item"
 STALE_AFTER = timedelta(minutes=15)
 
 
@@ -22,14 +23,19 @@ class JobQueue:
         ).fetchone()
         return row["id"]
 
-    def claim_next(self) -> dict[str, Any] | None:
-        """실행할 잡 하나를 잠그고 running으로 바꿔 돌려준다. 한 문장이라 다른 워커와 겹치지 않는다."""
+    def claim_next(self, skip_kinds: Sequence[str] = ()) -> dict[str, Any] | None:
+        """실행할 잡 하나를 잠그고 running으로 바꿔 돌려준다. 한 문장이라 다른 워커와 겹치지 않는다.
+
+        수집 잡을 먼저 집는다. 분석 잡이 수백 개 쌓여도 수집 주기가 밀리지 않게 하려는 것이다.
+        skip_kinds의 잡은 집지 않고 queued로 남겨 둔다(시도 횟수를 쓰지 않는다).
+        """
         return self._conn.execute(
             "update jobs set status = 'running', locked_at = %(now)s, attempts = attempts + 1 "
             "where id = (select id from jobs where status = 'queued' and run_after <= %(now)s "
-            "            order by run_after, id limit 1 for update skip locked) "
+            "            and not (kind = any(%(skip)s::text[])) "
+            "            order by (kind <> %(collect)s), run_after, id limit 1 for update skip locked) "
             "returning id, kind, payload, attempts, max_attempts",
-            {"now": self._clock()},
+            {"now": self._clock(), "skip": list(skip_kinds), "collect": COLLECT},
         ).fetchone()
 
     def finish_ok(self, job_id: int) -> None:
@@ -80,6 +86,14 @@ class JobQueue:
             )
         return len(ids)
 
+    def retry_failed_kind(self, kind: str) -> int:
+        """수동 재실행(종류별). 공급자 장애로 잡이 한꺼번에 failed가 됐을 때 쓴다. 되살린 개수를 돌려준다."""
+        cur = self._conn.execute(
+            "update jobs set status = 'queued', attempts = 0, run_after = %s, finished_at = null "
+            "where kind = %s and status = 'failed'", (self._clock(), kind),
+        )
+        return cur.rowcount
+
     def retry_failed(self, job_id: int) -> bool:
         """수동 재실행. failed 잡만 시도 횟수를 0으로 되돌려 다시 queued로 만든다."""
         cur = self._conn.execute(
@@ -101,3 +115,12 @@ class JobQueue:
             {"kind": COLLECT, "now": now},
         ).fetchall()
         return [self.enqueue(COLLECT, {"source_id": row["id"]}, now) for row in due]
+
+    def items_without_analysis_job(self, limit: int) -> list[dict[str, Any]]:
+        """분석 잡이 한 번도 없었던 수집 항목. 실패한 잡이 남은 항목은 `radar jobs retry`로만 다시 한다(한도를 태우지 않으려고)."""
+        return self._conn.execute(
+            "select i.id, i.title, i.excerpt, i.metadata, s.kind as source_kind "
+            "from source_items i join sources s on s.id = i.source_id "
+            "where not exists (select 1 from jobs j where j.kind = %s and (j.payload ->> 'source_item_id')::bigint = i.id) "
+            "order by i.id limit %s", (ANALYZE, limit),
+        ).fetchall()

@@ -21,6 +21,12 @@ class AnalysisStore:
         ).fetchone()
         return row["result"] if row else None
 
+    def current_result(self, kind: str, item_id: int) -> dict[str, Any] | None:
+        row = self._conn.execute(
+            "select result from analysis_runs where kind = %s and source_item_id = %s and is_current", (kind, item_id)
+        ).fetchone()
+        return row["result"] if row else None
+
     def record_success(self, kind: str, item_id: int, model: str, input_hash: str, result: dict[str, Any],
                        tokens_in: int | None, tokens_out: int | None) -> None:
         """이전 현재 행을 내리고 새 행을 올린다. 둘이 한 트랜잭션이라 현재 행이 0개나 2개인 순간이 없다."""
