@@ -10,8 +10,8 @@ MIGRATIONS_DIR = Path(__file__).resolve().parents[2] / "migrations"
 def connect(url: str, schema: str | None = None) -> psycopg.Connection:
     """autocommit 연결을 연다. 여러 문장이 한 덩어리여야 하면 호출하는 쪽이 conn.transaction()을 쓴다."""
     conn = psycopg.connect(url, autocommit=True, row_factory=dict_row)
-    if schema:
-        conn.execute(sql.SQL("set search_path = {}").format(sql.Identifier(schema)))
+    if schema:  # extensions는 pg_trgm의 gin_trgm_ops와 similarity()가 있는 Supabase 스키마다
+        conn.execute(sql.SQL("set search_path = {}, extensions").format(sql.Identifier(schema)))
     return conn
 
 
