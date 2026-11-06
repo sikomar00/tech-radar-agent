@@ -91,7 +91,8 @@ def add_item(db: Any, *, kind: str = "rss", title: str = "t", excerpt: str = "",
     """시험용 수집 항목 하나를 넣고 id를 돌려준다. 소스는 종류마다 하나를 재사용한다."""
     n = next(_ITEM_NUMBER)
     source = db.execute(
-        "insert into sources (name, kind) values (%s, %s) on conflict (name) do update set name = excluded.name returning id",
+        "insert into sources (name, kind, is_active) values (%s, %s, false) "  # 비활성: 시험 중 수집 잡이 생기지 않게
+        "on conflict (name) do update set name = excluded.name returning id",
         (f"src-{kind}", kind),
     ).fetchone()["id"]
     url = url or f"https://example.com/{n}"
