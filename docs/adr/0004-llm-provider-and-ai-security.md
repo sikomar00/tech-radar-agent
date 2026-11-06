@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 # 분석 모델은 무료 Gemini API로 시작하고, 호출은 우리 쪽 인터페이스 뒤에 둔다
 

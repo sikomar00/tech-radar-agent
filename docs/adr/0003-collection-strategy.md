@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 # 수집은 공식 API와 RSS만 쓰고, 요청 단위 재시도는 하지 않는다
 
