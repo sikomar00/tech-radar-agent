@@ -14,6 +14,11 @@ def load_env(path: str | Path = ".env") -> None:
             os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
 
 
+def gemini_api_key() -> str | None:
+    """키가 없으면 None이다. 워커는 수집만 하고 분석은 하지 않는다."""
+    return os.environ.get("GEMINI_API_KEY") or None
+
+
 def database_url() -> str:
     url = os.environ.get("DATABASE_URL")
     if not url:
