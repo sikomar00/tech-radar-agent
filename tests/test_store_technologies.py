@@ -51,8 +51,8 @@ def test_definite_match_reports_every_technology_when_the_name_is_ambiguous(db) 
     store = TechnologyStore(db)
     a, _ = store.create("Agent Kit", "PRODUCT")
     b, _ = store.create("Agent SDK", "FRAMEWORK_LIBRARY")
-    store.add_aliases(a, ["agent"], [])
-    store.add_aliases(b, ["agent"], [])
+    for tech in (a, b):  # ERD는 공유 별칭을 허용한다. 자동 추가는 막혀 있으니 사람이 넣은 것처럼 직접 넣는다
+        db.execute("insert into technology_aliases (technology_id, alias, lang) values (%s, 'agent', 'en')", (tech,))
     assert store.definite_match("Agent", None) == sorted([a, b])
 
 
@@ -79,7 +79,7 @@ def test_fuzzy_candidates_are_limited_to_the_top_few(db) -> None:
     ids = []
     for n in range(CANDIDATE_LIMIT + 2):
         tech, _ = store.create(f"Distinct Product {n}x{n * 7}", "PRODUCT")
-        store.add_aliases(tech, ["agent framework"], [])
+        db.execute("insert into technology_aliases (technology_id, alias, lang) values (%s, 'agent framework', 'en')", (tech,))
         ids.append(tech)
     assert store.fuzzy_candidates(["agent framework"]) == ids[:CANDIDATE_LIMIT]
 
@@ -112,3 +112,27 @@ def test_link_is_repeatable_and_starts_unverified(db) -> None:
     rows = db.execute("select evidence_type, confidence from technology_sources").fetchall()
     assert [(r["evidence_type"], r["confidence"]) for r in rows] == [("mention", "Unverified")]
     assert db.execute("select count(*) as n from technologies_without_source").fetchone()["n"] == 0
+
+
+def test_an_automatic_alias_never_takes_a_name_another_technology_already_uses(db) -> None:
+    store = TechnologyStore(db)
+    vim, _ = store.create("Vim", "PRODUCT")
+    zed, _ = store.create("Zed", "PRODUCT")
+    store.add_aliases(zed, ["zed-editor"], [])
+    store.add_aliases(vim, ["ZED", "Zed-Editor", "vi improved"], [])  # 남의 정규명, 남의 별칭, 아무도 안 쓰는 이름
+    assert [r["alias"] for r in db.execute("select alias from technology_aliases where technology_id = %s", (vim,))] == ["vi improved"]
+
+
+def test_adding_the_same_alias_twice_at_once_does_not_fail(db) -> None:
+    store = TechnologyStore(db)
+    tech, _ = store.create("Ollama", "PRODUCT")
+    for _ in range(2):
+        store.add_aliases(tech, ["ollama-cli"], [])
+    assert db.execute("select count(*) as n from technology_aliases").fetchone()["n"] == 1
+
+
+def test_describe_lists_only_the_first_few_aliases(db) -> None:
+    store = TechnologyStore(db)
+    tech, _ = store.create("Big", "PRODUCT")
+    store.add_aliases(tech, [f"alias-{n:02d}" for n in range(15)], [])
+    assert [r["aliases"] for r in store.describe([tech])] == [[f"alias-{n:02d}" for n in range(10)]]
