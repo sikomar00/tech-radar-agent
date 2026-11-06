@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+from pathlib import Path
 from typing import Sequence
 
 import psycopg
@@ -8,6 +9,7 @@ import psycopg
 from radar.adapters.http import UrllibClient
 from radar import holds
 from radar.config import database_url, gemini_api_key, load_env
+from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
 from radar.gate import gate_report
 from radar.llm import LlmClient
 from radar.llm.gemini import GeminiClient
@@ -35,6 +37,11 @@ def _parser() -> argparse.ArgumentParser:
     holds_cmd = sub.add_parser("holds", help="분류 보류 큐")
     holds_cmd.add_argument("action", choices=["list", "set", "link", "new"])
     holds_cmd.add_argument("ids", nargs="*", help="set: 기술 id와 유형(PRODUCT|FRAMEWORK_LIBRARY), link: 항목 id와 기술 id, new: 항목 id")
+    eval_cmd = sub.add_parser("eval", help="골든셋으로 분석 품질을 잰다(운영 워커를 멈추고 실행)")
+    eval_cmd.add_argument("--holdout", action="store_true", help="보류용 골든셋(게이트 판정 전용)")
+    eval_cmd.add_argument("--unreviewed", action="store_true", help="검토 전 라벨로 점검만 한다(수치는 믿지 않는다)")
+    eval_cmd.add_argument("--golden", type=Path, default=GOLDEN_PATH)
+    eval_cmd.add_argument("--cache", type=Path, default=CACHE_PATH)
     sub.add_parser("gate-check", help="1단계 게이트를 숫자로 점검한다")
     return parser
 
@@ -108,6 +115,8 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
         return _retry(args, JobQueue(conn, utc_now))
     elif args.command == "holds":
         return _holds(args, conn)
+    elif args.command == "eval":
+        return eval_command(conn, database_url(), _llm(), args.holdout, args.unreviewed, args.golden, args.cache)
     elif args.command == "gate-check":
         lines, passed = gate_report(conn)
         print("\n".join(lines))
