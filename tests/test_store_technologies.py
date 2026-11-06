@@ -24,14 +24,15 @@ def test_a_hold_is_a_technology_without_a_type(db) -> None:
     assert db.execute("select id from pending_classification").fetchone()["id"] == held
 
 
-def test_definite_match_ignores_case_and_looks_at_aliases(db) -> None:
+def test_definite_match_ignores_case_but_never_decides_on_an_alias_alone(db) -> None:
     store = TechnologyStore(db)
     tech, _ = store.create("LangChain", "FRAMEWORK_LIBRARY")
     store.add_aliases(tech, ["lang-chain"], ["랭체인"])
     assert store.definite_match("langCHAIN", None) == [tech]
-    assert store.definite_match("랭체인", None) == [tech]
-    assert store.definite_match("Lang-Chain", None) == [tech]
     assert store.definite_match("LangGraph", None) == []
+    # 별칭이 같다는 것만으로는 확정하지 않고, 유사도 1.0의 후보로 모델에게 보낸다
+    assert store.definite_match("랭체인", None) == [] and store.definite_match("Lang-Chain", None) == []
+    assert store.fuzzy_candidates(["랭체인"]) == [tech] and store.fuzzy_candidates(["Lang-Chain"]) == [tech]
 
 
 def test_definite_match_finds_a_technology_through_its_linked_github_repo(db) -> None:
@@ -47,13 +48,12 @@ def test_definite_match_finds_a_technology_through_its_linked_github_repo(db) ->
     assert store.definite_match("x", None) == [] and store.definite_match("x", "no/such") == []
 
 
-def test_definite_match_reports_every_technology_when_the_name_is_ambiguous(db) -> None:
+def test_definite_match_reports_every_technology_when_the_name_and_the_repo_disagree(db) -> None:
     store = TechnologyStore(db)
-    a, _ = store.create("Agent Kit", "PRODUCT")
-    b, _ = store.create("Agent SDK", "FRAMEWORK_LIBRARY")
-    for tech in (a, b):  # ERD는 공유 별칭을 허용한다. 자동 추가는 막혀 있으니 사람이 넣은 것처럼 직접 넣는다
-        db.execute("insert into technology_aliases (technology_id, alias, lang) values (%s, 'agent', 'en')", (tech,))
-    assert store.definite_match("Agent", None) == sorted([a, b])
+    named, _ = store.create("Foo", "PRODUCT")
+    by_repo, _ = store.create("Bar", "PRODUCT")
+    store.link(by_repo, add_item(db, kind="github", url="https://github.com/o/r", metadata={"kind": "new_repo"}), "official")
+    assert store.definite_match("foo", "o/r") == sorted([named, by_repo])
 
 
 def test_archived_technologies_are_never_matched(db) -> None:

@@ -198,3 +198,23 @@ def test_injected_items_reach_the_model_only_as_a_delimited_data_section(db, ite
     assert instruction == CLASSIFY_INSTRUCTION and data.startswith(DATA_START) and data.endswith(DATA_END)
     assert data.count(DATA_START) == 1 and data.count(DATA_END) == 1
     assert technologies(db) == [] and runs(db)[0]["status"] == "failed"
+
+
+def test_an_alias_alone_never_decides_the_match_the_model_is_asked(db) -> None:
+    store = TechnologyStore(db)
+    tech, _ = store.create("Claude Code", "PRODUCT")
+    store.add_aliases(tech, ["cc-cli"], [])
+    llm = FakeLlm(classify("UPDATE", "cc-cli", "PRODUCT"), decide("SAME", tech))
+    run(db, llm, add_item(db))
+    assert len(llm.calls) == 2 and f'"id": {tech}' in llm.calls[1][1]
+    assert technologies(db) == [("Claude Code", "PRODUCT")]
+
+
+def test_a_poisoned_alias_cannot_swallow_the_real_item_that_later_uses_that_name(db) -> None:
+    """악의적인 글이 아직 없는 이름(Zed)을 다른 기술(Foo)의 별칭으로 심어도, 진짜 Zed 글은 자동으로 Foo에 합쳐지지 않는다."""
+    foo, _ = TechnologyStore(db).create("Foo", "PRODUCT")
+    db.execute("insert into technology_aliases (technology_id, alias, lang) values (%s, 'Zed', 'en')", (foo,))
+    llm = FakeLlm(classify("ENTITY", "Zed", "PRODUCT"), decide("DIFFERENT"))
+    run(db, llm, add_item(db, title="Zed, a high-performance code editor"))
+    assert len(llm.calls) == 2  # 별칭이 같다는 이유로 확정하지 않고 모델에게 물었다
+    assert technologies(db) == [("Foo", "PRODUCT"), ("Zed", "PRODUCT")]
