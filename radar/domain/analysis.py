@@ -108,6 +108,17 @@ def parse_match(raw: dict[str, Any], candidate_ids: set[int]) -> MatchDecision:
     return MatchDecision("SAME", raw["technology_id"])
 
 
+def repo_key(source_kind: str, normalized_url: str, metadata: dict[str, Any]) -> str | None:
+    """GitHub 항목의 `owner/name`(소문자). 릴리스는 metadata.repo에, 저장소 항목은 정규화한 URL에 들어 있다."""
+    if source_kind != "github":
+        return None
+    repo = metadata.get("repo") if metadata.get("kind") == "release" else None
+    if not repo:
+        host, _, path = normalized_url.partition("/")
+        repo = "/".join(path.split("/")[:2]) if host == "github.com" else None
+    return repo.lower() if repo and repo.count("/") == 1 else None
+
+
 def evidence_type(source_kind: str, metadata: dict[str, Any], label: str) -> str:
     """기술과 수집 항목을 잇는 근거 종류. GitHub 릴리스 release, 저장소 official, ENTITY인 글 announcement, 그 밖은 mention."""
     if source_kind == "github":

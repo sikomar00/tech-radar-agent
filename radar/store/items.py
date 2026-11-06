@@ -103,3 +103,14 @@ class ItemStore:
             log.warning("삽입 중 키 충돌: %s", err)
             return "conflicts"
         return "inserted"
+
+
+def get_item(conn: psycopg.Connection, item_id: int) -> dict[str, Any]:
+    """분석할 항목과 소스 종류. 항목이 없으면 LookupError."""
+    row = conn.execute(
+        "select i.id, i.url, i.normalized_url, i.title, i.excerpt, i.metadata, s.kind as source_kind "
+        "from source_items i join sources s on s.id = i.source_id where i.id = %s", (item_id,),
+    ).fetchone()
+    if row is None:
+        raise LookupError(f"source_item {item_id}가 없습니다")
+    return row
