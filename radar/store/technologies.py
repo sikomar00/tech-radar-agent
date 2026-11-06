@@ -8,11 +8,9 @@ FUZZY_MIN = 0.6  # 초기값. 튜닝용 골든셋으로 조정한다(한 글자�
 CANDIDATE_LIMIT = 5
 MAX_DESCRIBED_ALIASES = 10  # 후보 설명에 실리는 별칭 수. 저장된 별칭이 이후 모델 입력으로 돌아오므로 늘어나는 것을 막는다
 
-_BY_NAME = (
-    "select id from technologies where archived_at is null and lower(canonical_name) = lower(%(name)s) "
-    "union select a.technology_id from technology_aliases a join technologies t on t.id = a.technology_id "
-    "where t.archived_at is null and lower(a.alias) = lower(%(name)s)"
-)
+# 정규명만 본다. 별칭은 모델이 낸 값이라(악의적인 글이 심을 수 있다) 별칭이 같다는 것만으로 같은 기술로 확정하지 않고,
+# 유사도 1.0의 퍼지 후보로 모델에게 보낸다(2026-11-06 결정, SPEC 2단계 매칭 1단계)
+_BY_NAME = "select id from technologies where archived_at is null and lower(canonical_name) = lower(%(name)s)"
 _BY_REPO = (
     "select ts.technology_id from technology_sources ts join technologies t on t.id = ts.technology_id "
     "join source_items i on i.id = ts.source_item_id where t.archived_at is null "
@@ -44,7 +42,7 @@ class TechnologyStore:
         self._conn = conn
 
     def definite_match(self, name: str, repo: str | None) -> list[int]:
-        """대소문자 무시로 정규명·별칭이 같거나 같은 GitHub 저장소가 이미 연결된 기술. 하나면 확정이고, 여럿이면 모호하다."""
+        """대소문자 무시로 정규명이 같거나 같은 GitHub 저장소가 이미 연결된 기술. 하나면 확정이고, 여럿이면 모호하다."""
         ids = {row["id"] for row in self._conn.execute(_BY_NAME, {"name": name})}
         if repo:
             ids |= {row["technology_id"] for row in self._conn.execute(_BY_REPO, {"repo": repo})}
