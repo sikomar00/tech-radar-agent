@@ -109,3 +109,18 @@ def test_the_hold_list_cannot_be_forged_or_corrupted_by_text_the_model_returned(
     lines = list_holds(db)
     assert sum(1 for line in lines if line.startswith("항목 #")) == 1
     assert not any(line.startswith("기술 #3") for line in lines) and "\x1b" not in "\n".join(lines)
+
+
+@pytest.mark.parametrize("error", ["schema: class: enum 위반 (1건)", "parse: 결과 글이 JSON이 아니다", "invalid: 후보인데 canonical_name이 비어 있다"])
+def test_failures_caused_by_the_item_do_not_trip_the_provider_breaker(db, error: str) -> None:
+    store = AnalysisStore(db, Clock())
+    for n in range(5):
+        store.record_failure("classify", add_item(db), "m", f"h{n}", error, retryable=True)
+    assert not store.failing_streak(5, timedelta(minutes=30))
+
+
+def test_a_single_item_failure_among_provider_failures_breaks_the_streak(db) -> None:
+    store, item = AnalysisStore(db, Clock()), add_item(db)
+    for n, error in enumerate(["timeout: x", "rate_limited: HTTP 429", "schema: bad", "http_status: HTTP 503", "network: OSError"]):
+        store.record_failure("classify", item, "m", f"h{n}", error, retryable=True)
+    assert not store.failing_streak(5, timedelta(minutes=30))
