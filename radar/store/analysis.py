@@ -5,6 +5,7 @@ from typing import Any, Callable
 import psycopg
 from psycopg.types.json import Jsonb
 
+PROVIDER_FAILURES = ("timeout", "network", "rate_limited", "http_status")  # LlmError.kind 중 공급자 쪽 문제
 PROVIDER_TZ = "America/Los_Angeles"  # 하루 호출 한도는 공급자 기준(태평양 시간 자정)으로 초기화된다
 
 
@@ -50,9 +51,15 @@ class AnalysisStore:
         )
 
     def failing_streak(self, count: int, within: timedelta) -> bool:
-        """가장 최근 호출 count개가 모두 실패했고 마지막 실패가 within 안이면 True. 공급자 장애의 신호다."""
-        rows = self._conn.execute("select status, created_at from analysis_runs order by id desc limit %s", (count,)).fetchall()
-        return len(rows) == count and all(r["status"] == "failed" for r in rows) and rows[0]["created_at"] > self._clock() - within
+        """가장 최근 호출 count개가 모두 공급자 쪽 실패이고 마지막 실패가 within 안이면 True. 공급자 장애의 신호다.
+
+        스키마 위반·해석 실패는 항목 때문에 생길 수 있어(악의적인 입력이 일부러 만들 수도 있다) 세지 않고 연속을 끊는다.
+        """
+        rows = self._conn.execute(
+            "select status, error, created_at from analysis_runs order by id desc limit %s", (count,)
+        ).fetchall()
+        provider_side = all(r["status"] == "failed" and (r["error"] or "").split(":")[0] in PROVIDER_FAILURES for r in rows)
+        return len(rows) == count and provider_side and rows[0]["created_at"] > self._clock() - within
 
     def calls_today(self) -> int:
         """공급자 기준 오늘(태평양 시간 자정부터) 기록된 호출 수. 실패한 호출도 한도에 세어지므로 함께 센다."""
