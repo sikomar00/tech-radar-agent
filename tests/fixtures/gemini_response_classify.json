@@ -1,0 +1,31 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"class\": \"UPDATE\",\n  \"canonical_name\": \"Claude Code\",\n  \"type\": \"PRODUCT\",\n  \"aliases_en\": [\n    \"claude-code\"\n  ],\n  \"aliases_ko\": [\n    \"클로드 코드\"\n  ]\n}",
+            "thoughtSignature": "EmAKXgFpFH0TJLQ0HTw1parqlL/mjwafIKcw7M25Xz5wDK1z3CarbbU0mhI9FjbEIwVoS7bcQbIK5w1JmN1IUFAlGtNa+MfeNdVijLB1NTndzTAepgaNJeT54peajxoM2Zw="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 496,
+    "candidatesTokenCount": 67,
+    "totalTokenCount": 563,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 496
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "TbrtavCTKpSj9tMPzNau6Qc"
+}

@@ -11,6 +11,7 @@ from psycopg import sql
 from radar.adapters.http import HttpResponse
 from radar.config import load_env
 from radar.domain.models import FetchError
+from radar.llm import LlmError, LlmResult
 from radar.store.db import apply_migrations, connect
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -45,6 +46,25 @@ class FakeHttp:
         if isinstance(route, FetchError):
             raise route
         return route
+
+
+class FakeLlm:
+    """미리 정한 응답이나 LlmError를 차례로 돌려주는 가짜 모델 클라이언트. 보낸 요청은 calls에 남는다."""
+
+    model = "fake-model"
+
+    def __init__(self, *script: "dict[str, Any] | LlmError") -> None:
+        self.script = list(script)
+        self.calls: list[tuple[str, str, dict[str, Any]]] = []
+
+    def complete_json(self, instruction: str, data: str, schema: dict[str, Any]) -> LlmResult:
+        self.calls.append((instruction, data, schema))
+        if not self.script:
+            raise AssertionError("예상하지 못한 모델 호출")
+        step = self.script.pop(0)
+        if isinstance(step, LlmError):
+            raise step
+        return LlmResult(step, tokens_in=10, tokens_out=5)
 
 
 class Clock:
