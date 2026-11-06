@@ -1,5 +1,5 @@
 """`analysis_runs` 접근. AI 분석은 덮어쓰지 않고 쌓고, 현재 값만 is_current로 표시한다(S2-05)."""
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Callable
 
 import psycopg
@@ -48,6 +48,11 @@ class AnalysisStore:
             "values (%s, %s, %s, %s, 'failed', %s, %s, %s)",
             (kind, item_id, model, input_hash, error[:500], retryable, self._clock()),
         )
+
+    def failing_streak(self, count: int, within: timedelta) -> bool:
+        """가장 최근 호출 count개가 모두 실패했고 마지막 실패가 within 안이면 True. 공급자 장애의 신호다."""
+        rows = self._conn.execute("select status, created_at from analysis_runs order by id desc limit %s", (count,)).fetchall()
+        return len(rows) == count and all(r["status"] == "failed" for r in rows) and rows[0]["created_at"] > self._clock() - within
 
     def calls_today(self) -> int:
         """공급자 기준 오늘(태평양 시간 자정부터) 기록된 호출 수. 실패한 호출도 한도에 세어지므로 함께 센다."""

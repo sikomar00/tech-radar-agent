@@ -1,11 +1,12 @@
 """analyze_item 잡 하나를 실행한다: 분류하고, 후보면 기존 기술과 맞춰 보고, 기술을 만들거나 잇는다(S2-02~S2-05)."""
 import logging
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Callable
 
 import psycopg
 
+from radar.domain.cleaning import sanitize_json
 from radar.domain.analysis import (
     Classification, MatchDecision, classify_payload, evidence_type, input_hash, match_payload, parse_classification,
     parse_match, passes_prefilter, render_data, repo_key,
@@ -21,6 +22,7 @@ from radar.store.technologies import CANDIDATE_LIMIT, TechnologyStore
 log = logging.getLogger(__name__)
 DAILY_CAP = 375  # 콘솔에 표시된 하루 한도 500회의 75%(ADR-0004)
 SCHEDULE_BATCH = 100
+BREAKER_FAILURES, BREAKER_COOLDOWN = 5, timedelta(minutes=30)
 CLASSIFY, MATCH = "classify", "match"
 
 
@@ -38,10 +40,19 @@ class AnalyzeFailed(JobFailed):
 def schedule_analysis(queue: JobQueue) -> list[int]:
     """사전 필터를 통과한 항목마다 analyze_item 잡을 만든다."""
     made = []
+    # shortcut: 거른 항목은 기록하지 않아 매 주기 다시 검사하고 한 번에 100건만 본다. 규칙이 100건 넘게 거르기 전에 거른 항목을 기록하게 바꾼다
     for item in queue.items_without_analysis_job(SCHEDULE_BATCH):
         if passes_prefilter(classify_payload(item["source_kind"], item["title"], item["excerpt"], item["metadata"])):
             made.append(queue.enqueue(ANALYZE, {"source_item_id": item["id"]}))
     return made
+
+
+def analysis_paused(conn: psycopg.Connection, clock: Callable[[], datetime]) -> bool:
+    """모델 호출이 연속으로 실패하는 중이면 잠시 분석 잡을 집지 않는다. 공급자 장애에 백로그가 한꺼번에 failed가 되지 않게 한다.
+
+    쉬는 시간이 지나면 잡 하나가 시험 삼아 호출한다. 성공하면 이어서 하고 또 실패하면 다시 쉰다.
+    """
+    return AnalysisStore(conn, clock).failing_streak(BREAKER_FAILURES, BREAKER_COOLDOWN)
 
 
 def daily_cap_reached(conn: psycopg.Connection, clock: Callable[[], datetime]) -> bool:
@@ -60,13 +71,14 @@ def _ask(env: AnalyzeEnv, store: AnalysisStore, item_id: int, kind: str, instruc
             pass  # 해석 규칙이 바뀌어 저장된 결과를 못 읽는다. 다시 묻는다
     try:
         reply = complete_validated(env.llm, instruction, render_data(payload), schema)
-        parsed = parse(reply.data)
+        answer = sanitize_json(reply.data)  # jsonb는 NUL을 받지 못한다. 저장할 값과 해석할 값을 같게 만든다
+        parsed = parse(answer)
     except (LlmError, ValueError) as err:
         retryable = err.retryable if isinstance(err, LlmError) else True  # 해석 실패는 모델이 흔들린 것이라 다시 해 볼 수 있다
         error = str(err) if isinstance(err, LlmError) else f"invalid: {err}"
         store.record_failure(kind, item_id, env.llm.model, digest, error, retryable)
         raise AnalyzeFailed(error, retryable) from err
-    store.record_success(kind, item_id, env.llm.model, digest, reply.data, reply.tokens_in, reply.tokens_out)
+    store.record_success(kind, item_id, env.llm.model, digest, answer, reply.tokens_in, reply.tokens_out)
     return parsed
 
 

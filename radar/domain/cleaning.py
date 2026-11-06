@@ -1,5 +1,6 @@
 import html
 import re
+from typing import Any
 
 TITLE_LIMIT = 300
 EXCERPT_LIMIT = 280
@@ -16,6 +17,17 @@ def collapse(text: str) -> str:
 
 def strip_control(text: str) -> str:
     return _CONTROL.sub("", text)
+
+
+def sanitize_json(value: Any) -> Any:
+    """모델이 돌려준 JSON의 문자열에서 jsonb가 거부하는 NUL·제어 문자와 짝 없는 서로게이트를 없앤다."""
+    if isinstance(value, str):
+        return strip_control(value).encode("utf-8", "replace").decode("utf-8")
+    if isinstance(value, list):
+        return [sanitize_json(v) for v in value]
+    if isinstance(value, dict):
+        return {sanitize_json(k): sanitize_json(v) for k, v in value.items()}
+    return value
 
 
 def clean_text(text: str | None, limit: int, *, is_html: bool = False) -> str:

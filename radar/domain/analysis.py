@@ -10,6 +10,8 @@ from radar.domain.prompts import MAX_ALIASES
 
 CANDIDATE_CLASSES = ("ENTITY", "UPDATE")
 NAME_LIMIT = 100
+# 모델이 이름을 모를 때 채우는 말. 이런 이름의 기술이 생기면 같은 말을 쓰는 모든 항목이 거기에 규칙으로 합쳐진다
+PLACEHOLDER_NAMES = {"none", "null", "n/a", "na", "unknown", "untitled", "-", "없음", "알 수 없음"}
 MAX_TOPICS = 10
 DATA_START, DATA_END = "<<<DATA", "DATA>>>"
 # 모델에 보내는 메타데이터는 이 키뿐이다. stars_snapshots 같은 내부 값은 보내지 않는다
@@ -63,7 +65,7 @@ def _clean_name(value: str) -> str:
     cleaned = clean_text(value, NAME_LIMIT + 1)
     if len(cleaned) > NAME_LIMIT:
         raise ValueError(f"이름이 {NAME_LIMIT}자를 넘는다")
-    return cleaned
+    return "" if cleaned.lower() in PLACEHOLDER_NAMES else cleaned
 
 
 def _aliases(values: list[str], canonical: str) -> tuple[str, ...]:

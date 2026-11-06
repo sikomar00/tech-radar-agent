@@ -6,6 +6,7 @@ from psycopg.errors import UniqueViolation
 
 FUZZY_MIN = 0.6  # 초기값. 튜닝용 골든셋으로 조정한다(한 글자가 빠진 langchan도 0.58이다)
 CANDIDATE_LIMIT = 5
+MAX_DESCRIBED_ALIASES = 10  # 후보 설명에 실리는 별칭 수. 저장된 별칭이 이후 모델 입력으로 돌아오므로 늘어나는 것을 막는다
 
 _BY_NAME = (
     "select id from technologies where archived_at is null and lower(canonical_name) = lower(%(name)s) "
@@ -29,7 +30,12 @@ _FUZZY = (
 _ADD_ALIAS = (
     "insert into technology_aliases (technology_id, alias, lang) select t.id, %(alias)s, %(lang)s from technologies t "
     "where t.id = %(id)s and lower(t.canonical_name) <> lower(%(alias)s) "
-    "and not exists (select 1 from technology_aliases a where a.technology_id = t.id and lower(a.alias) = lower(%(alias)s))"
+    "and not exists (select 1 from technology_aliases a where a.technology_id = t.id and lower(a.alias) = lower(%(alias)s)) "
+    # 다른 기술이 이미 쓰는 이름은 가져오지 않는다. 별칭은 규칙 매칭의 근거라서 모델이 낸 별칭이 남의 이름을 차지하면 안 된다
+    "and not exists (select 1 from technologies o where o.id <> t.id and o.archived_at is null "
+    "                and lower(o.canonical_name) = lower(%(alias)s)) "
+    "and not exists (select 1 from technology_aliases b where b.technology_id <> t.id and lower(b.alias) = lower(%(alias)s)) "
+    "on conflict do nothing"
 )
 
 
@@ -52,8 +58,8 @@ class TechnologyStore:
     def describe(self, ids: Iterable[int]) -> list[dict[str, Any]]:
         """매칭 호출에 보낼 후보 설명: id, 정규명, 별칭."""
         return self._conn.execute(
-            "select t.id, t.canonical_name, coalesce(array_agg(a.alias order by a.alias) filter (where a.alias is not null), "
-            "'{}') as aliases from technologies t left join technology_aliases a on a.technology_id = t.id "
+            "select t.id, t.canonical_name, coalesce((array_agg(a.alias order by a.alias) filter (where a.alias is not null))"
+            f"[1:{MAX_DESCRIBED_ALIASES}], '{{}}') as aliases from technologies t left join technology_aliases a on a.technology_id = t.id "
             "where t.id = any(%s) group by t.id order by t.id", (list(ids),),
         ).fetchall()
 

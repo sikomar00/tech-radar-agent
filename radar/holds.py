@@ -6,6 +6,7 @@ import psycopg
 
 from radar.analyze import attach
 from radar.domain.analysis import Classification, parse_classification
+from radar.domain.cleaning import clean_text
 from radar.store import holds as queries
 from radar.store.analysis import AnalysisStore
 from radar.store.items import get_item
@@ -23,7 +24,8 @@ def list_holds(conn: psycopg.Connection) -> list[str]:
     items = queries.held_items(conn)
     for item in items:
         found = item["classified"]
-        lines.append(f"항목 #{item['id']} [{found['class']}] {found['canonical_name']} (유형 {found['type']}) | {item['title']} | {item['url']}")
+        shown = {key: clean_text(str(found.get(key, "")), 100) for key in ("class", "canonical_name", "type")}
+        lines.append(f"항목 #{item['id']} [{shown['class']}] {shown['canonical_name']} (유형 {shown['type']}) | {item['title']} | {item['url']}")
     lines += ["(없음)"] if not items else []
     return lines
 

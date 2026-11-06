@@ -6,7 +6,7 @@ from typing import Callable
 import psycopg
 
 from radar.adapters.http import HttpClient
-from radar.analyze import AnalyzeEnv, daily_cap_reached, run_analyze_job, schedule_analysis
+from radar.analyze import AnalyzeEnv, analysis_paused, daily_cap_reached, run_analyze_job, schedule_analysis
 from radar.collect import Env, run_collect_job
 from radar.job_errors import JobFailed
 from radar.llm import LlmClient
@@ -35,7 +35,7 @@ def run_once(conn: psycopg.Connection, http: HttpClient, clock: Callable[[], dat
              llm: LlmClient | None = None) -> bool:
     """스케줄과 잠금 복구를 하고 잡 하나를 실행한다. 실행한 잡이 없으면 False.
 
-    llm이 없거나 오늘 호출 한도에 닿았으면 분석 잡은 집지 않고 queued로 남겨 다음에 이어서 한다.
+    llm이 없거나 오늘 호출 한도에 닿았거나 호출이 연속으로 실패 중이면 분석 잡은 집지 않고 queued로 남겨 다음에 이어서 한다.
     """
     queue = JobQueue(conn, clock)
     recovered = queue.recover_stale()
@@ -44,16 +44,19 @@ def run_once(conn: psycopg.Connection, http: HttpClient, clock: Callable[[], dat
     queue.schedule_due()
     if llm is not None:
         schedule_analysis(queue)
-    blocked = llm is None or daily_cap_reached(conn, clock)
+    blocked = llm is None or daily_cap_reached(conn, clock) or analysis_paused(conn, clock)
     job = queue.claim_next(skip_kinds=(ANALYZE,) if blocked else ())
     if job is None:
         return False
     try:
         _execute(conn, http, llm, clock, job)
         queue.finish_ok(job["id"])
-    except JobFailed as err:
-        outcome = queue.finish_failed(job, str(err), err.retryable)
-        log.warning("잡 %d(%s) 실패(%s), 시도 %d/%d: %s", job["id"], job["kind"], outcome, job["attempts"], job["max_attempts"], err)
+    except (JobFailed, psycopg.DataError, psycopg.IntegrityError) as err:
+        # DB가 거부한 값은 같은 입력으로 다시 해도 같다. 갇힌 잡이 15분 뒤 모델을 또 부르지 않게 바로 실패로 닫는다
+        retryable = err.retryable if isinstance(err, JobFailed) else False
+        message = str(err) if isinstance(err, JobFailed) else f"{type(err).__name__}: {str(err)[:300]}"
+        outcome = queue.finish_failed(job, message, retryable)
+        log.warning("잡 %d(%s) 실패(%s), 시도 %d/%d: %s", job["id"], job["kind"], outcome, job["attempts"], job["max_attempts"], message)
     return True
 
 

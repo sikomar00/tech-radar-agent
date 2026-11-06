@@ -34,8 +34,11 @@ class GeminiClient:
     def __init__(self, api_key: str, model: str = DEFAULT_MODEL, timeout: float = 90.0, min_interval: float = 6.0,
                  transport: Transport = _urllib_post, sleep: Callable[[float], None] = time.sleep,
                  clock: Callable[[], float] = time.monotonic) -> None:
+        key = api_key.strip()
+        if not key or not key.isprintable() or " " in key:  # 줄바꿈이 섞인 키는 http.client가 오류 문구에 키 전체를 넣는다
+            raise ValueError("GEMINI_API_KEY 형식이 올바르지 않습니다(공백이나 제어 문자가 있거나 비어 있음)")
         self.model = model
-        self._key = api_key
+        self._key = key
         self._timeout = timeout
         self._min_interval = min_interval
         self._transport, self._sleep, self._clock = transport, sleep, clock
@@ -68,6 +71,8 @@ class GeminiClient:
             raise LlmError("timeout" if timed_out else "network", type(err.reason).__name__, retryable=True) from err
         except (OSError, HTTPException) as err:  # 연결 끊김, SSL 오류 등. 오류 문구는 남기지 않는다
             raise LlmError("network", type(err).__name__, retryable=True) from err
+        except ValueError as err:  # 헤더 값이 잘못됐을 때 등. 문구에 키가 들어 있을 수 있어 종류만 남기고 다시 해도 소용없다
+            raise LlmError("network", type(err).__name__, retryable=False) from err
 
     def _mask(self, text: str) -> str:
         """서버가 키를 되돌려 보내도 남기지 않는다. 자르기 전에 가려야 키가 자르는 위치에 걸쳐도 앞부분이 남지 않는다."""
