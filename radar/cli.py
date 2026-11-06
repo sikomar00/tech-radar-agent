@@ -10,7 +10,7 @@ from radar.adapters.http import UrllibClient
 from radar import holds
 from radar.config import database_url, gemini_api_key, load_env
 from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
-from radar.gate import gate_report
+from radar.gate import gate_report, stage2_report
 from radar.llm import LlmClient
 from radar.llm.gemini import GeminiClient
 from radar.seed import seed_sources
@@ -42,7 +42,8 @@ def _parser() -> argparse.ArgumentParser:
     eval_cmd.add_argument("--unreviewed", action="store_true", help="검토 전 라벨로 점검만 한다(수치는 믿지 않는다)")
     eval_cmd.add_argument("--golden", type=Path, default=GOLDEN_PATH)
     eval_cmd.add_argument("--cache", type=Path, default=CACHE_PATH)
-    sub.add_parser("gate-check", help="1단계 게이트를 숫자로 점검한다")
+    gate = sub.add_parser("gate-check", help="게이트를 숫자로 점검한다(2단계는 DB로 확인하는 항목만)")
+    gate.add_argument("--stage", type=int, choices=[1, 2], default=1)
     return parser
 
 
@@ -118,7 +119,7 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
     elif args.command == "eval":
         return eval_command(conn, database_url(), _llm(), args.holdout, args.unreviewed, args.golden, args.cache)
     elif args.command == "gate-check":
-        lines, passed = gate_report(conn)
+        lines, passed = gate_report(conn) if args.stage == 1 else stage2_report(conn, utc_now)
         print("\n".join(lines))
         print("결과:", "통과" if passed else "미달")
         return 0 if passed else 1
