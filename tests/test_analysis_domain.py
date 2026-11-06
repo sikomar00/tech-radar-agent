@@ -4,7 +4,7 @@ import pytest
 
 from radar.domain.analysis import (
     DATA_END, DATA_START, Classification, classify_payload, evidence_type, input_hash, match_payload,
-    parse_classification, parse_match, passes_prefilter, render_data,
+    parse_classification, parse_match, passes_prefilter, render_data, repo_key,
 )
 from radar.domain.prompts import CLASSIFY_INSTRUCTION, CLASSIFY_SCHEMA, MATCH_SCHEMA
 from tests.conftest import fixture_json
@@ -80,6 +80,17 @@ def test_match_payload_carries_the_name_aliases_and_candidates() -> None:
     found = Classification("ENTITY", "Ollama", "PRODUCT", ("ollama-cli",), ("올라마",))
     payload = match_payload({"title": "t"}, found, [{"id": 1, "canonical_name": "Ollama", "aliases": []}])
     assert payload["item"]["aliases"] == ["ollama-cli", "올라마"] and payload["candidates"][0]["id"] == 1
+
+
+@pytest.mark.parametrize("source, url, meta, expected", [
+    ("github", "github.com/x/y", {"kind": "release", "repo": "Anthropics/Claude-Code"}, "anthropics/claude-code"),
+    ("github", "github.com/anthropics/claude-code", {"kind": "new_repo"}, "anthropics/claude-code"),
+    ("github", "github.com/o/n/releases/tag/v1", {}, "o/n"),
+    ("github", "github.com/justowner", {"kind": "new_repo"}, None),
+    ("rss", "github.com/o/n", {}, None),
+])
+def test_repo_key_is_only_for_github_items(source: str, url: str, meta: dict, expected: str | None) -> None:
+    assert repo_key(source, url, meta) == expected
 
 
 @pytest.mark.parametrize("source, meta, label, expected", [

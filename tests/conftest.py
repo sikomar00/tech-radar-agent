@@ -1,3 +1,4 @@
+import itertools
 import json
 import os
 import uuid
@@ -7,10 +8,12 @@ from typing import Any, Iterator
 
 import pytest
 from psycopg import sql
+from psycopg.types.json import Jsonb
 
 from radar.adapters.http import HttpResponse
 from radar.config import load_env
 from radar.domain.models import FetchError
+from radar.domain.normalize import normalize_url
 from radar.llm import LlmError, LlmResult
 from radar.store.db import apply_migrations, connect
 
@@ -78,6 +81,25 @@ class Clock:
 
     def advance(self, **delta: float) -> None:
         self.now += timedelta(**delta)
+
+
+_ITEM_NUMBER = itertools.count(1)
+
+
+def add_item(db: Any, *, kind: str = "rss", title: str = "t", excerpt: str = "", url: str | None = None,
+             metadata: dict[str, Any] | None = None) -> int:
+    """시험용 수집 항목 하나를 넣고 id를 돌려준다. 소스는 종류마다 하나를 재사용한다."""
+    n = next(_ITEM_NUMBER)
+    source = db.execute(
+        "insert into sources (name, kind) values (%s, %s) on conflict (name) do update set name = excluded.name returning id",
+        (f"src-{kind}", kind),
+    ).fetchone()["id"]
+    url = url or f"https://example.com/{n}"
+    return db.execute(
+        "insert into source_items (source_id, url, normalized_url, title, excerpt, content_hash, metadata) "
+        "values (%s, %s, %s, %s, %s, %s, %s) returning id",
+        (source, url, normalize_url(url), title, excerpt, f"hash-{n}", Jsonb(metadata or {})),
+    ).fetchone()["id"]
 
 
 @pytest.fixture
