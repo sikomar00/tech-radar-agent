@@ -69,11 +69,15 @@ class GeminiClient:
         except (OSError, HTTPException) as err:  # 연결 끊김, SSL 오류 등. 오류 문구는 남기지 않는다
             raise LlmError("network", type(err).__name__, retryable=True) from err
 
+    def _mask(self, text: str) -> str:
+        """서버가 키를 되돌려 보내도 남기지 않는다. 자르기 전에 가려야 키가 자르는 위치에 걸쳐도 앞부분이 남지 않는다."""
+        return text.replace(self._key, "***") if self._key else text
+
     def _status_error(self, status: int, raw: bytes) -> LlmError:
         detail = ""
         try:
             error = json.loads(raw).get("error", {})
-            detail = f" {error.get('status', '')} {str(error.get('message', ''))[:150]}".replace(self._key, "***")
+            detail = f" {self._mask(str(error.get('status', '')))} {self._mask(str(error.get('message', '')))[:150]}"
         except (ValueError, AttributeError):
             pass
         kind = "rate_limited" if status == 429 else "http_status"

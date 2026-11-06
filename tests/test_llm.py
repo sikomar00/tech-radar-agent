@@ -85,6 +85,13 @@ def test_error_messages_never_contain_the_key_even_if_the_server_echoes_it() -> 
     assert KEY not in str(caught.value) and "PERMISSION_DENIED" in caught.value.message
 
 
+def test_a_key_that_straddles_the_message_cut_is_still_fully_masked() -> None:
+    body = json.dumps({"error": {"status": f"S{KEY}", "message": "x" * 140 + KEY + "tail"}}).encode()
+    with pytest.raises(LlmError) as caught:
+        _client(Transport((403, body))).complete_json("i", "d", MATCH_SCHEMA)
+    assert KEY[:6] not in str(caught.value) and "***" in caught.value.message
+
+
 @pytest.mark.parametrize("raw", [b"not json", json.dumps({"candidates": []}).encode(), _response("not json"), _response("[1, 2]")])
 def test_unusable_responses_are_parse_failures_that_can_be_retried(raw: bytes) -> None:
     with pytest.raises(LlmError) as caught:
