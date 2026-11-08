@@ -19,8 +19,8 @@ class (pick exactly one):
 - USAGE: a tutorial, case study or experience report about using a technology.
 - NEWS: industry, business or security news that is not about one specific technology's release.
 - OPINION: an opinion, commentary, quote or discussion.
-- NOISE: anything else, including end-user apps and utilities, games, emulators, hobby and personal projects, promotional or spam-like pages, and anything outside software or AI.
-Only tools, libraries, frameworks, models and standards that developers or AI practitioners would track can be ENTITY or UPDATE: things they build with or integrate into their own work (SDKs, APIs, libraries, frameworks, developer tools, agent tools such as skills, plugins, MCP servers and bridges, models, standards). An app made for ordinary end users is NOISE even when it is new and open source. Merely mentioning a technology does not make an item ENTITY or UPDATE.
+- NOISE: anything else, including apps, utilities, games and emulators made for ordinary end users, promotional or spam-like pages, and anything outside software or AI.
+Only tools, libraries, frameworks, models and standards that developers or AI practitioners would track can be ENTITY or UPDATE: things they build with or integrate into their own work (SDKs, APIs, libraries, frameworks, developer tools, agent tools such as skills, plugins, MCP servers and bridges, models, standards). An app made for ordinary end users is NOISE even when it is new and open source. Judge by purpose only, not by size or popularity: a small, personal or early project that developers or AI practitioners can build with or integrate is still ENTITY or UPDATE. Missing a real technology is worse than including a doubtful one, so when you are unsure whether an item is ENTITY or UPDATE, choose ENTITY or UPDATE. Merely mentioning a technology does not make an item ENTITY or UPDATE.
 
 Only for ENTITY and UPDATE:
 - canonical_name: the English name of the product or project, not the repository or package name. A release of a monorepo package such as langchain-core is an event of the project LangChain, and the package name is an alias.
