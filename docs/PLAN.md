@@ -109,3 +109,100 @@ radar/holds.py, radar/eval.py (신규) 보류 큐 명령, 골든셋 평가      
 ## SPEC 보완 2건 (승인 시 함께 확인)
 1. `jobs retry --kind <종류>`: 실패한 잡을 종류별로 한꺼번에 재실행한다(SPEC은 잡 하나씩만).
 2. 평가의 입력 해시 재사용은 임시 스키마가 아니라 파일 캐시로 한다(SPEC 문장 "해시가 같으면 다시 호출하지 않는다"의 의도를 지키는 구현 방식).
+
+---
+
+# Plan v3.0 — 3단계(지식 데이터베이스) 구현 (승인 2026-11-08, 착수 2026-11-08)
+
+## Context
+2단계 게이트는 통과했다(2026-11-08). 운영 분석도 돌고 있어서, 기술이 중복 없이 쌓이기 시작했다. 3단계는 이 기술들을 출처와 함께 다시 꺼내 볼 수 있는 지식으로 만든다(PRD 3단계).
+- 선행 문서는 모두 승인됐다: IA v1.0, User Journey v1.0, SPEC v1.5 3단계 절, ADR-0006(웹 기술), ADR-0007(프로필 출처).
+- 이 Plan은 3단계를 게이트까지 구현하는 순서다.
+- 이 Plan을 승인하면 아래 라이브러리 목록도 함께 승인한 것으로 본다. 목록에는 ADR-0006을 FastAPI에서 Starlette로 좁히는 개정이 들어 있다.
+- 범위 안에서는 끊지 않고 진행한다. 커밋·푸시는 상시 요청이므로 묶음마다 코드 리뷰 뒤 성격별로 한다.
+- 범위 밖(삭제, 비용, 목록 밖 라이브러리, 운영 데이터 복원)은 멈춰서 묻는다.
+
+## 라이브러리 (승인 대상, 2026-11-08 pip 해석 결과로 고정)
+| 이름 | 버전 | 이유 |
+| --- | --- | --- |
+| starlette | 1.10.0 | 웹 라우팅·요청·응답. FastAPI의 기반이다. 서버 렌더링 폼에는 FastAPI의 API 검증(pydantic)이 필요 없어서 패키지가 18개에서 11개로 준다 |
+| uvicorn | 0.54.0 | 웹 서버(127.0.0.1에만 묶는다) |
+| Jinja2 | 3.1.6 | HTML 템플릿, 자동 이스케이프 |
+| httpx | 0.28.1 | 시험 전용(Starlette TestClient) |
+
+- 하위 의존성도 해석 결과 그대로 `requirements.txt`에 고정한다: anyio 4.16.0, click 8.5.1, h11 0.16.0, idna 3.20, MarkupSafe 3.0.4, httpcore 1.0.9, certifi 2026.10.23.
+- 폼 본문은 `urllib.parse.parse_qs`로 직접 읽어 python-multipart를 쓰지 않는다. htmx도 쓰지 않는다. POST 뒤 원래 화면으로 돌려보낸다(PRG).
+- ADR-0006은 "FastAPI → Starlette"로 개정한다.
+
+## 구조 (기존 계층 그대로: domain ← adapters·llm·store ← 업무 흐름·worker·cli·web)
+```
+migrations/0003_stage3.sql   DDL v1.1의 3단계 표 + manual 소스·사용자 한 행 + RLS
+radar/adapters/page.py       (신규) 공식 페이지 한 장 읽기: 스킴·포트·사설 IP 차단, 리다이렉트 재검사(3회), robots.txt(urllib.robotparser), 1MB·20초, HTML→텍스트(기존 domain/cleaning의 태그 제거 재사용), GitHub README(API raw)
+radar/domain/prompts.py      PROFILE·RETYPE 지시문·스키마 추가, CLASSIFY 유형에 PROTOCOL_STANDARD·MODEL 추가
+radar/profile.py             (신규) run_profile_job: 페이지 읽기 → _ask 재사용 → claims·claim_evidence 저장
+radar/events.py              (신규) 규칙 이벤트: 릴리스 항목→release, 저장소 항목→first_published, first_published_at 재계산
+radar/store/knowledge.py     (신규) claims·events·user_knowledge·notes·검색·Feed·보관 조회
+radar/backup.py              (신규) COPY TO/FROM, manifest(행 수·SHA-256), 임시 스키마 복원 검증
+radar/web/app.py, routes.py, templates/*.html   (신규) Starlette 앱, Host·Origin 검사 미들웨어
+```
+- 고치는 기존 코드:
+  - `radar/analyze.py`: 수동 항목은 후보로 다루고, 기술이 새로 생기면 프로필 잡과 규칙 이벤트를 만든다.
+  - `radar/store/technologies.py`: 정규명이 보관 기술과 같으면 그 기술에 잇는다.
+  - `radar/store/jobs.py`: `PROFILE` 종류를 더하고, 잡을 수집 → 분석 → 프로필 순으로 집는다.
+  - `radar/worker.py`: 처리기 표에 프로필 잡을 더한다.
+  - `radar/holds.py`: `HOLD_TYPES`를 넓히고 `retype`을 더한다.
+  - `radar/cli.py`: `add`, `web`, `backup`, `restore`, `holds retype` 명령을 더한다.
+  - `radar/gate.py`: 3단계 점검 항목을 더한다.
+- 재사용하는 기존 코드:
+  - 분석 흐름: `_ask`·`daily_cap_reached`·`analysis_paused`(`radar/analyze.py`), `AnalysisStore`.
+  - 수집 저장: `ItemStore` 저장 규칙(`radar/store/items.py`), `normalize_url`.
+  - 보류 처리: `holds.set_type`·`link_item`·`new_from_item`. 웹 버튼도 이 함수들을 그대로 부른다.
+  - 그 밖: `sanitize_json`, `UrllibClient`(`radar/adapters/http.py`).
+- 파일은 300줄, 함수는 30줄 이하로 쓰고 공개 함수에는 타입 힌트를 단다(`rules/code.md`). 웹은 DB를 `radar/store/`로만 만진다.
+
+## 작업 순서 (SPEC v1.5 3단계 절, PRD S3-01~09와 대응)
+- **T3-0 준비**: 라이브러리 설치·고정, ADR-0006 개정, `0003_stage3.sql`(임시 스키마 시험 → 운영 적용, `schema_migrations`로 확인).
+- **T3-1 수동 등록·페이지 읽기**(S3-06):
+  - `radar/adapters/page.py`를 만든다. 안전 규칙마다 시험을 붙인다(사설 IP·`file:`·리다이렉트로 내부망 가기·큰 응답·robots 차단).
+  - `radar add`를 만든다. 수동 항목은 후보 판별을 건너뛴다.
+- **T3-2 보관·유형 넓히기·이벤트**:
+  - 보관 기술에 잇는 규칙(S3-09 포함).
+  - `holds retype`: 유형이 빈 기술만, 호출 1번.
+  - 규칙 이벤트는 기존 연결분까지 한 번 채운다(`radar events backfill`, 운영 DB 쓰기는 추가뿐).
+- **T3-3 프로필**(S3-01·S3-03):
+  - 프로필 잡과 지시문을 만든다. 8칸 중 7칸은 모델이, 공식 출처 칸은 규칙이 채우고, 빈 칸은 행을 만들지 않는다.
+  - 지시문을 심은 페이지 fixture로 스키마 이탈과 지시 추종이 없는지 시험한다.
+  - 실제 모델로 5~10개를 점검한다.
+- **T3-4 웹**(S3-07·S3-08, IA-1~4, UJ-1~5):
+  - 화면을 Feed → 상세 → 검색 → Monitor 순으로 만든다.
+  - 안전 미들웨어(Host·Origin), 자동 이스케이프, `http(s)` 링크만 만들기를 넣는다.
+  - 다크 모드, 키보드 조작, 대비를 지킨다.
+- **T3-5 백업·복원**: `radar backup`과 `radar restore`를 만든다. 복원은 임시 스키마에서만 하고, 행 수와 체크섬을 비교한다.
+- **T3-6 게이트 측정과 QA**:
+  - `gate-check --stage 3`: 출처 연결률 100%, 별칭 검색, 백업 복원, Monitor에서 실패 원인 확인.
+  - 서로 다른 출처 3개가 연결된 기술 하나를 화면에 보여 준다.
+  - 내장 브라우저로 화면을 클릭해 QA하고 `docs/qa-guide.md`에 적는다.
+  - 사용자 QA는 실제 사용 체감, 문구·디자인, 이미 아는 기술 50~100개 넣기다.
+- **T3-7 게이트 보고**: 숫자로 보고하고 승인을 받는다. MVP(1~3단계)가 여기서 끝난다.
+
+## 위험과 한계
+- **호출 한도:** 프로필 호출이 분류와 같은 하루 375회를 쓴다. 새 기술이 하루 30~50개면 안에 들어오지만, 첫 50~100개 수동 등록과 쌓인 기술의 프로필은 며칠에 나눠 처리된다.
+- **GitHub 한도:** README 읽기가 비인증 한도(시간당 60회)를 수집과 나눠 쓴다. 그래서 시간당 30회로 제한한다.
+- **모델이 지어낼 위험:** 근거 페이지가 있어도 Flash Lite가 지어낼 수 있다. 칸마다 `Unverified`로 두고 근거 링크를 보여 주며, 실제 모델 점검 표본은 눈으로 확인한다.
+- **약관:** 페이지 읽기의 사이트 약관은 확인하지 못한다. 한 장만 읽고 저장하지 않는다(ADR-0007).
+- **CSRF:** localhost 웹이라도 다른 사이트가 요청을 보낼 수 있어서 Host·Origin 검사가 빠지면 위험하다. 시험으로 고정한다.
+- **확인하지 못한 것:** Starlette 1.x의 TestClient와 미들웨어 API가 문서와 같은지. T3-0에서 확인한다.
+
+## 검증
+- `python -m pytest` 통과 수를 변경 전후로 보고한다(현재 264개). 1·2단계 `gate-check`가 여전히 통과하는지 본다.
+- 안전 시험:
+  - 사설·루프백 주소, `file:` URL, 내부망으로 가는 리다이렉트를 거절한다.
+  - `Host`·`Origin`이 다른 요청을 거절한다.
+  - `javascript:` 링크가 링크로 나오지 않는다.
+  - 지시문을 심은 페이지로 만든 프로필이 스키마를 벗어나지 않는다.
+- 동작 시험:
+  - 보관한 이름의 새 글이 새 기술을 만들지 않는다.
+  - 이벤트를 다시 넣어도 중복이 없다.
+  - 메모는 AI 분석이 바꾸지 않는다.
+  - 백업 후 복원하면 행 수와 체크섬이 같다.
+- 화면: `radar web`을 띄우고 내장 브라우저로 UJ-1~UJ-5를 따라 클릭한다.
