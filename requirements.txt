@@ -8,3 +8,15 @@ jsonschema-specifications==2025.9.1
 referencing==0.37.0
 rpds-py==2026.9.1
 typing_extensions==4.16.0
+starlette==1.10.0
+uvicorn==0.54.0
+Jinja2==3.1.6
+httpx==0.28.1
+anyio==4.16.0
+click==8.5.1
+colorama==0.4.6
+h11==0.16.0
+idna==3.20
+MarkupSafe==3.0.4
+httpcore==1.0.9
+certifi==2026.10.23
