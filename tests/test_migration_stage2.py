@@ -74,7 +74,7 @@ def test_row_level_security_is_on_for_stage2_tables(db) -> None:
         "select relname from pg_class where relnamespace = current_schema()::regnamespace and relrowsecurity"
     ).fetchall()
     enabled = {r["relname"] for r in rows}
-    assert {"technologies", "technology_aliases", "analysis_runs", "technology_sources"} <= enabled
+    assert {"technologies", "technology_aliases", "analysis_runs", "technology_sources", "schema_migrations"} <= enabled
 
 
 def test_technology_type_must_be_a_known_enum_value(db) -> None:

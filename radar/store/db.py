@@ -21,6 +21,8 @@ def apply_migrations(conn: psycopg.Connection, directory: Path = MIGRATIONS_DIR)
         "create table if not exists schema_migrations "
         "(name text primary key, applied_at timestamptz not null default now())"
     )
+    # public 스키마의 표는 공개 API로 노출되므로 다른 표처럼 정책 없는 RLS로 막는다(Supabase 보안 어드바이저 경고)
+    conn.execute("alter table schema_migrations enable row level security")
     done = {row["name"] for row in conn.execute("select name from schema_migrations")}
     applied = []
     for path in sorted(directory.glob("*.sql")):
