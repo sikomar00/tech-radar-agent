@@ -30,3 +30,12 @@ def set_type(conn: psycopg.Connection, technology_id: int, type_: str) -> bool:
         "update technologies set type = %s where id = %s and type is null and archived_at is null", (type_, technology_id)
     )
     return cur.rowcount == 1
+
+
+def source_titles(conn: psycopg.Connection, technology_id: int, limit: int = 5) -> list[str]:
+    """유형을 다시 물을 때 보낼, 기술에 붙은 수집 항목 제목(오래된 순)."""
+    rows = conn.execute(
+        "select i.title from technology_sources s join source_items i on i.id = s.source_item_id "
+        "where s.technology_id = %s order by i.id limit %s", (technology_id, limit),
+    ).fetchall()
+    return [row["title"] for row in rows]

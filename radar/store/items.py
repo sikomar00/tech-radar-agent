@@ -108,7 +108,7 @@ class ItemStore:
 def get_item(conn: psycopg.Connection, item_id: int) -> dict[str, Any]:
     """분석할 항목과 소스 종류. 항목이 없으면 LookupError."""
     row = conn.execute(
-        "select i.id, i.url, i.normalized_url, i.title, i.excerpt, i.metadata, s.kind as source_kind "
+        "select i.id, i.url, i.normalized_url, i.title, i.excerpt, i.metadata, i.published_at, s.kind as source_kind "
         "from source_items i join sources s on s.id = i.source_id where i.id = %s", (item_id,),
     ).fetchone()
     if row is None:

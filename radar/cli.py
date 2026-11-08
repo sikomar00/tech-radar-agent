@@ -7,7 +7,7 @@ from typing import Sequence
 import psycopg
 
 from radar.adapters.http import UrllibClient
-from radar import holds
+from radar import events, holds
 from radar.config import database_url, gemini_api_key, load_env
 from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
 from radar.gate import gate_report, stage2_report
@@ -36,8 +36,11 @@ def _parser() -> argparse.ArgumentParser:
     jobs_cmd.add_argument("job_id", type=int, nargs="?", help="다시 실행할 failed 잡 하나")
     jobs_cmd.add_argument("--kind", help="이 종류의 failed 잡을 모두 다시 실행한다(예: analyze_item)")
     holds_cmd = sub.add_parser("holds", help="분류 보류 큐")
-    holds_cmd.add_argument("action", choices=["list", "set", "link", "new"])
-    holds_cmd.add_argument("ids", nargs="*", help="set: 기술 id와 유형(PRODUCT|FRAMEWORK_LIBRARY), link: 항목 id와 기술 id, new: 항목 id")
+    holds_cmd.add_argument("action", choices=["list", "set", "link", "new", "retype"])
+    holds_cmd.add_argument("ids", nargs="*", help="set: 기술 id와 유형(PRODUCT|FRAMEWORK_LIBRARY|PROTOCOL_STANDARD|MODEL), "
+                           "link: 항목 id와 기술 id, new: 항목 id. retype은 인자 없음")
+    events_cmd = sub.add_parser("events", help="변화 이력")
+    events_cmd.add_argument("action", choices=["backfill"], help="이미 기술에 붙은 GitHub 항목으로 이벤트를 채운다(추가만 한다)")
     eval_cmd = sub.add_parser("eval", help="골든셋으로 분석 품질을 잰다(운영 워커를 멈추고 실행)")
     eval_cmd.add_argument("--holdout", action="store_true", help="보류용 골든셋(게이트 판정 전용)")
     eval_cmd.add_argument("--unreviewed", action="store_true", help="검토 전 라벨로 점검만 한다(수치는 믿지 않는다)")
@@ -74,6 +77,13 @@ def _holds(args: argparse.Namespace, conn: psycopg.Connection) -> int:
     ids = args.ids
     if args.action == "list":
         print("\n".join(holds.list_holds(conn)))
+        return 0
+    if args.action == "retype":
+        llm = _llm()
+        if llm is None:
+            print("GEMINI_API_KEY가 없어 유형을 다시 물을 수 없습니다")
+            return 1
+        print("\n".join(holds.retype(conn, llm, utc_now)))
         return 0
     wanted = {"set": 2, "link": 2, "new": 1}[args.action]
     if len(ids) != wanted or not ids[0].isdigit() or (args.action == "link" and not ids[1].isdigit()):
@@ -129,6 +139,8 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
         return _retry(args, JobQueue(conn, utc_now))
     elif args.command == "holds":
         return _holds(args, conn)
+    elif args.command == "events":
+        print(f"새 이벤트 {events.backfill(conn)}개를 쌓았습니다")
     elif args.command == "add":
         return _add(args, conn)
     elif args.command == "eval":

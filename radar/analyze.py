@@ -12,6 +12,7 @@ from radar.domain.analysis import (
     parse_match, passes_prefilter, render_data, repo_key,
 )
 from radar.domain.prompts import CLASSIFY_INSTRUCTION, CLASSIFY_SCHEMA, MATCH_INSTRUCTION, MATCH_SCHEMA
+from radar.events import record_event
 from radar.job_errors import JobFailed
 from radar.llm import LlmClient, LlmError, complete_validated
 from radar.store.analysis import AnalysisStore
@@ -88,6 +89,9 @@ def _decide(env: AnalyzeEnv, store: AnalysisStore, techs: TechnologyStore, item:
     sure = techs.definite_match(found.name, repo_key(item["source_kind"], item["normalized_url"], item["metadata"]))
     if len(sure) == 1:
         return MatchDecision("SAME", sure[0])
+    archived = None if sure else techs.archived_match(found.name)
+    if archived is not None:  # 사용자가 보관한 이름이면 새로 만들지 않고 출처로만 붙인다(SPEC 3단계 보관)
+        return MatchDecision("SAME", archived)
     keys = [found.name, *found.aliases_en, *found.aliases_ko]
     ids = list(dict.fromkeys([*sure, *techs.fuzzy_candidates(keys)]))[:CANDIDATE_LIMIT]
     if not ids:
@@ -100,6 +104,7 @@ def attach(techs: TechnologyStore, item: dict[str, Any], found: Classification, 
     """기술에 새 별칭을 더하고 항목을 근거로 잇는다. 정규명이 다르면 항목의 이름도 별칭이 된다."""
     techs.add_aliases(technology_id, [found.name, *found.aliases_en], found.aliases_ko)
     techs.link(technology_id, item["id"], evidence_type(item["source_kind"], item["metadata"], found.label))
+    record_event(techs.conn, technology_id, item)
 
 
 def run_analyze_job(env: AnalyzeEnv, job: dict[str, Any]) -> None:

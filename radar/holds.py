@@ -1,18 +1,20 @@
-"""분류 보류 큐 운영 명령 `radar holds list|set|link|new`. 사람이 판정한다(S2-03). 화면은 3단계에서 만든다."""
+"""분류 보류 큐 운영 명령 `radar holds list|set|link|new|retype`. 사람이 판정하고(S2-03), retype만 모델에게 다시 묻는다(S3-09)."""
 from datetime import datetime
 from typing import Callable
 
 import psycopg
 
-from radar.analyze import attach
+from radar.analyze import AnalyzeEnv, AnalyzeFailed, _ask, attach, daily_cap_reached
 from radar.domain.analysis import Classification, parse_classification
 from radar.domain.cleaning import clean_text
+from radar.domain.prompts import RETYPE_INSTRUCTION, RETYPE_SCHEMA
+from radar.llm import LlmClient
 from radar.store import holds as queries
 from radar.store.analysis import AnalysisStore
 from radar.store.items import get_item
 from radar.store.technologies import TechnologyStore
 
-HOLD_TYPES = ("PRODUCT", "FRAMEWORK_LIBRARY")
+HOLD_TYPES = ("PRODUCT", "FRAMEWORK_LIBRARY", "PROTOCOL_STANDARD", "MODEL")  # S3-09에서 넓혔다
 
 
 def list_holds(conn: psycopg.Connection) -> list[str]:
@@ -68,3 +70,24 @@ def new_from_item(conn: psycopg.Connection, clock: Callable[[], datetime], item_
         technology_id, created = techs.create(found.name, found.type)
         attach(techs, get_item(conn, item_id), found, technology_id)
     return True, f"항목 #{item_id}로 기술 #{technology_id}를 {'만들었습니다' if created else '찾아 연결했습니다(같은 이름이 이미 있음)'}"
+
+
+def retype(conn: psycopg.Connection, llm: LlmClient, clock: Callable[[], datetime]) -> list[str]:
+    """유형이 빈 기술만 넓힌 유형 목록으로 한 번 더 묻는다. 이미 유형이 있는 기술은 건드리지 않는다(SPEC 3단계)."""
+    env, store, lines = AnalyzeEnv(conn, llm, clock), AnalysisStore(conn, clock), []
+    for tech in queries.held_technologies(conn):
+        if daily_cap_reached(conn, clock):
+            lines.append("오늘 호출 상한에 닿아 멈췄습니다. 내일 다시 실행하세요")
+            break
+        payload = {"canonical_name": tech["canonical_name"], "aliases": sorted(tech["aliases"])[:10],
+                   "titles": queries.source_titles(conn, tech["id"])}
+        try:
+            found = _ask(env, store, tech["id"], "retype", RETYPE_INSTRUCTION, RETYPE_SCHEMA, payload, lambda raw: raw["type"])
+        except AnalyzeFailed as err:
+            lines.append(f"기술 #{tech['id']}: 실패({err})")
+            continue
+        if found != "NONE" and queries.set_type(conn, tech["id"], found):
+            lines.append(f"기술 #{tech['id']} {tech['canonical_name']}: {found}")
+        else:
+            lines.append(f"기술 #{tech['id']} {tech['canonical_name']}: 모델도 정하지 못해 보류로 둠")
+    return lines or ["유형이 빈 기술이 없습니다"]

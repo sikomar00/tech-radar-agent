@@ -41,12 +41,24 @@ class TechnologyStore:
     def __init__(self, conn: psycopg.Connection) -> None:
         self._conn = conn
 
+    @property
+    def conn(self) -> psycopg.Connection:
+        return self._conn
+
     def definite_match(self, name: str, repo: str | None) -> list[int]:
         """대소문자 무시로 정규명이 같거나 같은 GitHub 저장소가 이미 연결된 기술. 하나면 확정이고, 여럿이면 모호하다."""
         ids = {row["id"] for row in self._conn.execute(_BY_NAME, {"name": name})}
         if repo:
             ids |= {row["technology_id"] for row in self._conn.execute(_BY_REPO, {"repo": repo})}
         return sorted(ids)
+
+    def archived_match(self, name: str) -> int | None:
+        """정규명이 같은 보관 기술(여럿이면 가장 최근에 보관한 것). 사용자가 치운 것을 새 기술로 다시 만들지 않으려고 쓴다."""
+        row = self._conn.execute(
+            "select id from technologies where archived_at is not null and lower(canonical_name) = lower(%s) "
+            "order by archived_at desc, id desc limit 1", (name,),
+        ).fetchone()
+        return row["id"] if row else None
 
     def fuzzy_candidates(self, keys: list[str]) -> list[int]:
         """이름이 keys 중 하나와 비슷한(pg_trgm 유사도 FUZZY_MIN 이상) 기술 id, 유사도 순 상위 CANDIDATE_LIMIT개."""
