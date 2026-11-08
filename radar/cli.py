@@ -13,6 +13,7 @@ from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
 from radar.gate import gate_report, stage2_report
 from radar.llm import LlmClient
 from radar.llm.gemini import GeminiClient
+from radar.manual import add_urls
 from radar.seed import seed_sources
 from radar.store import runs
 from radar.store.db import apply_migrations, connect
@@ -42,6 +43,9 @@ def _parser() -> argparse.ArgumentParser:
     eval_cmd.add_argument("--unreviewed", action="store_true", help="검토 전 라벨로 점검만 한다(수치는 믿지 않는다)")
     eval_cmd.add_argument("--golden", type=Path, default=GOLDEN_PATH)
     eval_cmd.add_argument("--cache", type=Path, default=CACHE_PATH)
+    add = sub.add_parser("add", help="이미 아는 기술의 URL을 등록한다(분석은 워커가 한다)")
+    add.add_argument("url", nargs="?", help="등록할 URL 하나")
+    add.add_argument("--file", type=Path, help="한 줄에 URL 하나씩 적은 파일(UTF-8)")
     gate = sub.add_parser("gate-check", help="게이트를 숫자로 점검한다(2단계는 DB로 확인하는 항목만)")
     gate.add_argument("--stage", type=int, choices=[1, 2], default=1)
     return parser
@@ -85,6 +89,15 @@ def _holds(args: argparse.Namespace, conn: psycopg.Connection) -> int:
     return 0 if ok else 1
 
 
+def _add(args: argparse.Namespace, conn: psycopg.Connection) -> int:
+    if (args.url is None) == (args.file is None):
+        print("URL 하나나 --file 중 하나만 정해 주세요")
+        return 2
+    urls = args.file.read_text(encoding="utf-8-sig").splitlines() if args.file else [args.url]
+    print("\n".join(add_urls(conn, urls, utc_now)))
+    return 0
+
+
 def _retry(args: argparse.Namespace, queue: JobQueue) -> int:
     if (args.job_id is None) == (args.kind is None):
         print("잡 id 하나나 --kind 중 하나만 정해 주세요")
@@ -116,6 +129,8 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
         return _retry(args, JobQueue(conn, utc_now))
     elif args.command == "holds":
         return _holds(args, conn)
+    elif args.command == "add":
+        return _add(args, conn)
     elif args.command == "eval":
         return eval_command(conn, database_url(), _llm(), args.holdout, args.unreviewed, args.golden, args.cache)
     elif args.command == "gate-check":

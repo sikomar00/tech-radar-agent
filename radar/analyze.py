@@ -110,6 +110,8 @@ def run_analyze_job(env: AnalyzeEnv, job: dict[str, Any]) -> None:
     store, techs = AnalysisStore(env.conn, env.clock), TechnologyStore(env.conn)
     payload = classify_payload(item["source_kind"], item["title"], item["excerpt"], item["metadata"])
     found = _ask(env, store, item["id"], CLASSIFY, CLASSIFY_INSTRUCTION, CLASSIFY_SCHEMA, payload, parse_classification)
+    if not found.is_candidate and item["source_kind"] == "manual":  # 후보가 아니면 이름을 받지 못해 기술을 만들 수 없다
+        raise AnalyzeFailed(f"invalid: 수동 등록 항목인데 {found.label}로 분류됐다", retryable=False)
     if not found.is_candidate:
         log.info("항목 %d: %s", item["id"], found.label)
         return
