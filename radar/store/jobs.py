@@ -6,6 +6,7 @@ from psycopg.types.json import Jsonb
 
 COLLECT = "collect_source"
 ANALYZE = "analyze_item"
+PROFILE = "profile_technology"
 STALE_AFTER = timedelta(minutes=15)
 
 
@@ -26,16 +27,16 @@ class JobQueue:
     def claim_next(self, skip_kinds: Sequence[str] = ()) -> dict[str, Any] | None:
         """실행할 잡 하나를 잠그고 running으로 바꿔 돌려준다. 한 문장이라 다른 워커와 겹치지 않는다.
 
-        수집 잡을 먼저 집는다. 분석 잡이 수백 개 쌓여도 수집 주기가 밀리지 않게 하려는 것이다.
+        수집 → 분석 → 프로필 순으로 집는다. 분석 잡이 수백 개 쌓여도 수집 주기가 밀리지 않고, 프로필이 분류를 굶기지 않게 한다.
         skip_kinds의 잡은 집지 않고 queued로 남겨 둔다(시도 횟수를 쓰지 않는다).
         """
         return self._conn.execute(
             "update jobs set status = 'running', locked_at = %(now)s, attempts = attempts + 1 "
             "where id = (select id from jobs where status = 'queued' and run_after <= %(now)s "
             "            and not (kind = any(%(skip)s::text[])) "
-            "            order by (kind <> %(collect)s), run_after, id limit 1 for update skip locked) "
+            "            order by (kind <> %(collect)s), (kind = %(profile)s), run_after, id limit 1 for update skip locked) "
             "returning id, kind, payload, attempts, max_attempts",
-            {"now": self._clock(), "skip": list(skip_kinds), "collect": COLLECT},
+            {"now": self._clock(), "skip": list(skip_kinds), "collect": COLLECT, "profile": PROFILE},
         ).fetchone()
 
     def finish_ok(self, job_id: int) -> None:

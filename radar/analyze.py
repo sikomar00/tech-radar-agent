@@ -17,7 +17,7 @@ from radar.job_errors import JobFailed
 from radar.llm import LlmClient, LlmError, complete_validated
 from radar.store.analysis import AnalysisStore
 from radar.store.items import get_item
-from radar.store.jobs import ANALYZE, JobQueue
+from radar.store.jobs import ANALYZE, PROFILE, JobQueue
 from radar.store.technologies import CANDIDATE_LIMIT, TechnologyStore
 
 log = logging.getLogger(__name__)
@@ -128,6 +128,8 @@ def run_analyze_job(env: AnalyzeEnv, job: dict[str, Any]) -> None:
         if decision.decision == "SAME":
             technology_id = decision.technology_id
         else:
-            technology_id, _ = techs.create(found.name, found.type)
+            technology_id, created = techs.create(found.name, found.type)
+            if created:  # 새 기술의 프로필은 별도 잡으로 나중에 만든다(분류를 굶기지 않게 우선순위가 낮다)
+                JobQueue(env.conn, env.clock).enqueue(PROFILE, {"technology_id": technology_id})
         attach(techs, item, found, technology_id)
     log.info("항목 %d: %s %r → 기술 %d(%s)", item["id"], found.label, found.name, technology_id, decision.decision)

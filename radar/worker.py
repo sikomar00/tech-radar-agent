@@ -1,5 +1,6 @@
 import logging
 import time
+from collections import deque
 from datetime import datetime, timezone
 from typing import Callable
 
@@ -10,11 +11,13 @@ from radar.analyze import AnalyzeEnv, analysis_paused, daily_cap_reached, run_an
 from radar.collect import Env, run_collect_job
 from radar.job_errors import JobFailed
 from radar.llm import LlmClient
-from radar.store.jobs import ANALYZE, COLLECT, JobQueue
+from radar.profile import ProfileEnv, run_profile_job
+from radar.store.jobs import ANALYZE, COLLECT, PROFILE, JobQueue
 
 log = logging.getLogger(__name__)
 IDLE_SECONDS = 30
 RECONNECT_SECONDS = 30
+_README_CALLS: deque = deque()  # README 시간당 한도를 잡 사이에도 세려고 워커 프로세스에 하나 둔다
 
 
 def utc_now() -> datetime:
@@ -27,6 +30,8 @@ def _execute(conn: psycopg.Connection, http: HttpClient, llm: LlmClient | None, 
         run_collect_job(Env(conn, http, clock), job)
     elif job["kind"] == ANALYZE and llm is not None:
         run_analyze_job(AnalyzeEnv(conn, llm, clock), job)
+    elif job["kind"] == PROFILE and llm is not None:
+        run_profile_job(ProfileEnv(conn, llm, clock, readme_calls=_README_CALLS), job)
     else:
         raise JobFailed(f"처리할 수 없는 잡 종류 {job['kind']}", retryable=False)
 
@@ -45,7 +50,7 @@ def run_once(conn: psycopg.Connection, http: HttpClient, clock: Callable[[], dat
     if llm is not None:
         schedule_analysis(queue)
     blocked = llm is None or daily_cap_reached(conn, clock) or analysis_paused(conn, clock)
-    job = queue.claim_next(skip_kinds=(ANALYZE,) if blocked else ())
+    job = queue.claim_next(skip_kinds=(ANALYZE, PROFILE) if blocked else ())
     if job is None:
         return False
     try:

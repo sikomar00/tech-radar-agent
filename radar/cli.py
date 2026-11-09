@@ -7,7 +7,7 @@ from typing import Sequence
 import psycopg
 
 from radar.adapters.http import UrllibClient
-from radar import events, holds
+from radar import events, holds, profile
 from radar.config import database_url, gemini_api_key, load_env
 from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
 from radar.gate import gate_report, stage2_report
@@ -39,6 +39,8 @@ def _parser() -> argparse.ArgumentParser:
     holds_cmd.add_argument("action", choices=["list", "set", "link", "new", "retype"])
     holds_cmd.add_argument("ids", nargs="*", help="set: 기술 id와 유형(PRODUCT|FRAMEWORK_LIBRARY|PROTOCOL_STANDARD|MODEL), "
                            "link: 항목 id와 기술 id, new: 항목 id. retype은 인자 없음")
+    profile_cmd = sub.add_parser("profile", help="기술 프로필")
+    profile_cmd.add_argument("action", choices=["backfill"], help="프로필이 없는 기술마다 프로필 잡을 2분 간격으로 넣는다")
     events_cmd = sub.add_parser("events", help="변화 이력")
     events_cmd.add_argument("action", choices=["backfill"], help="이미 기술에 붙은 GitHub 항목으로 이벤트를 채운다(추가만 한다)")
     eval_cmd = sub.add_parser("eval", help="골든셋으로 분석 품질을 잰다(운영 워커를 멈추고 실행)")
@@ -139,6 +141,8 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
         return _retry(args, JobQueue(conn, utc_now))
     elif args.command == "holds":
         return _holds(args, conn)
+    elif args.command == "profile":
+        print(f"프로필 잡 {profile.backfill(conn, utc_now)}개를 넣었습니다(2분 간격)")
     elif args.command == "events":
         print(f"새 이벤트 {events.backfill(conn)}개를 쌓았습니다")
     elif args.command == "add":

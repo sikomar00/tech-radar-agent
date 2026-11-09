@@ -12,6 +12,7 @@ from radar.llm import LlmClient
 from radar.store import holds as queries
 from radar.store.analysis import AnalysisStore
 from radar.store.items import get_item
+from radar.store.jobs import PROFILE, JobQueue
 from radar.store.technologies import TechnologyStore
 
 HOLD_TYPES = ("PRODUCT", "FRAMEWORK_LIBRARY", "PROTOCOL_STANDARD", "MODEL")  # S3-09에서 넓혔다
@@ -69,6 +70,8 @@ def new_from_item(conn: psycopg.Connection, clock: Callable[[], datetime], item_
     with conn.transaction():
         technology_id, created = techs.create(found.name, found.type)
         attach(techs, get_item(conn, item_id), found, technology_id)
+        if created:
+            JobQueue(conn, clock).enqueue(PROFILE, {"technology_id": technology_id})
     return True, f"항목 #{item_id}로 기술 #{technology_id}를 {'만들었습니다' if created else '찾아 연결했습니다(같은 이름이 이미 있음)'}"
 
 
