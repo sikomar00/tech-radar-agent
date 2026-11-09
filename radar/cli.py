@@ -7,7 +7,7 @@ from typing import Sequence
 import psycopg
 
 from radar.adapters.http import UrllibClient
-from radar import events, holds, profile
+from radar import backup, events, holds, profile
 from radar.config import database_url, gemini_api_key, load_env
 from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
 from radar.gate import gate_report, stage2_report
@@ -41,6 +41,10 @@ def _parser() -> argparse.ArgumentParser:
     holds_cmd.add_argument("ids", nargs="*", help="set: 기술 id와 유형(PRODUCT|FRAMEWORK_LIBRARY|PROTOCOL_STANDARD|MODEL), "
                            "link: 항목 id와 기술 id, new: 항목 id. retype은 인자 없음")
     sub.add_parser("web", help="웹 화면을 이 PC에서만 연다(127.0.0.1:8765)")
+    sub.add_parser("backup", help="표마다 CSV와 manifest(행 수·SHA-256)를 backups/ 아래에 만든다")
+    restore_cmd = sub.add_parser("restore", help="백업을 임시 스키마에 되살려 행 수·체크섬을 비교한다(운영은 건드리지 않는다)")
+    restore_cmd.add_argument("folder", type=Path)
+    restore_cmd.add_argument("--keep", action="store_true", help="확인한 임시 스키마를 지우지 않고 남긴다")
     profile_cmd = sub.add_parser("profile", help="기술 프로필")
     profile_cmd.add_argument("action", choices=["backfill"], help="프로필이 없는 기술마다 프로필 잡을 2분 간격으로 넣는다")
     events_cmd = sub.add_parser("events", help="변화 이력")
@@ -147,6 +151,14 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
         return _retry(args, JobQueue(conn, utc_now))
     elif args.command == "holds":
         return _holds(args, conn)
+    elif args.command == "backup":
+        print(f"백업을 만들었습니다: {backup.backup(conn, utc_now())}")
+    elif args.command == "restore":
+        schema = f"restore_{utc_now():%Y%m%d%H%M%S}"
+        ok, lines = backup.restore_check(database_url(), args.folder, schema, args.keep)
+        print("\n".join(lines))
+        print("결과:", "모두 같음" if ok else "다른 표가 있음", f"(임시 스키마 {schema} {'남김' if args.keep else '지움'})")
+        return 0 if ok else 1
     elif args.command == "profile":
         print(f"프로필 잡 {profile.backfill(conn, utc_now)}개를 넣었습니다(2분 간격)")
     elif args.command == "events":
