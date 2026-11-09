@@ -42,10 +42,11 @@
 
 <h2>출처 {{ sources|length }}개</h2>
 <div class="wrap"><table>
-  <thead><tr><th scope="col">제목</th><th scope="col">출처</th><th scope="col">근거 종류</th><th scope="col">발견</th></tr></thead>
+  <thead><tr><th scope="col">제목</th><th scope="col">출처</th><th scope="col">리스팅 이유</th><th scope="col">근거 종류</th><th scope="col">발견</th></tr></thead>
   <tbody>{% for s in sources %}
   <tr><td>#{{ s.id }} {% set link = s.url|safe_url %}{% if link %}<a href="{{ link }}" rel="noopener noreferrer" target="_blank">{{ s.title }}</a>{% else %}{{ s.title }}{% endif %}</td>
-    <td>{{ s.source_name }}</td><td>{{ s.evidence_type }}</td><td class="muted">{{ s.first_discovered_at.strftime("%Y-%m-%d") }}</td></tr>
+    <td>{{ s.source_name }}</td>
+    <td>{{ s.rule_basis }}{% if s.ai_reason %}<div class="muted">AI 판단: {{ s.ai_reason }}</div>{% endif %}</td><td>{{ s.evidence_type }}</td><td class="muted">{{ s.first_discovered_at.strftime("%Y-%m-%d") }}</td></tr>
   {% endfor %}</tbody>
 </table></div>
 
