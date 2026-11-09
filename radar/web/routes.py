@@ -40,8 +40,14 @@ def _render(request: Request, name: str, context: dict[str, Any]) -> Response:
     return request.app.state.templates.TemplateResponse(request, name, context)
 
 
+def _number(value: str | None) -> int | None:
+    """폼·주소의 숫자. "²" 같은 글자는 isdigit()을 통과하지만 int()가 받지 않으므로 isdecimal()로 본다."""
+    return int(value) if value and value.isdecimal() and len(value) < 10 else None
+
+
 def _days(value: str | None, default: int | None) -> int | None:
-    return min(max(int(value), 1), 365) if value and value.isdigit() else default
+    days = _number(value)
+    return min(max(days, 1), 365) if days is not None else default
 
 
 async def feed(request: Request) -> Response:
@@ -86,6 +92,8 @@ async def change(request: Request) -> Response:
     technology_id, action, form = request.path_params["technology_id"], request.path_params["action"], await _form(request)
     message = None
     with request.app.state.db() as conn:
+        if knowledge.technology(conn, technology_id) is None:
+            return PlainTextResponse("없는 기술입니다", status_code=404)
         user = views.user_id(conn)
         if action == "state" and form.get("state") in views.STATES:
             views.set_state(conn, user, technology_id, form["state"])
@@ -124,8 +132,8 @@ async def monitor_action(request: Request) -> Response:
             message = message if ok else "failed 상태의 잡이 아닙니다"
         elif action == "type":
             ok, message = holds.set_type(conn, target, form.get("type", ""))
-        elif action == "link" and form.get("technology_id", "").isdigit():
-            ok, message = holds.link_item(conn, utc_now, target, int(form["technology_id"]))
+        elif action == "link" and _number(form.get("technology_id")) is not None:
+            ok, message = holds.link_item(conn, utc_now, target, _number(form["technology_id"]))
         elif action == "new":
             ok, message = holds.new_from_item(conn, utc_now, target)
         else:

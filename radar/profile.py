@@ -14,6 +14,7 @@ import psycopg
 from radar.adapters.page import Page, PageError, read_page, read_readme
 from radar.analyze import AnalyzeEnv, AnalyzeFailed, _ask
 from radar.domain.profile import OFFICIAL_SOURCE, parse_profile
+from radar.job_errors import JobDeferred
 from radar.domain.prompts import PROFILE_INSTRUCTION, PROFILE_SCHEMA
 from radar.llm import LlmClient
 from radar.store import knowledge
@@ -36,21 +37,22 @@ class ProfileEnv:
     readme_calls: deque = field(default_factory=deque)  # 최근 한 시간의 README 호출 시각(워커는 하나라 프로세스 안에서 센다)
 
 
-def _readme_allowed(env: ProfileEnv) -> bool:
+def _take_readme_slot(env: ProfileEnv) -> None:
+    """README 한 번 읽을 자리를 잡는다. 한 시간 창이 차 있으면 가장 오래된 호출이 창을 벗어날 때까지 잡을 미룬다."""
     now = time.monotonic()
     while env.readme_calls and env.readme_calls[0] < now - 3600:
         env.readme_calls.popleft()
     if len(env.readme_calls) >= README_PER_HOUR:
-        return False
+        wait = env.readme_calls[0] + 3600 - now + 1
+        raise JobDeferred("README 읽기가 시간당 한도에 닿았다", env.clock() + timedelta(seconds=wait))
     env.readme_calls.append(now)
-    return True
 
 
 def _source_page(env: ProfileEnv, rows: list[dict[str, Any]]) -> tuple[Page | None, int]:
     """(읽은 페이지 또는 None, 근거로 걸 항목 id). GitHub 저장소가 있으면 README, 없으면 대표 출처 한 장."""
     github, chosen = knowledge.github_repo(rows), knowledge.representative(rows)
-    if github and not _readme_allowed(env):
-        raise AnalyzeFailed("rate_limited: README 읽기가 시간당 한도에 닿았다", retryable=True)
+    if github:
+        _take_readme_slot(env)
     try:
         if github:
             return env.readme(github[0]), github[1]

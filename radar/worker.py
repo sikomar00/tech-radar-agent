@@ -9,7 +9,7 @@ import psycopg
 from radar.adapters.http import HttpClient
 from radar.analyze import AnalyzeEnv, analysis_paused, daily_cap_reached, run_analyze_job, schedule_analysis
 from radar.collect import Env, run_collect_job
-from radar.job_errors import JobFailed
+from radar.job_errors import JobDeferred, JobFailed
 from radar.llm import LlmClient
 from radar.profile import ProfileEnv, run_profile_job
 from radar.store.jobs import ANALYZE, COLLECT, PROFILE, JobQueue
@@ -56,6 +56,9 @@ def run_once(conn: psycopg.Connection, http: HttpClient, clock: Callable[[], dat
     try:
         _execute(conn, http, llm, clock, job)
         queue.finish_ok(job["id"])
+    except JobDeferred as err:
+        queue.defer(job["id"], err.until)
+        log.info("잡 %d(%s)을 %s까지 미룹니다: %s", job["id"], job["kind"], f"{err.until:%H:%M}", err)
     except (JobFailed, psycopg.DataError, psycopg.IntegrityError) as err:
         # DB가 거부한 값은 같은 입력으로 다시 해도 같다. 갇힌 잡이 15분 뒤 모델을 또 부르지 않게 바로 실패로 닫는다
         retryable = err.retryable if isinstance(err, JobFailed) else False

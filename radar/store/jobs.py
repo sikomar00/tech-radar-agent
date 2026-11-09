@@ -60,6 +60,13 @@ class JobQueue:
         )
         return "queued"
 
+    def defer(self, job_id: int, until: datetime) -> None:
+        """잡을 until 뒤로 미룬다. 가져올 때 올린 시도 횟수를 되돌려 한도 대기가 실패로 쌓이지 않게 한다."""
+        self._conn.execute(
+            "update jobs set status = 'queued', run_after = %s, locked_at = null, attempts = greatest(attempts - 1, 0) "
+            "where id = %s", (until, job_id),
+        )
+
     def recover_stale(self) -> int:
         """워커가 죽어서 locked_at이 오래된 running 잡을 정리한다.
 
