@@ -1,4 +1,4 @@
-# Spec v1.5
+# Spec v1.6
 
 기준: `docs/PRD.md`, `docs/ERD.md`, `docs/adr/`. 1단계는 구현할 수 있는 수준으로 쓰고, 2단계는 중복 탐지와 후보 선별만, 3단계는 확정된 것만 적는다. 4~6단계는 PRD 원칙(게이트 통과 전에는 다음 단계를 시작하지 않는다)에 따라 각 단계 시작 전에 추가한다.
 
@@ -74,7 +74,7 @@
 
 ### 분류 호출 (`kind=classify`)
 - 입력: 소스 종류, 제목, 발췌(280자), 소스별 메타데이터(GitHub의 스타·언어·토픽, Hacker News의 점수). 전부 구분자로 감싼 데이터 구간에 넣고, 도구 정의는 보내지 않는다(ADR-0004).
-- 출력 스키마(평평하고 모든 필드 required): `class`(ENTITY, UPDATE, USAGE, NEWS, OPINION, NOISE), `canonical_name`(영문 정규명), `type`(PRODUCT, FRAMEWORK_LIBRARY, NONE), `aliases_en`, `aliases_ko`(각각 문자열 목록, 최대 5개).
+- 출력 스키마(평평하고 모든 필드 required): `class`(ENTITY, UPDATE, USAGE, NEWS, OPINION, NOISE), `canonical_name`(영문 정규명), `type`(PRODUCT, FRAMEWORK_LIBRARY, NONE. 3단계부터 PROTOCOL_STANDARD, MODEL 추가), `aliases_en`, `aliases_ko`(각각 문자열 목록, 최대 5개), `reason`(그 분류를 고른 이유 한 줄, 한국어, 100자. 2026-11-09 추가, 화면의 리스팅 이유에 "AI 판단"으로 보인다. 이전에 분류된 글은 비어 있다).
 - 후보가 아니면 이름, 유형, 별칭은 버린다. 시험 호출에서 모델이 NOISE에 `none`을 채웠다.
 - 이름 규칙: 저장소나 패키지 이름이 아니라 제품·프로젝트 이름을 정규명으로 한다. 모노레포 패키지 릴리스(예: `langchain-core`)는 프로젝트(LangChain)의 이벤트이고 패키지 이름은 별칭이다(ADR-0001). PRODUCT와 FRAMEWORK_LIBRARY가 아니거나 판단이 어려우면(모델 등) `NONE`이다.
 
@@ -159,6 +159,7 @@
   - 템플릿은 자동 이스케이프를 켜고, 외부 글의 링크는 `http`·`https`만 링크로 만든다(`javascript:` 차단).
 - 내 상태·중요도·메모, 보관·되돌리기, 보류 처리(유형 지정·기존 기술에 연결·새 기술로), 실패 잡 다시 실행은 POST 폼으로 한다. 보류 처리는 `radar holds`와 같은 함수를 쓴다.
 - 메모는 AI 내용과 다른 칸에 보이고, AI 분석은 `user_notes`·`user_knowledge`를 쓰지 않는다(S3-05).
+- Feed·검색 줄과 상세의 출처 목록에 "리스팅 이유" 칸을 둔다(2026-11-09 결정): 분류 결과와 출처 신호(GitHub 스타, 릴리스 태그, HN 점수, RSS 발행처)로 만든 규칙 근거와, 분류 호출의 `reason`(AI 판단, 미검증).
 
 ### 백업과 복원 (3단계 게이트)
 - `radar backup`은 표마다 `COPY ... TO STDOUT`(CSV)로 `backups/<시각>/` 아래 파일을 만들고, `manifest.json`에 표별 행 수와 파일 SHA-256을 적는다. `backups/`는 git에서 뺀다.
