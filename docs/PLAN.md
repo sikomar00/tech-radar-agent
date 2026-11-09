@@ -206,3 +206,97 @@ radar/web/app.py, routes.py, templates/*.html   (신규) Starlette 앱, Host·Or
   - 메모는 AI 분석이 바꾸지 않는다.
   - 백업 후 복원하면 행 수와 체크섬이 같다.
 - 화면: `radar web`을 띄우고 내장 브라우저로 UJ-1~UJ-5를 따라 클릭한다.
+
+# Plan v4.0 — 4단계(관계 분석과 그래프) 구현 (승인 2026-11-09, 착수 2026-11-09)
+
+## Context
+3단계 게이트는 2026-11-09에 통과했고, MVP가 끝났다. 기술은 출처·프로필과 함께 쌓이지만, 기술끼리 어떻게 이어지는지는 아직 없다. 사용자가 "핵심"이라고 한 옵시디언식 그래프뷰(PRD S4-08)는 관계 데이터가 있어야 그릴 수 있다.
+- 선행 문서는 모두 승인됐다(2026-11-09): PRD 4단계 범위 조정(S4-05·S4-07은 5단계로), IA v1.2, User Journey v1.1(UJ-7~UJ-10), SPEC v1.7 4단계 절, ERD 가정 12.
+- 이 Plan을 승인하면 아래 라이브러리도 함께 승인한 것으로 본다.
+- 범위 안에서는 끊지 않고 진행한다. 커밋·푸시는 묶음마다 시험 결과를 확인한 뒤 성격별로 한다.
+- 멈춰서 묻는 것: 삭제, 비용, 목록 밖 라이브러리, 작업 스케줄러 등록 직전 확인(SPEC에서 정함).
+
+## 라이브러리 (승인 대상)
+| 이름 | 버전 | 이유 |
+| --- | --- | --- |
+| Cytoscape.js | 3.34.4 (2026-10-15 공개, MIT, 의존성 0개) | 그래프 그리기. npm 레지스트리에서 `dist/cytoscape.min.js` 한 파일을 받아 `radar/web/static/`에 넣는다. CDN은 쓰지 않는다. SHA-256은 시험으로 고정하고, npm이 준 sha512 무결성 값과 대조한다 |
+
+- Python 새 패키지는 없다. 정적 파일은 Starlette에 이미 있는 `StaticFiles`로 내보낸다.
+- 배치는 Cytoscape 내장 `cose`를 쓰고, 확장 플러그인은 쓰지 않는다.
+
+## 구조 (기존 계층 그대로: domain ← adapters·llm·store ← 업무 흐름·worker·cli·web)
+```
+migrations/0005_stage4.sql      DDL v1.1 4단계 표 + origin·hidden_at·quote·relation_proposals + RLS
+radar/domain/relations.py       (신규) 후보 찾기(이름·별칭이 페이지에 낱말로 나오는 기술, 최대 20), 모델 출력 검사(근거 문장이 페이지에 실제로 있는지, 후보 id인지), 대칭 관계 방향 맞추기
+radar/domain/prompts.py         PROFILE 지시문에 관계 규칙 추가, profile_schema(candidate_ids)로 relations 배열 스키마
+radar/store/relations.py        (신규) AI 관계 저장(관계+근거 한 트랜잭션, 매트릭스 위반·유형 없음은 제안으로), 확인·숨김·되돌리기, 직접 잇기, 검토 목록, 표본, 그래프 데이터
+radar/web/graph_routes.py       (신규) /graph, /graph.json, /relations/sample, 관계 POST
+radar/web/static/cytoscape.min.js, graph.js   (신규) 그래프 화면 스크립트(점·선은 글자 데이터로만 넣는다)
+radar/web/templates/graph.html, _relations.html (신규), detail.html·monitor.html·base.html 수정
+scripts/start-worker.ps1        (신규) pid가 살아 있으면 그냥 끝, 아니면 워커를 창 없이 띄우고 pid 기록
+```
+- 고치는 기존 코드:
+  - `radar/profile.py`: 페이지를 읽었으면 후보를 찾아 payload에 넣고, 결과의 relations를 `store/relations`로 저장한다. 버린 수를 로그로 남긴다.
+  - `radar/domain/profile.py`: `parse_profile`은 그대로 두고, 관계 해석은 `domain/relations.py`가 맡는다.
+  - `radar/holds.py`: `set_type`(웹·CLI·retype 공통 경로)이 성공하면 그 기술의 open 제안을 다시 검사한다.
+  - `radar/profile.py` `backfill`과 `radar/cli.py`: `--all`(이미 프로필이 있는 기술도)을 더한다.
+  - `radar/web/app.py`: `StaticFiles` mount를 더한다. `routes.py`는 300줄을 넘지 않게 그래프·관계 라우트를 새 파일로 나눈다.
+  - `radar/gate.py`, `radar/cli.py`: `gate-check --stage 4`를 더한다.
+  - `radar/backup.py`: `TABLES`에 4단계 표 4개를 더한다.
+- 재사용하는 기존 코드:
+  - 호출·기록: `_ask`(`radar/analyze.py`), `AnalysisStore`. 입력 해시에 스키마가 들어가므로 후보가 바뀌면 새 호출이 된다.
+  - 이름 찾기: `TechnologyStore`(정규명·별칭), `views.search`.
+  - 화면: 3단계 안전 규칙(`HostOriginGuard`, 자동 이스케이프, `safe_url`), `_form`·`_back`·`_number`(`radar/web/routes.py`).
+- 함수는 30줄, 파일은 300줄 안팎으로 쓰고, 공개 함수에는 타입 힌트를 단다.
+
+## 작업 순서 (SPEC v1.7 4단계 절)
+- **T4-0 준비**: Cytoscape 3.34.4 받기(무결성 대조), `0005_stage4.sql`(임시 스키마 시험 → 운영 적용).
+- **T4-1 관계 뽑기 규칙**(domain):
+  - 후보 찾기: 낱말 경계, 3글자 미만은 대소문자까지 일치, 자기 자신·보관 기술 제외.
+  - 출력 검사: 후보 밖 id, 페이지에 없는 근거 문장(공백 무시 비교), 대칭 방향.
+  - 지시문을 심은 페이지 fixture로 시험한다.
+- **T4-2 저장과 프로필 연결**(store·profile·holds):
+  - 매트릭스 트리거가 막으면 제안(`matrix`)으로, 한쪽 유형이 없으면 제안(`untyped`)으로 보낸다.
+  - 같은 관계는 근거만 늘린다. 다시 만들어도 확인·숨김은 그대로 둔다.
+  - 유형을 정하면 open 제안을 다시 검사한다.
+  - `profile backfill --all`.
+- **T4-3 관계 화면**:
+  - 상세 화면의 관련 기술 표(문장형, 확인·숨기기·되돌리기)와 직접 잇기(활성 기술 이름 datalist, 매트릭스 위반이면 까닭을 보여 줌).
+  - Monitor 검토 목록(버리기, 유형 고치기 링크).
+  - `/relations/sample`(md5(id) 순서 50개).
+- **T4-4 그래프 화면**:
+  - `/graph.json`(전체·이웃 1~2단계·`all=1`).
+  - `/graph`(색은 유형, 크기는 출처 수, 점선·실선, 대칭은 화살표 없음, 거르기, 이름 찾기, 점 누르면 상세).
+  - 상세 안 이웃 그래프와, 같은 내용의 표.
+  - 다크 모드·키보드·대비를 지킨다.
+- **T4-5 워커 자동 시작**: `scripts/start-worker.ps1`과 등록·해제 명령을 문서로 둔다. 등록은 사용자에게 한 번 확인받고 `Register-ScheduledTask`(현재 사용자 로그온, 관리자 권한 없음)로 한다.
+- **T4-6 운영 적용**:
+  - 마이그레이션 적용, 워커를 새 코드로 다시 시작, `profile backfill --all`(약 200~250회, 1~2일).
+  - 실제 모델 결과 10개를 눈으로 점검: 관계가 맞는지, 근거 문장 버림 비율, 깨진 글자.
+- **T4-7 게이트**:
+  - `gate-check --stage 4`: 매트릭스 위반 저장 0, AI 관계 근거 없음 0, 그래프 점·선 수 일치.
+  - 사용자가 `/relations/sample` 50개를 판정하고 Precision을 잰다.
+  - QA를 `docs/qa-guide.md`에 적고, 숫자로 보고해 승인을 받는다.
+
+## 위험과 한계
+- **정수 enum:** Gemini가 `responseJsonSchema`의 정수 enum을 지키는지 확인하지 못했다. 그래서 받은 뒤에도 후보 id인지 검사한다(이중 방어).
+- **근거 문장 버림:** 모델이 문장을 바꿔 쓰면 근거 검사에서 많이 버려질 수 있다. T4-6에서 버림 비율을 재고, 높으면 지시문을 고친다(검사를 느슨하게 하지 않는다).
+- **이어지지 않는 관계:** 먼저 프로필이 만들어진 기술은 나중 기술과 이어지지 않는다(SPEC 한계). 다시 이을 방법은 4단계 측정 뒤에 정한다.
+- **호출:** `--all`은 이미 프로필이 있는 약 90개도 다시 부른다. 관계를 얻으려면 한 번은 다시 불러야 하기 때문이다. 그동안 새 글 분석과 하루 375회를 나눠 쓴다.
+- **그래프가 읽힐지:** 기술 200~1,000개에서 점이 뭉칠 수 있다. 기본으로 관계가 있는 기술만 보여 주고, 사용자 QA로 확인한다.
+- **깨진 한국어:** AI 판단 칸처럼 깨질 수 있다. 관계에는 모델이 쓴 한국어가 없다(근거 문장은 페이지 원문, 관계 문장은 규칙으로 만든다).
+
+## 검증
+- `python -m pytest` 통과 수를 변경 전후로 보고한다(현재 377개). 1~3단계 `gate-check`가 여전히 통과하는지 본다.
+- 안전 시험:
+  - 이름에 `<script>`를 넣은 기술이 그래프·표에서 글자로만 보인다.
+  - 다른 Origin에서 온 관계 POST를 거절한다.
+  - 지시문을 심은 페이지로 관계를 뽑아도 후보 밖 기술이나 스키마 밖 값이 나오지 않는다.
+- 동작 시험:
+  - 매트릭스를 어긴 관계와 유형 없는 기술의 관계는 저장되지 않고 제안으로 간다.
+  - 유형을 정하면 제안이 관계가 된다.
+  - 근거 문장이 페이지에 없으면 버린다. 대칭 관계는 한 방향만 저장한다.
+  - 같은 관계를 다시 뽑으면 근거만 늘어난다. 다시 만들어도 확인·숨김이 그대로다.
+  - `/graph.json`의 점·선 수가 DB와 같다.
+  - 정적 파일 SHA-256이 고정값과 같다.
+- 화면: `radar web`을 띄워 그래프·상세·Monitor·표본 화면이 200으로 응답하는지 HTTP로 확인한다. 눈으로 보는 확인은 사용자 QA로 넘긴다(이 세션에는 내장 브라우저가 없다).
