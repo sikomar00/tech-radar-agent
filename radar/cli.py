@@ -10,7 +10,7 @@ from radar.adapters.http import UrllibClient
 from radar import backup, events, holds, profile
 from radar.config import database_url, gemini_api_key, load_env
 from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
-from radar.gate import gate_report, stage2_report
+from radar.gate import gate_report, stage2_report, stage3_report
 from radar.llm import LlmClient
 from radar.llm.gemini import GeminiClient
 from radar.manual import add_urls
@@ -57,8 +57,8 @@ def _parser() -> argparse.ArgumentParser:
     add = sub.add_parser("add", help="이미 아는 기술의 URL을 등록한다(분석은 워커가 한다)")
     add.add_argument("url", nargs="?", help="등록할 URL 하나")
     add.add_argument("--file", type=Path, help="한 줄에 URL 하나씩 적은 파일(UTF-8)")
-    gate = sub.add_parser("gate-check", help="게이트를 숫자로 점검한다(2단계는 DB로 확인하는 항목만)")
-    gate.add_argument("--stage", type=int, choices=[1, 2], default=1)
+    gate = sub.add_parser("gate-check", help="게이트를 숫자로 점검한다(2·3단계는 DB로 확인하는 항목만)")
+    gate.add_argument("--stage", type=int, choices=[1, 2, 3], default=1)
     return parser
 
 
@@ -168,7 +168,8 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
     elif args.command == "eval":
         return eval_command(conn, database_url(), _llm(), args.holdout, args.unreviewed, args.golden, args.cache)
     elif args.command == "gate-check":
-        lines, passed = gate_report(conn) if args.stage == 1 else stage2_report(conn, utc_now)
+        reports = {1: lambda: gate_report(conn), 2: lambda: stage2_report(conn, utc_now), 3: lambda: stage3_report(conn)}
+        lines, passed = reports[args.stage]()
         print("\n".join(lines))
         print("결과:", "통과" if passed else "미달")
         return 0 if passed else 1
