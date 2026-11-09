@@ -4,8 +4,8 @@
       "content": {
         "parts": [
           {
-            "text": "{\n  \"class\": \"UPDATE\",\n  \"canonical_name\": \"Claude Code\",\n  \"type\": \"PRODUCT\",\n  \"aliases_en\": [\n    \"claude-code\"\n  ],\n  \"aliases_ko\": [\n    \"클로드 코드\"\n  ],\n  \"reason\": \"Claude Code의 새 버전 릴리스 노트다\"\n}",
-            "thoughtSignature": "EmAKXgFpFH0TJLQ0HTw1parqlL/mjwafIKcw7M25Xz5wDK1z3CarbbU0mhI9FjbEIwVoS7bcQbIK5w1JmN1IUFAlGtNa+MfeNdVijLB1NTndzTAepgaNJeT54peajxoM2Zw="
+            "text": "{\"class\": \"UPDATE\", \"canonical_name\": \"Claude Code\", \"type\": \"PRODUCT\", \"aliases_en\": [\"claude-code\"], \"aliases_ko\": [\"클로드 코드\"], \"reason\": \"Claude Code의 새로운 버전 출시 소식이므로 UPDATE로 분류했습니다.\"}",
+            "thoughtSignature": "EmAKXgFpFH0T2wUq3HuhhdxbK8nDuIpYzF7PXhGxJrczPEYngHwxJ4fUKymsunOoI545/kD9UoJcF/LHTKpXwFdLuKP74HeF1qkYkJNui5TZ5sCjaaG5T6xuv51VdlRtWV4="
           }
         ],
         "role": "model"
@@ -15,17 +15,17 @@
     }
   ],
   "usageMetadata": {
-    "promptTokenCount": 496,
-    "candidatesTokenCount": 67,
-    "totalTokenCount": 563,
+    "promptTokenCount": 698,
+    "candidatesTokenCount": 61,
+    "totalTokenCount": 759,
     "promptTokensDetails": [
       {
         "modality": "TEXT",
-        "tokenCount": 496
+        "tokenCount": 698
       }
     ],
     "serviceTier": "standard"
   },
   "modelVersion": "gemini-3.5-flash-lite",
-  "responseId": "TbrtavCTKpSj9tMPzNau6Qc"
+  "responseId": "t4XxaoOEOd-bvr0PhNyTkQ0"
 }
