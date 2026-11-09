@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Monitor{% endblock %}
+{% block content %}
+<h1>System Monitor</h1>
+
+<h2>수집 (최근 24시간)</h2>
+<div class="wrap"><table>
+  <thead><tr><th scope="col">소스</th><th scope="col">요청</th><th scope="col">실패</th><th scope="col">성공률</th><th scope="col">마지막 실행</th><th scope="col">마지막 실패 원인</th></tr></thead>
+  <tbody>{% for c in collection %}
+  <tr><td>{{ c.name }}</td><td>{{ c.requests }}</td><td>{{ c.failed }}</td>
+    <td>{{ "%.1f%%"|format(100 * (c.requests - c.failed) / c.requests) if c.requests else "-" }}</td>
+    <td class="muted">{{ c.last_run.strftime("%m-%d %H:%M") if c.last_run else "없음" }}</td><td class="muted">{{ (c.last_error or "")[:120] }}</td></tr>
+  {% endfor %}</tbody>
+</table></div>
+
+<h2>분석</h2>
+<p>오늘(태평양 시간) 모델 호출 <strong>{{ calls_today }}</strong> / 상한 {{ cap }}
+  {% if calls_today >= cap %}<span class="chip">상한 도달 · 내일 이어서</span>{% endif %}
+  {% if paused %}<span class="chip">연속 실패로 잠시 쉼(30분)</span>{% endif %}</p>
+<h3>최근 분석 실패</h3>
+{% if failures %}<div class="wrap"><table>
+  <thead><tr><th scope="col">시각</th><th scope="col">종류</th><th scope="col">대상</th><th scope="col">원인</th><th scope="col">재시도 가능</th></tr></thead>
+  <tbody>{% for f in failures %}
+  <tr><td class="muted">{{ f.created_at.strftime("%m-%d %H:%M") }}</td><td>{{ f.kind }}</td>
+    <td>{% if f.technology_id %}<a href="/kb/{{ f.technology_id }}">기술 #{{ f.technology_id }}</a>{% else %}항목 #{{ f.source_item_id }}{% endif %}</td>
+    <td>{{ f.error }}</td><td>{{ "예" if f.retryable else "아니오" }}</td></tr>
+  {% endfor %}</tbody>
+</table></div>{% else %}<p class="muted">분석 실패가 없습니다.</p>{% endif %}
+
+<h2>잡</h2>
+<p>{% for j in job_counts %}<span class="chip">{{ j.kind }} · {{ j.status }} {{ j.n }}</span> {% endfor %}</p>
+{% if failed_jobs %}<div class="wrap"><table>
+  <thead><tr><th scope="col">잡</th><th scope="col">종류</th><th scope="col">시도</th><th scope="col">원인</th><th scope="col"><span class="skip">동작</span></th></tr></thead>
+  <tbody>{% for j in failed_jobs %}
+  <tr><td>#{{ j.id }}</td><td>{{ j.kind }}</td><td>{{ j.attempts }}</td><td>{{ (j.last_error or "")[:200] }}</td>
+    <td><form method="post" action="/monitor/{{ j.id }}/retry"><input type="hidden" name="next" value="/monitor"><button>다시 실행</button></form></td></tr>
+  {% endfor %}</tbody>
+</table></div>{% else %}<p class="muted">실패한 잡이 없습니다.</p>{% endif %}
+
+<h2>분류 보류</h2>
+<h3>유형을 정해야 하는 기술 {{ holds.technologies|length }}개</h3>
+{% for t in holds.technologies %}
+<form class="filters" method="post" action="/monitor/{{ t.id }}/type">
+  <input type="hidden" name="next" value="/monitor">
+  <span><a href="/kb/{{ t.id }}">{{ t.canonical_name }}</a> <span class="muted">근거 {{ t.sources }}건</span></span>
+  <label>유형 <select name="type">{% for ty in hold_types %}<option>{{ ty }}</option>{% endfor %}</select></label><button>정하기</button>
+</form>
+{% else %}<p class="muted">없습니다.</p>{% endfor %}
+<h3>기존 기술과 같은지 모르는 항목 {{ holds["items"]|length }}개</h3>
+{% for i in holds["items"] %}
+<div class="filters">
+  <span>#{{ i.id }} {% set link = i.url|safe_url %}{% if link %}<a href="{{ link }}" rel="noopener noreferrer" target="_blank">{{ i.title }}</a>{% else %}{{ i.title }}{% endif %}
+    <span class="muted">모델 판단: {{ i.classified.get("canonical_name", "") }}</span></span>
+  <form class="inline" method="post" action="/monitor/{{ i.id }}/link"><input type="hidden" name="next" value="/monitor">
+    <label>기술 id <input name="technology_id" inputmode="numeric" size="6" required></label><button>기존 기술에 연결</button></form>
+  <form class="inline" method="post" action="/monitor/{{ i.id }}/new"><input type="hidden" name="next" value="/monitor"><button>새 기술로</button></form>
+</div>
+{% else %}<p class="muted">없습니다.</p>{% endfor %}
+{% endblock %}

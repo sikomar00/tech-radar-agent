@@ -18,6 +18,7 @@ from radar.seed import seed_sources
 from radar.store import runs
 from radar.store.db import apply_migrations, connect
 from radar.store.jobs import JobQueue
+from radar.web.app import HOST as WEB_HOST, PORT as WEB_PORT, serve
 from radar.worker import run_forever, run_once, utc_now
 
 
@@ -39,6 +40,7 @@ def _parser() -> argparse.ArgumentParser:
     holds_cmd.add_argument("action", choices=["list", "set", "link", "new", "retype"])
     holds_cmd.add_argument("ids", nargs="*", help="set: 기술 id와 유형(PRODUCT|FRAMEWORK_LIBRARY|PROTOCOL_STANDARD|MODEL), "
                            "link: 항목 id와 기술 id, new: 항목 id. retype은 인자 없음")
+    sub.add_parser("web", help="웹 화면을 이 PC에서만 연다(127.0.0.1:8765)")
     profile_cmd = sub.add_parser("profile", help="기술 프로필")
     profile_cmd.add_argument("action", choices=["backfill"], help="프로필이 없는 기술마다 프로필 잡을 2분 간격으로 넣는다")
     events_cmd = sub.add_parser("events", help="변화 이력")
@@ -63,6 +65,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     url = database_url()
     if args.command == "worker" and not args.once:
         run_forever(lambda: connect(url), UrllibClient(), _llm())
+        return 0
+    if args.command == "web":
+        print(f"http://{WEB_HOST}:{WEB_PORT} 에서 엽니다(이 PC에서만). 끝내려면 Ctrl+C")
+        serve(url)
         return 0
     with connect(url) as conn:
         return _run(args, conn)

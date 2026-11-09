@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Tech Radar{% endblock %} · Tech Radar</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1a1a1a; --muted: #5c5c5c; --line: #d9d9d9; --accent: #0b57d0; --warn-bg: #fff4ce; --warn-fg: #5c4400; --chip: #f1f3f4; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161616; --fg: #ececec; --muted: #a8a8a8; --line: #3a3a3a; --accent: #8ab4f8; --warn-bg: #3d3200; --warn-fg: #ffe28a; --chip: #262626; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, "Malgun Gothic", sans-serif; }
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .skip { position: absolute; left: -9999px; } .skip:focus { left: 16px; top: 8px; background: var(--bg); padding: 4px 8px; }
+  header { border-bottom: 1px solid var(--line); }
+  header .inner, main { max-width: 1040px; margin: 0 auto; padding: 12px 16px; }
+  nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  nav a { text-decoration: none; font-weight: 600; } nav a[aria-current="page"] { text-decoration: underline; }
+  nav form { margin-left: auto; display: flex; gap: 6px; }
+  input, select, textarea, button { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; }
+  button { cursor: pointer; } button.link { border: none; padding: 0 4px; color: var(--accent); text-decoration: underline; background: none; }
+  table { width: 100%; border-collapse: collapse; } th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .muted { color: var(--muted); font-size: 14px; } .chip { background: var(--chip); border-radius: 4px; padding: 0 6px; font-size: 13px; white-space: nowrap; }
+  .notice { background: var(--warn-bg); color: var(--warn-fg); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin: 8px 0 16px; } .filters label { display: grid; font-size: 14px; }
+  .inline { display: inline; } .unverified { color: var(--muted); font-style: italic; }
+  .wrap { overflow-x: auto; } h1 { font-size: 24px; margin: 8px 0; } h2 { font-size: 19px; margin: 24px 0 8px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header><div class="inner"><nav aria-label="주 메뉴">
+  {% set here = request.url.path %}
+  <a href="/" {% if here == "/" %}aria-current="page"{% endif %}>Feed</a>
+  <a href="/kb" {% if here.startswith("/kb") %}aria-current="page"{% endif %}>Knowledge Base</a>
+  <a href="/monitor" {% if here == "/monitor" %}aria-current="page"{% endif %}>Monitor</a>
+  <form action="/kb" method="get" role="search"><label for="top-q" class="skip">기술 검색</label>
+    <input id="top-q" name="q" type="search" placeholder="이름·별칭·키워드" value="{{ q or '' }}"><button>검색</button></form>
+</nav></div></header>
+<main id="main">
+{% if msg %}<p class="notice" role="status">{{ msg }}</p>{% endif %}
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

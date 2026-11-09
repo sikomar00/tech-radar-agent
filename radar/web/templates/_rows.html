@@ -1,0 +1,29 @@
+{% set STATE_LABELS = {"unread": "안 읽음", "saved": "저장", "learned": "학습함"} %}
+{% macro rows_table(rows, back, show_new=false) %}
+<div class="wrap"><table>
+  <thead><tr><th scope="col">기술</th><th scope="col">유형</th><th scope="col">최근 출처</th><th scope="col">출처 수</th><th scope="col">내 상태</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+  <tr>
+    <td><a href="/kb/{{ r.id }}">{{ r.canonical_name }}</a>
+      {% if show_new %}<span class="chip">{{ "새 기술" if r.is_new else "업데이트" }}</span>{% endif %}
+      {% if r.one_liner %}<div class="muted">{{ r.one_liner }}</div>{% endif %}</td>
+    <td><span class="chip">{{ r.type or "분류 보류" }}</span></td>
+    <td>{{ r.last_title }}<div class="muted">{{ r.last_seen.strftime("%Y-%m-%d %H:%M") }}</div></td>
+    <td>{{ r.sources }}</td>
+    <td>
+      {% for value, label in STATE_LABELS.items() %}
+      <form class="inline" method="post" action="/kb/{{ r.id }}/state">
+        <input type="hidden" name="state" value="{{ value }}"><input type="hidden" name="next" value="{{ back }}">
+        <button class="link" {% if r.state == value %}aria-pressed="true" disabled{% else %}aria-pressed="false"{% endif %}
+          aria-label="{{ r.canonical_name }}을(를) {{ label }}으로">{{ label }}</button>
+      </form>
+      {% endfor %}
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5" class="muted">보여 줄 기술이 없습니다.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endmacro %}
