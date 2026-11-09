@@ -4,7 +4,7 @@ from typing import Any
 
 import psycopg
 
-from radar.domain.listing import ai_reason, rule_basis
+from radar.domain.listing import ai_reason, description, rule_basis
 
 STATES = ("unread", "saved", "learned")
 SOURCE_KINDS = ("github", "hackernews", "rss", "manual")
@@ -20,6 +20,7 @@ select t.id, t.canonical_name, t.type, t.created_at, max(i.first_discovered_at) 
        coalesce(k.state::text, 'unread') as state, k.importance,
        (select c.content from technology_claims c where c.technology_id = t.id and c.field = 'one_liner' and c.is_current
         order by c.id desc limit 1) as one_liner,
+       (array_agg(i.excerpt order by i.first_discovered_at, i.id) filter (where coalesce(i.excerpt, '') <> ''))[1] as excerpt,
        (array_agg(jsonb_build_object('kind', so.kind, 'source', so.name, 'stars', i.metadata -> 'stars',
             'score', i.metadata -> 'score', 'tag', i.metadata -> 'tag', 'class', cr.result -> 'class',
             'reason', cr.result -> 'reason') order by i.first_discovered_at desc))[1] as basis
@@ -41,6 +42,12 @@ def _with_reasons(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [{**row, "rule_basis": rule_basis(row["basis"]), "ai_reason": ai_reason(row["basis"])} for row in rows]
 
 
+def _with_description(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """줄마다 기술이 대략 무엇인지(프로필 한 줄 설명, 없으면 가장 먼저 발견한 출처의 발췌)를 붙인다."""
+    return [{**row, **dict(zip(("description", "description_source"), description(row["one_liner"], row["excerpt"])))}
+            for row in rows]
+
+
 def user_id(conn: psycopg.Connection) -> str:
     """사용자는 한 명이다(ADR-0006). 마이그레이션 0003이 넣은 행을 쓴다."""
     return str(conn.execute("select id from users order by created_at limit 1").fetchone()["id"])
@@ -52,7 +59,7 @@ def feed(conn: psycopg.Connection, user: str, since: datetime, state: str | None
                          having="max(i.first_discovered_at) >= %(since)s and (%(state)s::text is null "
                                 "or coalesce(k.state::text, 'unread') = %(state)s)")
     rows = conn.execute(query, {"user": user, "since": since, "state": state}).fetchall()
-    return [{**row, "is_new": row["created_at"] >= since} for row in _with_reasons(rows)]
+    return [{**row, "is_new": row["created_at"] >= since} for row in _with_description(_with_reasons(rows))]
 
 
 def _like(text: str) -> str:
@@ -74,7 +81,7 @@ def search(conn: psycopg.Connection, user: str, q: str, filters: dict[str, Any])
     having = ("(%(since)s::timestamptz is null or min(i.first_discovered_at) >= %(since)s) "
               "and (%(state)s::text is null or coalesce(k.state::text, 'unread') = %(state)s)")
     params = {"user": user, "q": q.strip(), "like": _like(q.strip()), "fuzzy": FUZZY_SEARCH_MIN, **filters}
-    return _with_reasons(conn.execute(_ROWS.format(where=where, having=having, limit=ROW_LIMIT), params).fetchall())
+    return _with_description(_with_reasons(conn.execute(_ROWS.format(where=where, having=having, limit=ROW_LIMIT), params).fetchall()))
 
 
 def detail(conn: psycopg.Connection, user: str, technology_id: int) -> dict[str, Any] | None:
@@ -88,7 +95,7 @@ def detail(conn: psycopg.Connection, user: str, technology_id: int) -> dict[str,
     aliases = conn.execute("select alias, lang from technology_aliases where technology_id = %s order by lang, alias",
                            (technology_id,)).fetchall()
     sources = conn.execute(
-        "select i.id, i.title, i.url, i.first_discovered_at, s.kind as source_kind, s.name as source_name, ts.evidence_type, "
+        "select i.id, i.title, i.url, i.excerpt, i.first_discovered_at, s.kind as source_kind, s.name as source_name, ts.evidence_type, "
         "jsonb_build_object('kind', s.kind, 'source', s.name, 'stars', i.metadata -> 'stars', 'score', i.metadata -> 'score', "
         "'tag', i.metadata -> 'tag', 'class', cr.result -> 'class', 'reason', cr.result -> 'reason') as basis "
         "from technology_sources ts join source_items i on i.id = ts.source_item_id join sources s on s.id = i.source_id "

@@ -6,6 +6,7 @@
 {% set EVENT_LABELS = {"release": "릴리스", "first_published": "최초 공개"} %}
 {% set back = "/kb/" ~ tech.id %}
 <h1>{{ tech.canonical_name }}</h1>
+{% if summary %}<p>{{ summary }} <span class="muted">({{ summary_source }})</span></p>{% endif %}
 {% if tech.archived_at %}<p class="notice">보관한 기술입니다({{ tech.archived_at.strftime("%Y-%m-%d") }}). Feed와 검색에 나오지 않습니다.</p>{% endif %}
 <p>
   <span class="chip">{{ tech.type or "분류 보류" }}</span>

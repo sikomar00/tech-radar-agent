@@ -9,6 +9,7 @@ from starlette.routing import Route
 
 from radar import holds
 from radar.analyze import DAILY_CAP, analysis_paused
+from radar.domain.listing import description
 from radar.domain.profile import ALL_FIELDS
 from radar.store import knowledge, monitor, views
 from radar.store.analysis import AnalysisStore
@@ -84,7 +85,11 @@ async def detail(request: Request) -> Response:
         claims = knowledge.current_claims(conn, technology_id) if found else {}
     if found is None:
         return PlainTextResponse("없는 기술입니다", status_code=404)
-    return _render(request, "detail.html", {**found, "claims": claims, "fields": ALL_FIELDS})
+    one_liner = claims["one_liner"]["content"] if "one_liner" in claims else None
+    first_excerpt = next((s["excerpt"] for s in reversed(found["sources"]) if s["excerpt"]), None)  # 출처는 최근 순이다
+    summary, summary_source = description(one_liner, first_excerpt)
+    return _render(request, "detail.html", {**found, "claims": claims, "fields": ALL_FIELDS,
+                                            "summary": summary, "summary_source": summary_source})
 
 
 async def change(request: Request) -> Response:

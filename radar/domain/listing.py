@@ -27,6 +27,18 @@ def rule_basis(basis: dict[str, Any] | None) -> str:
     return " · ".join(part for part in (label, _signal(basis)) if part)
 
 
+DESCRIPTION_LIMIT = 140
+
+
+def description(one_liner: str | None, excerpt: str | None) -> tuple[str, str]:
+    """기술이 대략 무엇인지와 그 출처 표시. 프로필 한 줄 설명(AI 요약)이 있으면 그것, 없으면 출처 발췌(원문 그대로)."""
+    for text, label in ((one_liner, "AI 요약"), (excerpt, "출처 발췌")):
+        cleaned = strip_control(text or "").strip()
+        if cleaned:
+            return (cleaned[:DESCRIPTION_LIMIT] + ("…" if len(cleaned) > DESCRIPTION_LIMIT else "")), label
+    return "", ""
+
+
 def ai_reason(basis: dict[str, Any] | None) -> str:
     """모델이 쓴 이유 한 줄. 이 칸이 생기기 전에 분류된 글은 빈 문자열이다. 화면은 자동 이스케이프로 보여 준다."""
     reason = (basis or {}).get("reason")
