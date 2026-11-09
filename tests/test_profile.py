@@ -149,3 +149,11 @@ def test_backfill_spaces_jobs_two_minutes_apart_and_runs_once(db) -> None:
     assert backfill(db, clock) == 3 and backfill(db, clock) == 0
     gaps = [r["run_after"] for r in db.execute("select run_after from jobs order by id")]
     assert [(b - a).total_seconds() for a, b in zip(gaps, gaps[1:])] == [120, 120]
+
+
+def test_backfill_can_take_only_technologies_without_any_excerpt(db) -> None:
+    _tech(db, "Bare", kind="hackernews", url="https://bare.example/")
+    described, item = _tech(db, "Described", kind="rss", url="https://described.example/")
+    db.execute("update source_items set excerpt = 'A described tool.' where id = %s", (item,))
+    assert backfill(db, Clock(), only_without_excerpt=True) == 1
+    assert db.execute("select (payload ->> 'technology_id')::bigint as t from jobs").fetchone()["t"] != described

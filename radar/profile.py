@@ -83,13 +83,20 @@ def run_profile_job(env: ProfileEnv, job: dict[str, Any]) -> None:
     log.info("기술 %d %r: 프로필 %d칸(페이지 %s)", technology_id, tech["canonical_name"], len(fields), "읽음" if page else "못 읽음")
 
 
-def backfill(conn: psycopg.Connection, clock: Callable[[], datetime]) -> int:
-    """현재 프로필이 없고 프로필 잡도 없었던 기술마다 잡을 넣는다. README 한도 때문에 2분 간격으로 띄운다."""
+_NO_EXCERPT = ("and not exists (select 1 from technology_sources s join source_items i on i.id = s.source_item_id "
+               "where s.technology_id = t.id and coalesce(i.excerpt, '') <> '') ")
+
+
+def backfill(conn: psycopg.Connection, clock: Callable[[], datetime], only_without_excerpt: bool = False) -> int:
+    """현재 프로필이 없고 프로필 잡도 없었던 기술마다 잡을 넣는다. README 한도 때문에 2분 간격으로 띄운다.
+
+    only_without_excerpt면 화면에 보일 설명(출처 발췌)조차 없는 기술만 넣는다(2026-11-09 결정: 나머지는 4단계에서 관계와 함께).
+    """
     rows = conn.execute(
         "select t.id from technologies t where t.archived_at is null "
         "and not exists (select 1 from technology_claims c where c.technology_id = t.id and c.is_current) "
         "and not exists (select 1 from jobs j where j.kind = %s and (j.payload ->> 'technology_id')::bigint = t.id) "
-        "order by t.id", (PROFILE,),
+        + (_NO_EXCERPT if only_without_excerpt else "") + "order by t.id", (PROFILE,),
     ).fetchall()
     queue, now = JobQueue(conn, clock), clock()
     for n, row in enumerate(rows):

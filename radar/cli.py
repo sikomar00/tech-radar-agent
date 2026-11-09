@@ -47,6 +47,7 @@ def _parser() -> argparse.ArgumentParser:
     restore_cmd.add_argument("--keep", action="store_true", help="확인한 임시 스키마를 지우지 않고 남긴다")
     profile_cmd = sub.add_parser("profile", help="기술 프로필")
     profile_cmd.add_argument("action", choices=["backfill"], help="프로필이 없는 기술마다 프로필 잡을 2분 간격으로 넣는다")
+    profile_cmd.add_argument("--no-excerpt-only", action="store_true", help="화면에 보일 설명(출처 발췌)도 없는 기술만")
     events_cmd = sub.add_parser("events", help="변화 이력")
     events_cmd.add_argument("action", choices=["backfill"], help="이미 기술에 붙은 GitHub 항목으로 이벤트를 채운다(추가만 한다)")
     eval_cmd = sub.add_parser("eval", help="골든셋으로 분석 품질을 잰다(운영 워커를 멈추고 실행)")
@@ -160,7 +161,7 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
         print("결과:", "모두 같음" if ok else "다른 표가 있음", f"(임시 스키마 {schema} {'남김' if args.keep else '지움'})")
         return 0 if ok else 1
     elif args.command == "profile":
-        print(f"프로필 잡 {profile.backfill(conn, utc_now)}개를 넣었습니다(2분 간격)")
+        print(f"프로필 잡 {profile.backfill(conn, utc_now, args.no_excerpt_only)}개를 넣었습니다(2분 간격)")
     elif args.command == "events":
         print(f"새 이벤트 {events.backfill(conn)}개를 쌓았습니다")
     elif args.command == "add":
