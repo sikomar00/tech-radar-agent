@@ -10,11 +10,12 @@ from radar.adapters.http import UrllibClient
 from radar import backup, events, holds, profile
 from radar.config import database_url, gemini_api_key, load_env
 from radar.eval import CACHE_PATH, GOLDEN_PATH, eval_command
-from radar.gate import gate_report, stage2_report, stage3_report
+from radar.gate import gate_report, stage2_report, stage3_report, stage4_report
 from radar.llm import LlmClient
 from radar.llm.gemini import GeminiClient
 from radar.manual import add_urls
 from radar.seed import seed_sources
+from radar.store import graph as graph_store
 from radar.store import runs
 from radar.store.db import apply_migrations, connect
 from radar.store.jobs import JobQueue
@@ -47,7 +48,11 @@ def _parser() -> argparse.ArgumentParser:
     restore_cmd.add_argument("--keep", action="store_true", help="확인한 임시 스키마를 지우지 않고 남긴다")
     profile_cmd = sub.add_parser("profile", help="기술 프로필")
     profile_cmd.add_argument("action", choices=["backfill"], help="프로필이 없는 기술마다 프로필 잡을 2분 간격으로 넣는다")
-    profile_cmd.add_argument("--no-excerpt-only", action="store_true", help="화면에 보일 설명(출처 발췌)도 없는 기술만")
+    scope = profile_cmd.add_mutually_exclusive_group()
+    scope.add_argument("--no-excerpt-only", action="store_true", help="화면에 보일 설명(출처 발췌)도 없는 기술만")
+    scope.add_argument("--all", action="store_true", help="보관하지 않은 모든 기술을 4단계 지시문(프로필+관계)으로 다시 만든다")
+    relations_cmd = sub.add_parser("relations", help="관계")
+    relations_cmd.add_argument("action", choices=["sample"], help="정확도 판정 표본 50개를 한 번 고정한다(4단계 게이트)")
     events_cmd = sub.add_parser("events", help="변화 이력")
     events_cmd.add_argument("action", choices=["backfill"], help="이미 기술에 붙은 GitHub 항목으로 이벤트를 채운다(추가만 한다)")
     eval_cmd = sub.add_parser("eval", help="골든셋으로 분석 품질을 잰다(운영 워커를 멈추고 실행)")
@@ -58,8 +63,8 @@ def _parser() -> argparse.ArgumentParser:
     add = sub.add_parser("add", help="이미 아는 기술의 URL을 등록한다(분석은 워커가 한다)")
     add.add_argument("url", nargs="?", help="등록할 URL 하나")
     add.add_argument("--file", type=Path, help="한 줄에 URL 하나씩 적은 파일(UTF-8)")
-    gate = sub.add_parser("gate-check", help="게이트를 숫자로 점검한다(2·3단계는 DB로 확인하는 항목만)")
-    gate.add_argument("--stage", type=int, choices=[1, 2, 3], default=1)
+    gate = sub.add_parser("gate-check", help="게이트를 숫자로 점검한다(2~4단계는 DB로 확인하는 항목만)")
+    gate.add_argument("--stage", type=int, choices=[1, 2, 3, 4], default=1)
     return parser
 
 
@@ -161,7 +166,12 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
         print("결과:", "모두 같음" if ok else "다른 표가 있음", f"(임시 스키마 {schema} {'남김' if args.keep else '지움'})")
         return 0 if ok else 1
     elif args.command == "profile":
-        print(f"프로필 잡 {profile.backfill(conn, utc_now, args.no_excerpt_only)}개를 넣었습니다(2분 간격)")
+        scope = "all" if args.all else "no_excerpt" if args.no_excerpt_only else "missing"
+        print(f"프로필 잡 {profile.backfill(conn, utc_now, scope)}개를 넣었습니다(2분 간격)")
+    elif args.command == "relations":
+        ok, message = graph_store.freeze_sample(conn)
+        print(message)
+        return 0 if ok else 1
     elif args.command == "events":
         print(f"새 이벤트 {events.backfill(conn)}개를 쌓았습니다")
     elif args.command == "add":
@@ -169,7 +179,8 @@ def _run(args: argparse.Namespace, conn: psycopg.Connection) -> int:
     elif args.command == "eval":
         return eval_command(conn, database_url(), _llm(), args.holdout, args.unreviewed, args.golden, args.cache)
     elif args.command == "gate-check":
-        reports = {1: lambda: gate_report(conn), 2: lambda: stage2_report(conn, utc_now), 3: lambda: stage3_report(conn)}
+        reports = {1: lambda: gate_report(conn), 2: lambda: stage2_report(conn, utc_now), 3: lambda: stage3_report(conn),
+                   4: lambda: stage4_report(conn)}
         lines, passed = reports[args.stage]()
         print("\n".join(lines))
         print("결과:", "통과" if passed else "미달")

@@ -3,6 +3,8 @@ from typing import Any
 
 import psycopg
 
+from radar.store import relations
+
 
 def held_technologies(conn: psycopg.Connection) -> list[dict[str, Any]]:
     return conn.execute(
@@ -25,11 +27,17 @@ def held_items(conn: psycopg.Connection) -> list[dict[str, Any]]:
 
 
 def set_type(conn: psycopg.Connection, technology_id: int, type_: str) -> bool:
-    """유형이 비어 있는 기술에만 유형을 정한다. 이미 정해진 기술은 바꾸지 않는다."""
+    """유형이 비어 있는 기술에만 유형을 정한다. 이미 정해진 기술은 바꾸지 않는다.
+
+    정하면 그 기술 때문에 검토 목록에 간 관계 제안을 다시 검사한다(SPEC v1.7). 웹·CLI·retype이 모두 이 길을 지난다.
+    """
     cur = conn.execute(
         "update technologies set type = %s where id = %s and type is null and archived_at is null", (type_, technology_id)
     )
-    return cur.rowcount == 1
+    if cur.rowcount != 1:
+        return False
+    relations.recheck(conn, technology_id)
+    return True
 
 
 def source_titles(conn: psycopg.Connection, technology_id: int, limit: int = 5) -> list[str]:

@@ -1,4 +1,4 @@
-"""게이트 점검. docs/PRD.md의 완료 기준 중 DB로 확인할 수 있는 것을 숫자로 출력한다(1단계 전부, 2·3단계는 DB 항목만)."""
+"""게이트 점검. docs/PRD.md의 완료 기준 중 DB로 확인할 수 있는 것을 숫자로 출력한다(1단계 전부, 2~4단계는 DB 항목만)."""
 from datetime import datetime
 from typing import Callable
 
@@ -6,6 +6,7 @@ import psycopg
 
 from radar.analyze import DAILY_CAP
 from radar.store.analysis import AnalysisStore
+from radar.store import graph as graph_store
 from radar.store import views
 from radar.store.holds import held_items
 
@@ -116,3 +117,35 @@ def stage3_report(conn: psycopg.Connection) -> tuple[list[str], bool]:
     lines.append("백업 복원은 `radar backup` 다음 `radar restore <폴더>`로 확인한다")
     passed = sourceless == 0 and three >= 1 and sampled > 0 and found == sampled and failed["no_cause"] == 0 and profiles["no_evidence"] == 0
     return lines, passed
+
+
+_MATRIX_BREAKS = (
+    "select count(*)::int as n from technology_relations r join technologies s on s.id = r.source_technology_id "
+    "join technologies t on t.id = r.target_technology_id where not exists (select 1 from relation_type_rules m "
+    "where m.relation_type = r.relation_type and m.source_type = s.type and m.target_type = t.type)"
+)
+_RELATION_COUNTS = (
+    "select count(*) filter (where origin = 'ai')::int as ai, count(*) filter (where origin = 'manual')::int as manual, "
+    "count(*) filter (where hidden_at is not null)::int as hidden, count(*) filter (where user_verified)::int as verified, "
+    "(select count(*)::int from relation_proposals where status = 'open') as proposals from technology_relations"
+)
+
+
+def stage4_report(conn: psycopg.Connection) -> tuple[list[str], bool]:
+    """4단계 게이트 중 DB로 확인하는 항목과 판정 표본의 Precision. 그래프 화면을 눈으로 보는 확인은 사용자 QA다."""
+    lines = ["== 4단계 게이트 =="]
+    breaks = conn.execute(_MATRIX_BREAKS).fetchone()["n"]
+    lines.append(f"허용 매트릭스를 어긴 관계 {breaks}건 (목표 0)")
+    no_evidence = conn.execute("select count(*)::int as n from relations_without_evidence").fetchone()["n"]
+    lines.append(f"근거 없는 AI 관계 {no_evidence}건 (목표 0, 직접 이은 관계는 사용자가 근거)")
+    counts = conn.execute(_RELATION_COUNTS).fetchone()
+    lines.append(f"관계: AI {counts['ai']}개 · 직접 {counts['manual']}개 · 확인 {counts['verified']}개 · 숨김 {counts['hidden']}개, "
+                 f"검토 목록 {counts['proposals']}개")
+    lines.append("그래프의 점·선이 DB와 같은지는 시험(test_graph_web)과 사용자 QA(표본을 눈으로 대조)로 본다")
+    rows = graph_store.sample(conn)
+    verified, judged, precision = graph_store.precision(rows)
+    shown = f"{precision:.1%}" if precision is not None else "판정 없음"
+    lines.append(f"판정 표본 {judged}/{len(rows)}개 판정, 확인 {verified}개, Precision {shown} "
+                 f"(`radar relations sample`로 고정한 {graph_store.SAMPLE_SIZE}개를 모두 판정해야 잰다, 목표치는 잰 뒤 정한다)")
+    full = len(rows) == graph_store.SAMPLE_SIZE and judged == len(rows)
+    return lines, breaks == 0 and no_evidence == 0 and full

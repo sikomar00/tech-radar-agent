@@ -1,6 +1,7 @@
 """분류·매칭 지시문과 출력 스키마. 문구나 스키마를 고치면 입력 해시가 바뀌어 이전 결과를 재사용하지 않는다(analysis.input_hash)."""
 
 from radar.domain.profile import FIELD_LIMITS, MODEL_FIELDS
+from radar.domain.relations import MAX_RELATIONS, QUOTE_LIMIT, RELATION_TYPES
 
 CLASSES = ("ENTITY", "UPDATE", "USAGE", "NEWS", "OPINION", "NOISE")
 TYPES = ("PRODUCT", "FRAMEWORK_LIBRARY", "PROTOCOL_STANDARD", "MODEL", "NONE")  # PATTERN_CONCEPT·RESEARCH는 4단계(S4-05)
@@ -92,10 +93,29 @@ Use only facts stated in the data. Do not use outside knowledge and do not guess
 - differences: how it differs from other technologies, only if the data compares them (at most {FIELD_LIMITS['differences']} characters).
 - use_cases: what people use it for (at most {FIELD_LIMITS['use_cases']} characters).
 - pros_cons: strengths and limitations, only if the data states them (at most {FIELD_LIMITS['pros_cons']} characters).
-When page_text is empty, fill only one_liner from the titles and leave every other field empty."""
+When page_text is empty, fill only one_liner from the titles and leave every other field empty.
+
+candidates lists other technologies already in the knowledge base whose names appear in page_text, as id, name and type.
+- relations: relations between this technology and a candidate that page_text states directly, at most {MAX_RELATIONS}. For each:
+  - other_id: the id of that candidate. Use only ids from candidates.
+  - relation_type: DERIVED_FROM (a fork or derivative of), BUILT_ON (runs on or is built with), EXTENDS (a plugin, extension or skill for), IMPLEMENTS (implements a protocol or standard), PART_OF (a component or package of), REPLACES (a newer thing that replaces an older one), COMPETES_WITH (an alternative to), INTEGRATES_WITH (works together with), or RELATED_TO when page_text clearly connects them but no specific type fits.
+  - this_is_subject: true when this technology is the subject, as in "this technology BUILT_ON the candidate"; false when the candidate is the subject.
+  - quote: one sentence copied exactly from page_text, at most {QUOTE_LIMIT} characters, that names the candidate and states the relation. Do not translate, shorten or rephrase it. A relation without such a sentence is dropped.
+Do not guess and do not use outside knowledge. Return an empty list when candidates is empty or page_text states no relation."""
+_RELATION = {
+    "type": "object",
+    "properties": {
+        "other_id": {"type": "integer"},
+        "relation_type": {"type": "string", "enum": list(RELATION_TYPES)},
+        "this_is_subject": {"type": "boolean"},
+        "quote": {"type": "string"},
+    },
+    "required": ["other_id", "relation_type", "this_is_subject", "quote"],
+    "additionalProperties": False,
+}
 PROFILE_SCHEMA = {
     "type": "object",
-    "properties": {name: {"type": "string"} for name in MODEL_FIELDS},
-    "required": list(MODEL_FIELDS),
+    "properties": {**{name: {"type": "string"} for name in MODEL_FIELDS}, "relations": {"type": "array", "items": _RELATION}},
+    "required": [*MODEL_FIELDS, "relations"],
     "additionalProperties": False,
 }

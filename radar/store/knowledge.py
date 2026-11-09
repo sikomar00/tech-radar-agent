@@ -36,18 +36,24 @@ def representative(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
     return next((r for r in rows if r["evidence_type"] in ("announcement", "official")), rows[0] if rows else None)
 
 
-def save_profile(conn: psycopg.Connection, technology_id: int, fields: dict[str, str], evidence_item: int) -> None:
-    """이전 현재 주장을 모두 내리고 새 주장을 올린다. 행을 지우지 않는다. 빈 칸은 행이 없어 "미확인"이 된다."""
-    run = conn.execute(
+def current_run(conn: psycopg.Connection, technology_id: int) -> int | None:
+    """기술의 현재 프로필 분석 실행 id(주장과 관계가 어느 호출에서 나왔는지 남긴다)."""
+    row = conn.execute(
         "select id from analysis_runs where kind = 'profile' and technology_id = %s and is_current", (technology_id,)
     ).fetchone()
+    return row["id"] if row else None
+
+
+def save_profile(conn: psycopg.Connection, technology_id: int, fields: dict[str, str], evidence_item: int) -> None:
+    """이전 현재 주장을 모두 내리고 새 주장을 올린다. 행을 지우지 않는다. 빈 칸은 행이 없어 "미확인"이 된다."""
+    run = current_run(conn, technology_id)
     with conn.transaction():
         conn.execute("update technology_claims set is_current = false where technology_id = %s and is_current "
                      "and field = any(%s)", (technology_id, list(ALL_FIELDS)))
         for field, content in fields.items():
             claim = conn.execute(
                 "insert into technology_claims (technology_id, field, content, analysis_run_id) values (%s, %s, %s, %s) "
-                "returning id", (technology_id, field, content, run["id"] if run else None),
+                "returning id", (technology_id, field, content, run),
             ).fetchone()["id"]
             conn.execute("insert into claim_evidence (claim_id, source_item_id) values (%s, %s)", (claim, evidence_item))
 

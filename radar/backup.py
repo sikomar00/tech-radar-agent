@@ -18,6 +18,7 @@ BACKUP_DIR = Path("backups")
 TABLES = (
     "sources", "jobs", "collection_runs", "source_items", "technologies", "technology_aliases", "analysis_runs",
     "technology_sources", "users", "technology_claims", "claim_evidence", "technology_events", "user_knowledge", "user_notes",
+    "relation_type_rules", "technology_relations", "relation_evidence", "relation_proposals", "relation_sample",
 )
 
 
@@ -60,6 +61,7 @@ def _load(conn: psycopg.Connection, table: str, path: Path) -> None:
 def restore_check(url: str, folder: Path, schema: str, keep: bool = False) -> tuple[bool, list[str]]:
     """임시 스키마에 되살리고 표마다 행 수와 체크섬을 비교한다. (모두 같은지, 표별 결과 줄)."""
     manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+    saved = [t for t in TABLES if t in manifest]  # 4단계 전에 만든 백업에는 관계 표가 없다
     lines, ok = [], True
     with connect(url) as admin:
         admin.execute(sql.SQL("create schema {}").format(sql.Identifier(schema)))
@@ -70,9 +72,9 @@ def restore_check(url: str, folder: Path, schema: str, keep: bool = False) -> tu
                 tables = sql.SQL(", ").join(sql.Identifier(t) for t in TABLES)
                 with conn.transaction():
                     conn.execute(sql.SQL("truncate {} restart identity cascade").format(tables))  # 마이그레이션이 넣은 기본 행을 비운다
-                    for table in TABLES:
+                    for table in saved:
                         _load(conn, table, folder / f"{table}.csv")
-                for table in TABLES:
+                for table in saved:
                     rows, checksum = _export(conn, table, folder / f".check-{table}.csv")
                     (folder / f".check-{table}.csv").unlink()
                     same = rows == manifest[table]["rows"] and checksum == manifest[table]["sha256"]
