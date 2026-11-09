@@ -27,6 +27,12 @@ def test_ai_reason_is_cleaned_clipped_and_empty_for_old_results() -> None:
     assert ai_reason({}) == "" and ai_reason({"reason": None}) == "" and ai_reason(None) == ""
 
 
+@pytest.mark.parametrize("garbled", ["⌣⌣⌣⌣⌣", "소흐트애여 기슈ᅧᆫ대녀", "\x80\x99\x84 \x94\x80"])  # 운영에서 나온 깨진 이유
+def test_ai_reason_hides_garbled_model_text(garbled) -> None:
+    assert ai_reason({"reason": garbled}) == ""
+    assert ai_reason({"reason": "Next.js 프레임워크의 v16.5 “canary” 릴리스입니다."}) != ""
+
+
 def test_the_model_reason_is_stored_with_the_classification(db) -> None:
     item = add_item(db)
     answer = {**classify("ENTITY", "Ollama"), "reason": "로컬에서 LLM을 돌리는 개발자 도구 발표"}

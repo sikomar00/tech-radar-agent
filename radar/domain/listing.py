@@ -1,4 +1,5 @@
 """Feed·검색의 '리스팅 이유'(2026-11-09 결정). 규칙 근거는 분류 결과와 출처 신호로 만들고, AI 이유는 분류 호출이 쓴 한 줄이다."""
+import re
 from typing import Any
 
 from radar.domain.cleaning import strip_control
@@ -39,7 +40,17 @@ def description(one_liner: str | None, excerpt: str | None) -> tuple[str, str]:
     return "", ""
 
 
+# 완성형 한글, ASCII, 흔한 문장부호만 정상으로 본다. 운영에서 flash-lite가 낸 깨진 이유(낱자모·기호 반복·깨진 바이트)를 걸러 낸다.
+_READABLE = re.compile(r"[가-힣\x20-\x7e·…‘’“”–—]*")
+
+
 def ai_reason(basis: dict[str, Any] | None) -> str:
-    """모델이 쓴 이유 한 줄. 이 칸이 생기기 전에 분류된 글은 빈 문자열이다. 화면은 자동 이스케이프로 보여 준다."""
+    """모델이 쓴 이유 한 줄. 이 칸이 생기기 전에 분류된 글이나 글자가 깨진 이유는 빈 문자열이다. 화면은 자동 이스케이프로 보여 준다.
+
+    shortcut: 읽을 수 있는 글자로만 된 헛소리(예: '슈시미나 녀스로')는 못 거른다, 비율이 커지면 모델이나 언어를 바꾼다.
+    """
     reason = (basis or {}).get("reason")
-    return strip_control(reason).strip()[:REASON_LIMIT] if isinstance(reason, str) else ""
+    if not isinstance(reason, str):
+        return ""
+    cleaned = strip_control(reason).strip()
+    return cleaned[:REASON_LIMIT] if _READABLE.fullmatch(cleaned) else ""
