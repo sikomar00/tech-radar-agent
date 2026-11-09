@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Graph{% endblock %}
+{% block head %}<script src="/static/cytoscape.min.js" defer></script><script src="/static/graph.js" defer></script>{% endblock %}
+{% block content %}
+<h1>Knowledge Graph</h1>
+<p class="muted">점은 기술(색은 유형, 크기는 출처 수), 선은 관계입니다. 점선은 AI가 뽑고 아직 확인하지 않은 관계, 실선은 확인했거나 직접 이은 관계입니다. 점을 누르면 기술 상세로 갑니다.</p>
+
+<div class="filters" id="graph-filters" aria-label="그래프 거르기">
+  <label>유형 <select id="f-type"><option value="">전부</option>{% for t in types %}<option>{{ t }}</option>{% endfor %}</select></label>
+  <label>관계 <select id="f-relation"><option value="">전부</option>{% for t in relation_types %}<option value="{{ t }}">{{ RELATION_LABELS[t] }} ({{ t }})</option>{% endfor %}</select></label>
+  <label><span><input type="checkbox" id="f-verified"> 확인한 관계만</span></label>
+  <label>이름 찾기 <input id="f-name" type="search" list="graph-names" autocomplete="off"></label>
+  <datalist id="graph-names">{% for n in nodes %}<option value="{{ n.name }}">{% endfor %}</datalist>
+  <a href="{{ '/graph' if all_nodes else '/graph?all=1' }}">{{ "관계가 있는 기술만 보기" if all_nodes else "관계 없는 기술도 보기" }}</a>
+</div>
+<div class="legend" id="graph-legend" aria-hidden="true"></div>
+
+{% if edges or all_nodes %}
+<div id="graph" class="graph" data-graph-url="/graph.json{{ '?all=1' if all_nodes else '' }}"
+  role="img" aria-label="기술 {{ nodes|length }}개와 관계 {{ edges|length }}개의 그래프. 같은 내용이 아래 표에 있습니다"></div>
+<p class="muted" id="graph-status" role="status"></p>
+{% else %}<p class="notice">아직 관계가 없습니다. 프로필이 만들어지면서 쌓입니다.</p>{% endif %}
+
+<details><summary>표로 보기 (관계 {{ edges|length }}개)</summary>
+<div class="wrap"><table>
+  <thead><tr><th scope="col">관계</th><th scope="col">상태</th></tr></thead>
+  <tbody>{% for e in edges %}
+  <tr><td><a href="/kb/{{ e.source }}">{{ names[e.source] }}</a> {{ "↔" if e.symmetric else "→" }} <a href="/kb/{{ e.target }}">{{ names[e.target] }}</a>
+      · {{ e.label }} <span class="muted">{{ e.type }}</span></td>
+    <td>{% if e.verified %}확인함{% else %}<span class="unverified">미확인</span>{% endif %}</td></tr>
+  {% endfor %}</tbody>
+</table></div>
+</details>
+{% endblock %}

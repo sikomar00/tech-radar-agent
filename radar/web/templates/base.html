@@ -28,7 +28,10 @@
   .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin: 8px 0 16px; } .filters label { display: grid; font-size: 14px; }
   .inline { display: inline; } .unverified { color: var(--muted); font-style: italic; }
   .wrap { overflow-x: auto; } h1 { font-size: 24px; margin: 8px 0; } h2 { font-size: 19px; margin: 24px 0 8px; }
+  .graph { height: 520px; border: 1px solid var(--line); border-radius: 4px; } .graph.small { height: 340px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; color: var(--muted); }
 </style>
+{% block head %}{% endblock %}
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -36,6 +39,7 @@
   {% set here = request.url.path %}
   <a href="/" {% if here == "/" %}aria-current="page"{% endif %}>Feed</a>
   <a href="/kb" {% if here.startswith("/kb") %}aria-current="page"{% endif %}>Knowledge Base</a>
+  <a href="/graph" {% if here == "/graph" %}aria-current="page"{% endif %}>Graph</a>
   <a href="/monitor" {% if here == "/monitor" %}aria-current="page"{% endif %}>Monitor</a>
   <form action="/kb" method="get" role="search"><label for="top-q" class="skip">기술 검색</label>
     <input id="top-q" name="q" type="search" placeholder="이름·별칭·키워드" value="{{ q or '' }}"><button>검색</button></form>

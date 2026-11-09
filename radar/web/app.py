@@ -13,14 +13,18 @@ import psycopg
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.responses import PlainTextResponse
+from starlette.routing import Mount
+from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
+from radar.domain.relations import RELATION_LABELS, SYMMETRIC
 from radar.store.db import connect
 
 HOST, PORT = "127.0.0.1", 8765
 ALLOWED_HOSTS = frozenset({f"127.0.0.1:{PORT}", f"localhost:{PORT}"})
 MAX_BODY_BYTES = 64_000  # 폼은 메모 한 개가 가장 크다
 TEMPLATES = Path(__file__).parent / "templates"
+STATIC = Path(__file__).parent / "static"
 DbFactory = Callable[[], ContextManager[psycopg.Connection]]
 
 
@@ -72,13 +76,17 @@ def templates() -> Jinja2Templates:
     found = Jinja2Templates(directory=TEMPLATES)
     found.env.autoescape = True  # 외부 글의 제목·발췌가 그대로 HTML이 되지 않게 한다(기본값에 기대지 않는다)
     found.env.filters["safe_url"] = safe_url
+    found.env.globals.update(RELATION_LABELS=RELATION_LABELS, SYMMETRIC=SYMMETRIC)
     return found
 
 
 def create_app(db: DbFactory, allowed_hosts: frozenset[str] = ALLOWED_HOSTS) -> Starlette:
-    from radar.web.routes import ROUTES  # routes가 이 모듈의 templates·safe_url을 쓴다
+    from radar.web.graph_routes import GRAPH_ROUTES  # 라우트 모듈이 이 모듈의 templates·safe_url을 쓴다
+    from radar.web.routes import ROUTES
 
-    app = Starlette(routes=ROUTES, middleware=[Middleware(HostOriginGuard, allowed_hosts=allowed_hosts)],
+    static = Mount("/static", app=StaticFiles(directory=STATIC), name="static")  # 그래프 라이브러리는 CDN이 아니라 저장소에서 낸다
+    # /kb/{id}/{action}보다 먼저 맞춰 볼 그래프·관계 라우트를 앞에 둔다
+    app = Starlette(routes=[*GRAPH_ROUTES, *ROUTES, static], middleware=[Middleware(HostOriginGuard, allowed_hosts=allowed_hosts)],
                     max_body_size=MAX_BODY_BYTES)
     app.state.db = db
     app.state.templates = templates()

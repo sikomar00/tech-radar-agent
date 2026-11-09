@@ -11,7 +11,8 @@ from radar import holds
 from radar.analyze import DAILY_CAP, analysis_paused
 from radar.domain.listing import description
 from radar.domain.profile import ALL_FIELDS
-from radar.store import knowledge, monitor, views
+from radar.domain.relations import RELATION_TYPES
+from radar.store import knowledge, monitor, relations, views
 from radar.store.analysis import AnalysisStore
 from radar.store.jobs import JobQueue
 from radar.worker import utc_now
@@ -82,14 +83,27 @@ async def detail(request: Request) -> Response:
     technology_id = request.path_params["technology_id"]
     with request.app.state.db() as conn:
         found = views.detail(conn, views.user_id(conn), technology_id)
-        claims = knowledge.current_claims(conn, technology_id) if found else {}
-    if found is None:
-        return PlainTextResponse("없는 기술입니다", status_code=404)
+        if found is None:
+            return PlainTextResponse("없는 기술입니다", status_code=404)
+        claims = knowledge.current_claims(conn, technology_id)
+        related, names = relations.for_technology(conn, technology_id), relations.active_names(conn)
     one_liner = claims["one_liner"]["content"] if "one_liner" in claims else None
     first_excerpt = next((s["excerpt"] for s in reversed(found["sources"]) if s["excerpt"]), None)  # 출처는 최근 순이다
     summary, summary_source = description(one_liner, first_excerpt)
-    return _render(request, "detail.html", {**found, "claims": claims, "fields": ALL_FIELDS,
-                                            "summary": summary, "summary_source": summary_source})
+    return _render(request, "detail.html", {**found, "claims": claims, "fields": ALL_FIELDS, "summary": summary,
+                                            "summary_source": summary_source, "related": related, "names": names,
+                                            "relation_types": RELATION_TYPES})
+
+
+def _link(conn, technology_id: int, form: dict[str, str]) -> str:
+    """직접 잇기(UJ-9). 다른 기술은 이름으로 받고, 방향은 이 기술이 주어인지로 받는다."""
+    other = relations.resolve(conn, form.get("other", "")[:200])
+    if other is None:
+        return "그 이름의 기술을 찾지 못했습니다(목록에서 고르세요)"
+    if form.get("relation_type") not in RELATION_TYPES:
+        return "관계 종류를 고르세요"
+    source, target = (technology_id, other) if form.get("direction") != "in" else (other, technology_id)
+    return relations.add_manual(conn, source, target, form["relation_type"])[1]
 
 
 async def change(request: Request) -> Response:
@@ -110,6 +124,8 @@ async def change(request: Request) -> Response:
             message = "보관했습니다" if views.archive(conn, technology_id) else "이미 보관된 기술입니다"
         elif action == "unarchive":
             message = views.unarchive(conn, technology_id)[1]
+        elif action == "link":
+            message = _link(conn, technology_id, form)
         else:
             return PlainTextResponse("잘못된 요청입니다", status_code=400)
     return _back(form, f"/kb/{technology_id}", message)
@@ -123,7 +139,7 @@ async def monitor_page(request: Request) -> Response:
             "calls_today": AnalysisStore(conn, utc_now).calls_today(), "cap": DAILY_CAP,
             "paused": analysis_paused(conn, utc_now), "failures": monitor.recent_failures(conn),
             "job_counts": monitor.job_counts(conn), "failed_jobs": monitor.failed_jobs(conn),
-            "holds": monitor.holds(conn), "hold_types": holds.HOLD_TYPES,
+            "holds": monitor.holds(conn), "hold_types": holds.HOLD_TYPES, "proposals": relations.open_proposals(conn),
         }
     return _render(request, "monitor.html", context)
 
@@ -141,6 +157,8 @@ async def monitor_action(request: Request) -> Response:
             ok, message = holds.link_item(conn, utc_now, target, _number(form["technology_id"]))
         elif action == "new":
             ok, message = holds.new_from_item(conn, utc_now, target)
+        elif action == "discard":
+            message = "관계 제안을 버렸습니다" if relations.discard(conn, target) else "열려 있는 제안이 아닙니다"
         else:
             return PlainTextResponse("잘못된 요청입니다", status_code=400)
     return _back(form, "/monitor", message)

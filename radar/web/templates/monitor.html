@@ -40,7 +40,7 @@
 <h2>분류 보류</h2>
 <h3>유형을 정해야 하는 기술 {{ holds.technologies|length }}개</h3>
 {% for t in holds.technologies %}
-<form class="filters" method="post" action="/monitor/{{ t.id }}/type">
+<form class="filters" method="post" action="/monitor/{{ t.id }}/type" id="hold-{{ t.id }}">
   <input type="hidden" name="next" value="/monitor">
   <span><a href="/kb/{{ t.id }}">{{ t.canonical_name }}</a> <span class="muted">근거 {{ t.sources }}건</span></span>
   <label>유형 <select name="type">{% for ty in hold_types %}<option>{{ ty }}</option>{% endfor %}</select></label><button>정하기</button>
@@ -56,4 +56,18 @@
   <form class="inline" method="post" action="/monitor/{{ i.id }}/new"><input type="hidden" name="next" value="/monitor"><button>새 기술로</button></form>
 </div>
 {% else %}<p class="muted">없습니다.</p>{% endfor %}
+
+<h2>관계 검토 목록 {{ proposals|length }}개 <span class="muted">(AI가 제안했지만 규칙에 걸려 저장하지 않은 관계)</span></h2>
+{% if proposals %}<div class="wrap"><table>
+  <thead><tr><th scope="col">제안</th><th scope="col">저장하지 않은 까닭</th><th scope="col">근거</th><th scope="col">처리</th></tr></thead>
+  <tbody>{% for p in proposals %}
+  <tr><td><a href="/kb/{{ p.source_id }}">{{ p.source_name }}</a> {{ "↔" if p.relation_type in SYMMETRIC else "→" }} <a href="/kb/{{ p.target_id }}">{{ p.target_name }}</a>
+      · {{ RELATION_LABELS[p.relation_type] }} <span class="muted">{{ p.relation_type }}</span></td>
+    <td>{% if p.reason == "untyped" %}유형이 없는 기술이 있음({% if not p.source_type %}{{ p.source_name }}{% endif %}{% if not p.source_type and not p.target_type %}, {% endif %}{% if not p.target_type %}{{ p.target_name }}{% endif %})
+        {% else %}허용 매트릭스 위반: {{ p.source_type }} → {{ p.target_type }}에는 {{ p.relation_type }}를 쓸 수 없음{% endif %}</td>
+    <td>{% if p.quote %}<span class="muted">“{{ p.quote }}”</span>{% endif %}{% set link = p.url|safe_url %}{% if link %} <a href="{{ link }}" rel="noopener noreferrer" target="_blank">원문</a>{% endif %}</td>
+    <td>{% if p.reason == "untyped" %}<a href="#hold-{{ p.source_id if not p.source_type else p.target_id }}">유형 고치기</a>{% endif %}
+      <form class="inline" method="post" action="/monitor/{{ p.id }}/discard"><input type="hidden" name="next" value="/monitor"><button class="link">버리기</button></form></td></tr>
+  {% endfor %}</tbody>
+</table></div>{% else %}<p class="muted">없습니다.</p>{% endif %}
 {% endblock %}

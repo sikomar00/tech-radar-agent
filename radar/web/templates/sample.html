@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_relations.html" import relation_text, actions %}
+{% block title %}관계 판정 표본{% endblock %}
+{% block content %}
+<h1>관계 판정 표본 <span class="muted">(4단계 게이트)</span></h1>
+<p>AI가 뽑은 관계 {{ rows|length }}개를 무작위 순서(고정)로 보여 줍니다. 근거 문장을 읽고 맞으면 <strong>확인</strong>, 틀리면 <strong>숨기기</strong>를 누르세요.</p>
+<p class="notice" role="status">판정 {{ judged }}/{{ rows|length }} · 확인 {{ verified }}
+  {% if precision is not none %} · Precision {{ "%.1f"|format(precision * 100) }}%{% endif %}
+  {% if judged < rows|length %} · 모두 판정하면 게이트 수치가 됩니다{% endif %}</p>
+<div class="wrap"><table>
+  <thead><tr><th scope="col">#</th><th scope="col">관계</th><th scope="col">근거 문장</th><th scope="col">판정</th></tr></thead>
+  <tbody>{% for r in rows %}{% set link = r.url|safe_url %}
+  <tr><td>{{ loop.index }}</td><td>{{ relation_text(r) }}</td>
+    <td>{% if r.quote %}“{{ r.quote }}”{% endif %}{% if link %} <a href="{{ link }}" rel="noopener noreferrer" target="_blank">원문</a>{% endif %}</td>
+    <td>{% if r.hidden_at %}숨김(틀림) {% elif r.user_verified %}확인함(맞음) {% endif %}{{ actions(r, "/relations/sample") }}</td></tr>
+  {% else %}<tr><td colspan="4" class="muted">아직 고정한 표본이 없습니다. AI 관계가 50개 이상 쌓이면 `radar relations sample`로 한 번 고정합니다.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

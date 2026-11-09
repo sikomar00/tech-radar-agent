@@ -1,0 +1,28 @@
+{# RELATION_LABELS·SYMMETRIC은 radar/web/app.py가 넣는 전역 값이다(radar/domain/relations.py) #}
+{% macro relation_text(r) %}<a href="/kb/{{ r.source_technology_id }}">{{ r.source_name }}</a> {{ "↔" if r.relation_type in SYMMETRIC else "→" }}
+  <a href="/kb/{{ r.target_technology_id }}">{{ r.target_name }}</a> · {{ RELATION_LABELS[r.relation_type] }} <span class="muted">{{ r.relation_type }}</span>{% endmacro %}
+
+{% macro state_text(r) %}{% if r.hidden_at %}숨김{% elif r.origin == "manual" %}직접 이음{% elif r.user_verified %}확인함{% else %}<span class="unverified">미확인</span>{% endif %}{% endmacro %}
+
+{% macro actions(r, back) %}
+  {% for action, label, show in (("verify", "확인", not r.user_verified and not r.hidden_at), ("unverify", "확인 취소", r.user_verified and r.origin != "manual"),
+                                 ("hide", "숨기기", not r.hidden_at), ("unhide", "되돌리기", r.hidden_at)) if show %}
+  <form class="inline" method="post" action="/relations/{{ r.id }}/{{ action }}"><input type="hidden" name="next" value="{{ back }}">
+    <button class="link" aria-label="{{ r.source_name }}–{{ r.target_name }} 관계 {{ label }}">{{ label }}</button></form>
+  {% endfor %}
+{% endmacro %}
+
+{% macro evidence_list(evidence) %}
+  {% for e in evidence %}{% set link = e.url|safe_url %}
+  <div class="muted">{% if e.quote %}“{{ e.quote }}” {% endif %}{% if link %}<a href="{{ link }}" rel="noopener noreferrer" target="_blank">근거 #{{ e.item }}</a>{% else %}근거 #{{ e.item }}{% endif %}</div>
+  {% else %}<span class="muted">근거 항목 없음(사용자가 직접 이음)</span>{% endfor %}
+{% endmacro %}
+
+{% macro relation_table(rows, back) %}
+<div class="wrap"><table>
+  <thead><tr><th scope="col">관계</th><th scope="col">상태</th><th scope="col">근거</th><th scope="col">판정</th></tr></thead>
+  <tbody>{% for r in rows %}
+  <tr><td>{{ relation_text(r) }}</td><td>{{ state_text(r) }}</td><td>{{ evidence_list(r.evidence) }}</td><td>{{ actions(r, back) }}</td></tr>
+  {% endfor %}</tbody>
+</table></div>
+{% endmacro %}

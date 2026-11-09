@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+{% from "_relations.html" import relation_table %}
 {% block title %}{{ tech.canonical_name }}{% endblock %}
+{% block head %}<script src="/static/cytoscape.min.js" defer></script><script src="/static/graph.js" defer></script>{% endblock %}
 {% block content %}
 {% set FIELD_LABELS = {"one_liner": "한 줄 설명", "description": "상세 설명", "problem": "해결하려는 문제", "features": "주요 특징",
   "differences": "기존 기술과의 차이", "use_cases": "활용 사례", "pros_cons": "장점과 한계", "official_source": "공식 출처"} %}
@@ -40,6 +42,26 @@
     {% else %}<span class="unverified">미확인</span>{% endif %}</dd>
 {% endfor %}
 </dl>
+
+<h2 id="related">관련 기술 <span class="muted">(AI 관계는 점선·미확인, 확인하거나 직접 이으면 실선)</span></h2>
+{% set visible = related|rejectattr("hidden_at")|list %}
+{% set hidden = related|selectattr("hidden_at")|list %}
+{% if visible %}
+<div id="neighborhood" class="graph small" data-graph-url="/graph.json?center={{ tech.id }}" data-center="{{ tech.id }}"
+  role="img" aria-label="{{ tech.canonical_name }}의 이웃 그래프. 같은 내용이 아래 표에 있습니다"></div>
+<p><button type="button" id="depth-toggle" data-depth="1">2단계까지 보기</button></p>
+{{ relation_table(visible, back ~ "#related") }}
+{% else %}<p class="muted">아직 관계가 없습니다. 프로필이 만들어질 때 페이지에 나온 아는 기술과 이어집니다.</p>{% endif %}
+{% if hidden %}<details><summary>숨긴 관계 보기 ({{ hidden|length }}개)</summary>{{ relation_table(hidden, back ~ "#related") }}</details>{% endif %}
+
+<form class="filters" method="post" action="/kb/{{ tech.id }}/link" aria-label="직접 잇기">
+  <input type="hidden" name="next" value="{{ back }}">{# 결과 문구를 ?msg=로 붙이므로 #조각을 쓰지 않는다 #}
+  <label>방향 <select name="direction"><option value="out">이 기술 →</option><option value="in">→ 이 기술</option></select></label>
+  <label>관계 <select name="relation_type">{% for t in relation_types %}<option value="{{ t }}">{{ RELATION_LABELS[t] }} ({{ t }})</option>{% endfor %}</select></label>
+  <label>다른 기술 <input name="other" list="tech-names" required maxlength="200" autocomplete="off"></label>
+  <datalist id="tech-names">{% for n in names if n != tech.canonical_name %}<option value="{{ n }}">{% endfor %}</datalist>
+  <button>직접 잇기</button>
+</form>
 
 <h2>출처 {{ sources|length }}개</h2>
 <div class="wrap"><table>
