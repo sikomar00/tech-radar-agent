@@ -1,11 +1,13 @@
 """프로필 잡(S3-01, S3-03, ADR-0007): 페이지 한 장 → 호출 1번 → 칸별 주장. 빈 칸은 미확인, 이전 주장은 내리기만 한다."""
 import time
 from collections import deque
+from datetime import timedelta
 
 import pytest
 
 from radar.adapters.page import Page, PageError
 from radar.analyze import AnalyzeFailed
+from radar.job_errors import JobDeferred
 from radar.domain.profile import FIELD_LIMITS, MODEL_FIELDS
 from radar.profile import README_PER_HOUR, ProfileEnv, backfill, run_profile_job
 from radar.store import knowledge
@@ -111,9 +113,19 @@ def test_instructions_planted_in_the_page_stay_inside_the_data_and_bad_output_is
 def test_the_readme_hourly_limit_defers_the_job_instead_of_reading(db) -> None:
     tech, _ = _tech(db)
     full = deque([time.monotonic()] * README_PER_HOUR)
-    with pytest.raises(AnalyzeFailed) as caught:
-        run_profile_job(_env(db, FakeLlm(), calls=full), _job(tech))
-    assert caught.value.retryable and "rate_limited" in str(caught.value)
+    env = _env(db, FakeLlm(), calls=full)
+    with pytest.raises(JobDeferred) as caught:
+        run_profile_job(env, _job(tech))
+    assert timedelta(minutes=59) < caught.value.until - env.clock() <= timedelta(minutes=61)
+
+
+def test_a_deferred_job_waits_without_using_an_attempt(db) -> None:
+    queue, clock = JobQueue(db, Clock()), Clock()
+    queue.enqueue(PROFILE, {"technology_id": 1})
+    job = queue.claim_next()
+    queue.defer(job["id"], clock() + timedelta(hours=1))
+    row = db.execute("select status::text as s, attempts, run_after from jobs").fetchone()
+    assert (row["s"], row["attempts"]) == ("queued", 0) and queue.claim_next() is None
 
 
 def test_a_newly_created_technology_gets_a_profile_job_but_a_linked_one_does_not(db) -> None:

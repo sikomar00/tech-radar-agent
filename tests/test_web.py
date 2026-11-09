@@ -136,3 +136,11 @@ def test_the_feed_warns_when_collection_has_stopped(client, db) -> None:
     db.execute("insert into collection_runs (source_id, status, started_at) values (%s, 'succeeded', %s)",
                (source, datetime.now(timezone.utc) - timedelta(minutes=10)))
     assert "Monitor에서 확인하기" not in client.get("/").text
+
+
+def test_odd_numbers_and_unknown_technologies_are_client_errors_not_crashes(client, db) -> None:
+    assert client.get("/?days=²").status_code == 200  # 기본 기간으로 본다
+    assert client.post("/kb/999999/state", data={"state": "saved"}, headers=ORIGIN).status_code == 404
+    item = add_item(db)
+    res = client.post(f"/monitor/{item}/link", data={"technology_id": "²", "next": "/monitor"}, headers=ORIGIN)
+    assert res.status_code == 400

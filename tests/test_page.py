@@ -1,6 +1,7 @@
 """공식 페이지 읽기(ADR-0007)의 안전 규칙. 127.0.0.1에 실제 HTTP 서버를 띄워 시험한다(외부 네트워크 없음)."""
 import socket
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import pytest
@@ -20,11 +21,13 @@ ROUTES = {
     "/big": (200, "text/html", b"a" * (page.MAX_PAGE_BYTES + 10)),
     "/bin": (200, "application/octet-stream", b"\x00\x01"),
 }
-REDIRECTS = {"/loop": "/loop", "/to-private": "http://10.0.0.1/", "/hop": "/page"}
+REDIRECTS = {"/loop": "/loop", "/to-private": "http://10.0.0.1/", "/hop": "/page", "/broken": "http://[::1"}
 
 
 class _Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802 (http.server 규약)
+        if self.path == "/drip":
+            return self._drip()
         if self.path in REDIRECTS:
             self.send_response(302)
             self.send_header("Location", REDIRECTS[self.path])
@@ -36,6 +39,19 @@ class _Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def _drip(self) -> None:
+        """본문을 0.2초마다 한 바이트씩 흘려보내는 서버(소켓 timeout만으로는 끊기지 않는다)."""
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.end_headers()
+        try:
+            for _ in range(100):
+                self.wfile.write(b"a")
+                self.wfile.flush()
+                time.sleep(0.2)
+        except OSError:
+            pass
 
     def log_message(self, *_args) -> None:
         pass
@@ -100,13 +116,15 @@ def test_a_name_that_changes_to_a_private_address_after_the_check_is_caught_at_c
     monkeypatch.setattr(socket, "getaddrinfo", rebinding)
     port = int(server.rsplit(":", 1)[1])
     with pytest.raises(PageError) as caught:
-        page._fetch(f"http://rebind.test:{port}/page", Guard(any_port=True), {})
+        page._fetch(f"http://rebind.test:{port}/page", Guard(any_port=True), {}, time.monotonic() + 10)
     assert caught.value.kind == "blocked"
 
 
 @pytest.mark.parametrize(("ip", "expected"), [("8.8.8.8", True), ("127.0.0.1", False), ("10.1.2.3", False),
                                               ("169.254.169.254", False), ("::1", False), ("fe80::1%eth0", False),
-                                              ("192.168.0.1", False), ("100.64.0.1", False)])
+                                              ("192.168.0.1", False), ("100.64.0.1", False),
+                                              ("64:ff9b::a00:1", False), ("2002:a00:1::", False), ("::7f00:1", False),
+                                              ("::ffff:10.0.0.1", False), ("64:ff9b::808:808", True), ("2001:4860:4860::8888", True)])
 def test_only_global_addresses_are_public(ip: str, expected: bool) -> None:
     assert public_ip(ip) is expected
 
@@ -116,3 +134,21 @@ def test_a_readme_request_takes_only_an_owner_and_name(repo: str) -> None:
     with pytest.raises(PageError) as caught:
         read_readme(repo)
     assert caught.value.kind == "blocked"
+
+
+def test_a_server_that_drips_bytes_is_cut_at_the_total_deadline(server, monkeypatch) -> None:
+    monkeypatch.setattr(page, "TOTAL_SECONDS", 1.5)
+    started = time.monotonic()
+    with pytest.raises(PageError) as caught:
+        read_page(f"{server}/drip", LOCAL)
+    assert caught.value.kind == "timeout" and time.monotonic() - started < 6
+
+
+def test_non_ascii_paths_are_sent_encoded_and_broken_redirects_are_page_errors(server) -> None:
+    with pytest.raises(PageError) as caught:
+        read_page(f"{server}/한글 경로?q=값", LOCAL)
+    assert caught.value.kind == "http_status"  # 요청은 나갔고 서버가 404로 답했다(UnicodeEncodeError로 죽지 않는다)
+    with pytest.raises(PageError):  # 깨진 Location도 PageError로 끝난다(ValueError로 잡을 죽이지 않는다)
+        read_page(f"{server}/broken", LOCAL)
+    with pytest.raises(PageError):
+        read_page("http://[::1")
