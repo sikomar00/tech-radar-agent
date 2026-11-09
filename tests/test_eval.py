@@ -16,7 +16,7 @@ def gold(n: int, label: str, name: str = "", type_: str | None = None, split: st
 
 
 def cls(label: str, name: str = "", type_: str = "NONE") -> dict:
-    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": [], "aliases_ko": []}
+    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": [], "aliases_ko": [], "reason": "시험"}
 
 
 def out(row: GoldRow, label: str | None, name: str = "", type_: str | None = None, tech: int | None = None, created: bool = False) -> Outcome:

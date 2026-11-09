@@ -10,7 +10,7 @@ def analyze(db, item: int, *script: dict) -> None:
 
 
 def classified(label: str, name: str, type_: str = "FRAMEWORK_LIBRARY", en=()) -> dict:
-    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": list(en), "aliases_ko": []}
+    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": list(en), "aliases_ko": [], "reason": "시험"}
 
 
 def unknown_item(db, title: str = "langchain-core 1.0") -> tuple[int, int]:

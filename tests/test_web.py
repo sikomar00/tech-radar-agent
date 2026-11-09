@@ -8,7 +8,8 @@ from starlette.testclient import TestClient
 from radar.store.knowledge import save_profile
 from radar.store.technologies import TechnologyStore
 from radar.web.app import create_app
-from tests.conftest import add_item
+from tests.conftest import FakeLlm, add_item
+from tests.test_analyze import classify, run
 
 ORIGIN = {"Origin": "http://testserver"}
 
@@ -144,3 +145,12 @@ def test_odd_numbers_and_unknown_technologies_are_client_errors_not_crashes(clie
     item = add_item(db)
     res = client.post(f"/monitor/{item}/link", data={"technology_id": "²", "next": "/monitor"}, headers=ORIGIN)
     assert res.status_code == 400
+
+
+def test_rows_show_why_they_are_listed(client, db) -> None:
+    item = add_item(db, kind="hackernews", title="Show HN: Waymark", metadata={"score": 83})
+    run(db, FakeLlm({**classify("ENTITY", "Waymark"), "reason": "워크플로 엔진 <b>발표</b>"}), item)
+    feed = client.get("/").text
+    assert "새 기술 발표 · HN 83점" in feed and "AI 판단: 워크플로 엔진 &lt;b&gt;발표&lt;/b&gt;" in feed
+    tech = db.execute("select id from technologies").fetchone()["id"]
+    assert "새 기술 발표 · HN 83점" in client.get(f"/kb/{tech}").text

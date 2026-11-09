@@ -10,7 +10,8 @@ from tests.conftest import Clock, FakeLlm, add_item, fixture_json
 
 
 def classify(label: str = "ENTITY", name: str = "Ollama", type_: str = "PRODUCT", en=(), ko=()) -> dict:
-    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": list(en), "aliases_ko": list(ko)}
+    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": list(en), "aliases_ko": list(ko),
+            "reason": "시험용 이유"}
 
 
 def decide(decision: str, technology_id: int = 0) -> dict:

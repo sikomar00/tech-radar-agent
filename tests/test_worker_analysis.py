@@ -8,7 +8,7 @@ from radar.store.jobs import ANALYZE, COLLECT, JobQueue
 from radar.worker import run_once
 from tests.conftest import Clock, FakeHttp, FakeLlm, add_item
 
-NOISE = {"class": "NOISE", "canonical_name": "", "type": "NONE", "aliases_en": [], "aliases_ko": []}
+NOISE = {"class": "NOISE", "canonical_name": "", "type": "NONE", "aliases_en": [], "aliases_ko": [], "reason": "시험"}
 
 
 def jobs(db, kind: str = ANALYZE) -> list[dict]:

@@ -4,7 +4,7 @@
       "content": {
         "parts": [
           {
-            "text": "{\n  \"class\": \"UPDATE\",\n  \"canonical_name\": \"Claude Code\",\n  \"type\": \"PRODUCT\",\n  \"aliases_en\": [\n    \"claude-code\"\n  ],\n  \"aliases_ko\": [\n    \"클로드 코드\"\n  ]\n}",
+            "text": "{\n  \"class\": \"UPDATE\",\n  \"canonical_name\": \"Claude Code\",\n  \"type\": \"PRODUCT\",\n  \"aliases_en\": [\n    \"claude-code\"\n  ],\n  \"aliases_ko\": [\n    \"클로드 코드\"\n  ],\n  \"reason\": \"Claude Code의 새 버전 릴리스 노트다\"\n}",
             "thoughtSignature": "EmAKXgFpFH0TJLQ0HTw1parqlL/mjwafIKcw7M25Xz5wDK1z3CarbbU0mhI9FjbEIwVoS7bcQbIK5w1JmN1IUFAlGtNa+MfeNdVijLB1NTndzTAepgaNJeT54peajxoM2Zw="
           }
         ],

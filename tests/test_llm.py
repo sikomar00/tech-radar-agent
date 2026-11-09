@@ -10,7 +10,7 @@ from radar.domain.prompts import CLASSIFY_SCHEMA, MATCH_SCHEMA
 from tests.conftest import FakeLlm, fixture_bytes
 
 KEY = "test-key-0123456789"
-GOOD = {"class": "NOISE", "canonical_name": "", "type": "NONE", "aliases_en": [], "aliases_ko": []}
+GOOD = {"class": "NOISE", "canonical_name": "", "type": "NONE", "aliases_en": [], "aliases_ko": [], "reason": "기술 글이 아니다"}
 
 
 def _response(payload: dict | str, usage: dict | None = None) -> bytes:

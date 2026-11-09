@@ -13,7 +13,8 @@ INJECTIONS = fixture_json("injection/items.json")
 
 
 def _raw(label: str = "ENTITY", name: str = "Ollama", type_: str = "PRODUCT", en=(), ko=()) -> dict:
-    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": list(en), "aliases_ko": list(ko)}
+    return {"class": label, "canonical_name": name, "type": type_, "aliases_en": list(en), "aliases_ko": list(ko),
+            "reason": "시험용 이유"}
 
 
 def test_classify_payload_clips_text_and_sends_only_allowed_metadata() -> None:
