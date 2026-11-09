@@ -154,3 +154,13 @@ def test_rows_show_why_they_are_listed(client, db) -> None:
     assert "새 기술 발표 · HN 83점" in feed and "AI 판단: 워크플로 엔진 &lt;b&gt;발표&lt;/b&gt;" in feed
     tech = db.execute("select id from technologies").fetchone()["id"]
     assert "새 기술 발표 · HN 83점" in client.get(f"/kb/{tech}").text
+
+
+def test_rows_and_detail_say_roughly_what_the_technology_is(client, db) -> None:
+    tech, item = _tech(db, "Ollama")
+    db.execute("update source_items set excerpt = 'Get up and running with large language models.' where id = %s", (item,))
+    assert "Get up and running with large language models." in client.get("/").text
+    assert "출처 발췌" in client.get(f"/kb/{tech}").text
+    save_profile(db, tech, {"one_liner": "로컬에서 LLM을 실행하는 도구"}, item)
+    feed = client.get("/").text
+    assert "로컬에서 LLM을 실행하는 도구" in feed and "AI 요약" in feed

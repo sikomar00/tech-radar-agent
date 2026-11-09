@@ -34,3 +34,12 @@ def test_the_model_reason_is_stored_with_the_classification(db) -> None:
     stored = db.execute("select result ->> 'reason' as r from analysis_runs where kind = 'classify'").fetchone()["r"]
     assert stored == "로컬에서 LLM을 돌리는 개발자 도구 발표"
     assert TechnologyStore(db).definite_match("Ollama", None)
+
+
+def test_description_prefers_the_profile_line_then_the_source_excerpt() -> None:
+    from radar.domain.listing import DESCRIPTION_LIMIT, description
+    assert description("로컬 LLM 실행 도구", "Run LLMs locally") == ("로컬 LLM 실행 도구", "AI 요약")
+    assert description(None, "Run LLMs locally") == ("Run LLMs locally", "출처 발췌")
+    assert description("  ", "") == ("", "")
+    text, _ = description(None, "a" * 500)
+    assert len(text) == DESCRIPTION_LIMIT + 1 and text.endswith("…")
