@@ -35,7 +35,7 @@ erDiagram
 | 1 수집 | `sources`, `jobs`, `collection_runs`, `source_items` |
 | 2 식별 | `technologies`, `technology_aliases`, `technology_sources`, `analysis_runs` |
 | 3 지식 DB | `technology_claims`, `claim_evidence`, `technology_events`, `user_knowledge`, `user_notes`, `users` |
-| 4 관계 | `technology_relations`, `relation_evidence`, `relation_type_rules` |
+| 4 관계 | `technology_relations`, `relation_evidence`, `relation_type_rules`, `relation_proposals`(SPEC v1.7에서 추가) |
 | 5 브리핑 | `briefings`, `briefing_items` |
 
 스키마는 1단계 시작 때 한 번에 적용하지 않고 단계별 마이그레이션으로 나눠 적용한다. 점검 뷰 `pending_classification`, `technologies_without_source`, `relations_without_evidence`는 PRD 게이트의 "검증 쿼리"에 쓴다.
@@ -60,6 +60,7 @@ erDiagram
 9. `briefing_items.kind`는 중복 방지 인덱스에 쓰려고 `briefings.kind`를 복사한 값이다.
 10. 알려진 후속 변경: URL 수동 등록(S3-06)의 출처를 위해 `sources.kind`에 `manual`을 3단계 마이그레이션에서 추가한다. v1.1 DDL은 검증을 마친 상태로 두었다.
 11. (2026-11-08, SPEC v1.5) 3단계 마이그레이션 0003은 DDL v1.1의 3단계 표를 그대로 옮기고, `manual` 소스 한 행과 사용자 한 행을 넣는다. 보관한 기술과 정규명이 같은 새 글은 새 기술을 만들지 않고 보관 기술에 잇는다(소문자 정규명 유일 제약은 보관 아닌 기술에만 걸리므로 DB 변경은 없다).
+12. (2026-11-09, SPEC v1.7) 4단계 마이그레이션 0005는 DDL v1.1의 4단계 표에 다음을 더한다: `technology_relations.origin`(ai·manual)과 `hidden_at`, `relation_evidence.quote`(200자 이하 근거 문장), 검토 목록 `relation_proposals`. 근거 없는 관계 점검은 숨기지 않은 AI 관계에만 적용한다(직접 이은 관계는 사용자가 근거).
 
 ## 확인하지 못한 것
 - 실제 부하에서의 성능과 인덱스 적합성(데이터가 없다).
