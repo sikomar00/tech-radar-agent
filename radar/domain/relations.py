@@ -21,6 +21,9 @@ MAX_RELATIONS = 10
 QUOTE_LIMIT = 200
 MIN_QUOTE = 20
 SHORT_NAME = 3  # 이보다 짧은 이름(Go, R 등)은 대소문자까지 같아야 후보로 본다
+# 설치 명령은 쓰는 법이지 관계가 아니다. 운영에서 "git clone https://..." 한 줄로 'X 연동 Git'이 생겼다(2026-11-13)
+INSTALL_COMMAND = re.compile(
+    r"\$?\s*(git clone|(pip3?|npm|pnpm|yarn|brew|cargo|go|gem|apt(-get)?) (install|add|i)|uv (add|pip|tool)|npx)\s", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -55,10 +58,12 @@ def find_candidates(text: str, known: Iterable[tuple[int, Iterable[str]]], self_
 
 
 def _check(item: dict[str, Any], candidates: dict[int, list[str]], page: str) -> tuple[int, str, bool, str] | None:
-    """근거 문장은 MIN_QUOTE자 이상, 페이지에 그대로 있고, 상대 기술의 이름을 담아야 한다(아무 글자나 근거가 되지 않게)."""
+    """근거 문장은 MIN_QUOTE자 이상, 페이지에 그대로 있고, 설치 명령이 아니며, 상대 기술의 이름을 담아야 한다."""
     other, type_ = item.get("other_id"), item.get("relation_type")
     quote = _squash(str(item.get("quote", "")))[:QUOTE_LIMIT]
     if other not in candidates or type_ not in RELATION_TYPES or len(quote) < MIN_QUOTE or quote not in page:
+        return None
+    if INSTALL_COMMAND.match(quote):
         return None
     if not any(_mentions(name, quote) for name in candidates[other]):
         return None

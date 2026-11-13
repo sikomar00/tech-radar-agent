@@ -7,7 +7,9 @@ from typing import Any, Iterable
 import psycopg
 from psycopg.errors import RaiseException
 
+from radar.domain.listing import description
 from radar.domain.relations import SYMMETRIC, Proposed
+from radar.store.graph import NODES
 
 
 def known_names(conn: psycopg.Connection) -> list[tuple[int, list[str]]]:
@@ -38,11 +40,13 @@ def resolve(conn: psycopg.Connection, name: str) -> int | None:
 
 
 def describe(conn: psycopg.Connection, ids: list[int]) -> list[dict[str, Any]]:
-    """모델에 보낼 후보 목록(id, 이름, 유형). 순서는 ids를 따른다."""
-    rows = {r["id"]: r for r in conn.execute(
-        "select id, canonical_name as name, coalesce(type::text, 'NONE') as type from technologies where id = any(%s)", (ids,)
-    ).fetchall()}
-    return [rows[i] for i in ids if i in rows]
+    """모델에 보낼 후보 목록(id, 이름, 유형, 무엇인가). 순서는 ids를 따른다.
+
+    이름이 일반 낱말과 겹치면('LLM' 도구와 낱말 LLM) 모델이 설명을 보고 가려내게 한다(운영 오탐, 2026-11-13).
+    """
+    rows = {r["id"]: r for r in conn.execute(NODES, {"all": False, "ids": ids}).fetchall()}
+    return [{"id": i, "name": rows[i]["name"], "type": rows[i]["type"] or "NONE",
+             "what": description(rows[i]["one_liner"], rows[i]["excerpt"])[0]} for i in ids if i in rows]
 
 
 def _types_known(conn: psycopg.Connection, a: int, b: int) -> bool:

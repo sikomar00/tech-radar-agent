@@ -15,7 +15,7 @@ _EDGES = (
     "join technologies s on s.id = r.source_technology_id join technologies t on t.id = r.target_technology_id "
     "where r.hidden_at is null and s.archived_at is null and t.archived_at is null order by r.id"
 )
-_NODES = (
+NODES = (
     "select t.id, t.canonical_name as name, t.type, "
     "(select count(*)::int from technology_sources s where s.technology_id = t.id) as sources, "
     "(select c.content from technology_claims c where c.technology_id = t.id and c.is_current and c.field = 'one_liner' "
@@ -50,7 +50,7 @@ def graph(conn: psycopg.Connection, center: int | None = None, depth: int = 1, a
         edges = [e for e in edges if e["source"] in ids and e["target"] in ids]
     else:
         ids = {e["source"] for e in edges} | {e["target"] for e in edges}
-    rows = conn.execute(_NODES, {"all": all_nodes and center is None, "ids": list(ids)}).fetchall()
+    rows = conn.execute(NODES, {"all": all_nodes and center is None, "ids": list(ids)}).fetchall()
     nodes = [{"id": r["id"], "name": r["name"], "type": r["type"], "sources": r["sources"],
               "what": description(r["one_liner"], r["excerpt"])[0]} for r in rows]
     return {"nodes": nodes,

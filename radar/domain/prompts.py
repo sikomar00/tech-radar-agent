@@ -95,7 +95,9 @@ Use only facts stated in the data. Do not use outside knowledge and do not guess
 - pros_cons: strengths and limitations, only if the data states them (at most {FIELD_LIMITS['pros_cons']} characters).
 When page_text is empty, fill only one_liner from the titles and leave every other field empty.
 
-candidates lists other technologies already in the knowledge base whose names appear in page_text, as id, name and type.
+candidates lists other technologies already in the knowledge base whose names appear in page_text, as id, name, type and what (a short description).
+A candidate name can also be an ordinary word, as with a tool named LLM and the general term LLM. Relate a candidate only when page_text means that specific technology as described in what.
+An install or clone command (git clone URL, pip install, npm install) is not a relation.
 - relations: relations between this technology and a candidate that page_text states directly, at most {MAX_RELATIONS}. For each:
   - other_id: the id of that candidate. Use only ids from candidates.
   - relation_type: DERIVED_FROM (a fork or derivative of), BUILT_ON (runs on or is built with), EXTENDS (a plugin, extension or skill for), IMPLEMENTS (implements a protocol or standard), PART_OF (a component or package of), REPLACES (a newer thing that replaces an older one), COMPETES_WITH (an alternative to), INTEGRATES_WITH (works together with), or RELATED_TO when page_text clearly connects them but no specific type fits.
