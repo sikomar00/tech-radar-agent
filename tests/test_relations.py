@@ -49,6 +49,22 @@ def test_a_quote_must_be_a_real_sentence_that_names_the_other_technology() -> No
     assert parse_relations([short, unnamed], 5, NAMES, page) == ([], 2)
 
 
+def test_an_install_command_is_not_evidence_of_a_relation() -> None:
+    page = ("git clone https://github.com/a/ollama-ui && cd ollama-ui\n$ pip install llama.cpp-python bindings\n"
+            "Run it with git clone first, then point it at llama.cpp for inference.")
+    names = {2: ["llama.cpp"], 4: ["Git"]}
+    raw = [_rel(4, "INTEGRATES_WITH", quote="git clone https://github.com/a/ollama-ui && cd ollama-ui"),
+           _rel(2, quote="$ pip install llama.cpp-python bindings"),
+           _rel(2, quote="Run it with git clone first, then point it at llama.cpp for inference.")]
+    kept, dropped = parse_relations(raw, 5, names, page)
+    assert [k.target_id for k in kept] == [2] and dropped == 2  # 명령으로 시작하는 줄만 버린다
+
+
+def test_candidates_carry_what_the_technology_is(db) -> None:
+    tech, _ = _tech(db, "LLM")
+    assert relations.describe(db, [tech, 999999]) == [{"id": tech, "name": "LLM", "type": "PRODUCT", "what": ""}]
+
+
 def test_the_candidate_is_the_subject_when_the_model_says_so() -> None:
     kept, _ = parse_relations([_rel(2, "REPLACES", subject=False)], 5, NAMES, TEXT)
     assert (kept[0].source_id, kept[0].target_id) == (2, 5)
