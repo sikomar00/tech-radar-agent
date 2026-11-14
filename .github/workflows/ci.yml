@@ -13,6 +13,8 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_PASSWORD: postgres
+          # 별칭 정렬 시험은 코드포인트 순서(영문 → 한글)를 기대한다. 이미지 기본값 en_US.utf8은 순서가 달라진다.
+          POSTGRES_INITDB_ARGS: --locale=C.UTF-8
         ports:
           - 5432:5432
         options: >-
